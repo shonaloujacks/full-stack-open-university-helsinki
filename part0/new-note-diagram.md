@@ -8,7 +8,7 @@ participant server
     server-->>browser: HTML document
     deactivate server
 
-    Note right of browser: Server responds with status code 302 (redirect) and asks browser to perform new GET request to address in the haeder's Location (/exampleapp/notes)
+    Note right of browser: Server responds with status code 302 (redirect) and asks browser to perform new GET request to address in the header's Location (/exampleapp/notes)
 
     browser->>server: GET
     https://studies.cs.helsinki.fi/exampleapp/notes
@@ -16,7 +16,7 @@ participant server
     server-->>browser: HTML document
     deactivate server
 
-     Note right of browser: browser reloads Notes page and triggers three more GET requests
+    Note right of browser: browser reloads Notes page and triggers three more GET requests
 
     browser->>server: GET
     https://studies.cs.helsinki.fi/exampleapp/main.css
