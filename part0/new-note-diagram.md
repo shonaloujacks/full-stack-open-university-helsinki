@@ -31,7 +31,7 @@ participant server
 
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
     activate server
-    server-->>browser: [{"content": "I love cats", "date": "2025-04-09T12:58:38.164Z"}, ...]
+    server-->>browser: JSON data [{ "content": "I love cats", "date": "2025-04-09T12:58:38.164Z"}, ...]
     deactivate server
 
     Note right of browser: The browser executes the callback function that renders the notes
