@@ -48,12 +48,7 @@ const App = () => {
   const [total, setTotal] = useState(0);
   const [average, setAverage] = useState(0);
 
-  const positiveFeedback = () => {
-    if (total > 0) {
-      return (good / total) * 100;
-    }
-    return 0;
-  };
+  const positiveFeedback = total > 0 ? (good / total) * 100 : 0;
 
   const handleGoodClick = () => {
     setGood(good + 1);
@@ -86,7 +81,7 @@ const App = () => {
         bad={bad}
         total={total}
         average={average}
-        positiveFeedback={positiveFeedback()}
+        positiveFeedback={positiveFeedback}
       />
     </div>
   );
