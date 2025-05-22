@@ -24,7 +24,7 @@ const App = () => {
     const copyVotes = [...votes];
     copyVotes[selected] += 1;
     setMostVotedAnecdote(findMaxIndex(copyVotes));
-    return setVotes(copyVotes);
+    setVotes(copyVotes);
   };
 
   const findMaxIndex = (votes) => {
