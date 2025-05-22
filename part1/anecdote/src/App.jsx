@@ -14,6 +14,7 @@ const App = () => {
 
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState(new Array(8).fill(0));
+  const [mostVotedAnecdote, setMostVotedAnecdote] = useState(0);
 
   const handleNextAnecdote = () => {
     setSelected(Math.floor(Math.random() * 8));
@@ -22,15 +23,14 @@ const App = () => {
   const handleVote = () => {
     const copyVotes = [...votes];
     copyVotes[selected] += 1;
-    setVotes(copyVotes);
+    setMostVotedAnecdote(findMaxIndex(copyVotes));
+    return setVotes(copyVotes);
   };
 
   const findMaxIndex = (votes) => {
     const maxValue = Math.max(...votes);
     return votes.indexOf(maxValue);
   };
-
-  const mostVotedIndex = findMaxIndex(votes);
 
   return (
     <div>
@@ -44,7 +44,7 @@ const App = () => {
       </p>
       <button onClick={handleVote}>Vote</button>
       <h1>Anecdote with the most votes</h1>
-      <i>{anecdotes[mostVotedIndex]}</i>
+      <i>{anecdotes[mostVotedAnecdote]}</i>
     </div>
   );
 };
