@@ -17,11 +17,18 @@ const App = () => {
   ]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [filterSearch, setFilterSearch] = useState("");
+
+  const maxID =
+    persons.length > 0
+      ? Math.max(...persons.map((person) => person.id)) + 1
+      : 0;
 
   const addName = (event) => {
     event.preventDefault();
-    const personObject = { name: newName, number: newNumber };
+    const personObject = { name: newName, number: newNumber, id: maxID };
     const repeatEntry = persons.find((person) => person.name === newName);
+
     if (repeatEntry) {
       alert(`${newName} is already added to phonebook`);
       setNewName("");
@@ -40,9 +47,23 @@ const App = () => {
     setNewNumber(event.target.value);
   };
 
+  const handleFilterNames = (event) => {
+    console.log(event.target.value);
+    setFilterSearch(event.target.value);
+  };
+
+  const filteredPersons = persons.filter((person) =>
+    person.name.toLowerCase().includes(filterSearch.toLowerCase())
+  );
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <p>
+        Search for a contact:{" "}
+        <input value={filterSearch} onChange={handleFilterNames} />
+      </p>
+      <h2>Add a new contact: </h2>
       <form onSubmit={addName}>
         {" "}
         {/*only triggerd when add button is clicked*/}
@@ -55,7 +76,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map((person) => (
+      {filteredPersons.map((person) => (
         <Name key={person.name} person={person} />
       ))}
     </div>
