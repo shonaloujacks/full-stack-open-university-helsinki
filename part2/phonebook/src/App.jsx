@@ -11,9 +11,11 @@ const App = () => {
   const addName = (event) => {
     event.preventDefault();
     const personObject = { name: newName };
-
-    setPersons(persons.concat(personObject));
-
+    const repeatEntry = persons.find((person) => person.name === newName);
+    if (repeatEntry) {
+      alert(`${newName} is already added to phonebook`);
+      setNewName("");
+    } else setPersons(persons.concat(personObject));
     setNewName("");
   };
 
@@ -21,7 +23,6 @@ const App = () => {
     console.log(event.target.value);
     setNewName(event.target.value);
   };
-
   return (
     <div>
       <h2>Phonebook</h2>
