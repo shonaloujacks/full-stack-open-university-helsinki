@@ -8,6 +8,16 @@ const Name = (props) => {
   );
 };
 
+const Persons = (props) => {
+  return (
+    <div>
+      {props.filteredPersons.map((person) => (
+        <Name key={person.name} person={person} />
+      ))}{" "}
+    </div>
+  );
+};
+
 const Filter = (props) => {
   return (
     <p>
@@ -35,16 +45,6 @@ const PersonForm = (props) => {
   );
 };
 
-const Persons = (props) => {
-  return (
-    <div>
-      {props.filteredPersons.map((person) => (
-        <Name key={person.name} person={person} />
-      ))}{" "}
-    </div>
-  );
-};
-
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "040-123456", id: 1 },
@@ -56,14 +56,13 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filterSearch, setFilterSearch] = useState("");
 
-  const maxID =
-    persons.length > 0
-      ? Math.max(...persons.map((person) => person.id)) + 1
-      : 0;
-
   const addName = (event) => {
     event.preventDefault();
-    const personObject = { name: newName, number: newNumber, id: maxID };
+    const personObject = {
+      name: newName,
+      number: newNumber,
+      id: persons.length + 1,
+    };
     const repeatEntry = persons.find((person) => person.name === newName);
     if (repeatEntry) {
       alert(`${newName} is already added to phonebook`);
