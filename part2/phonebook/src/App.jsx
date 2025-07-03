@@ -1,11 +1,23 @@
 import { useState, useEffect } from "react";
+import phonebookService from "./services/phonebook";
 import axios from "axios";
 
 const Name = (props) => {
   return (
-    <p>
+    <div>
       {props.person.name}: {props.person.number}
-    </p>
+      <button
+        onClick={() => {
+          if (window.confirm("Do you want to delete this phonebook entry?")) {
+            props.handleDeleteEntry(props.person.id);
+          } else {
+            null;
+          }
+        }}
+      >
+        delete
+      </button>
+    </div>
   );
 };
 
@@ -13,8 +25,12 @@ const Persons = (props) => {
   return (
     <div>
       {props.filteredPersons.map((person) => (
-        <Name key={person.name} person={person} />
-      ))}{" "}
+        <Name
+          key={person.name}
+          person={person}
+          handleDeleteEntry={props.handleDeleteEntry}
+        />
+      ))}
     </div>
   );
 };
@@ -22,7 +38,7 @@ const Persons = (props) => {
 const Filter = (props) => {
   return (
     <p>
-      Search for a contact:{" "}
+      Search for a contact:
       <input value={props.filterSearch} onChange={props.handleFilterNames} />
     </p>
   );
@@ -31,13 +47,12 @@ const Filter = (props) => {
 const PersonForm = (props) => {
   return (
     <form onSubmit={props.addName}>
-      {" "}
       {/*only triggerd when add button is clicked*/}
-      Name:{" "}
+      Name:
       <input value={props.newName} onChange={props.handleNewPerson}></input>
       <div>
         <div>
-          Number:{" "}
+          Number:
           <input value={props.newNumber} onChange={props.handleNewNumber} />
         </div>
         <button type="submit">add</button>
@@ -53,27 +68,31 @@ const App = () => {
   const [filterSearch, setFilterSearch] = useState("");
 
   useEffect(() => {
-    console.log("effect");
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log("promise fulfilled");
-      setPersons(response.data);
-    });
+    const getAll = async () => {
+      const allPhoneNumbers = await phonebookService.getAll();
+      setPersons(allPhoneNumbers);
+    };
+    getAll();
   }, []);
 
-  const addName = (event) => {
+  const addName = async (event) => {
     event.preventDefault();
     const personObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
+      id: String(persons.length + 1),
     };
+
     const repeatEntry = persons.find((person) => person.name === newName);
     if (repeatEntry) {
       alert(`${newName} is already added to phonebook`);
       setNewName("");
-    } else setPersons(persons.concat(personObject));
-    setNewName("");
-    setNewNumber("");
+    } else {
+      const newEntry = await phonebookService.create(personObject);
+      setPersons(persons.concat(newEntry));
+      setNewName("");
+      setNewNumber("");
+    }
   };
 
   const handleNewPerson = (event) => {
@@ -95,6 +114,11 @@ const App = () => {
     person.name.toLowerCase().includes(filterSearch.toLowerCase())
   );
 
+  const handleDeleteEntry = async (id) => {
+    await axios.delete(`${"http://localhost:3001/persons"}/${id}`);
+    setPersons(persons.filter((person) => person.id !== id));
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -113,7 +137,10 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons filteredPersons={filteredPersons} />
+      <Persons
+        filteredPersons={filteredPersons}
+        handleDeleteEntry={handleDeleteEntry}
+      />
     </div>
   );
 };
