@@ -12,12 +12,12 @@ const create = async (personObject) => {
 };
 
 const deleteEntry = async (id) => {
-  const response = axios.delete(`${baseURL}/${id}`);
+  const response = await axios.delete(`${baseURL}/${id}`);
   return response.data;
 };
 
-const update = async (id, updatedPerson) => {
-  const response = axios.put(`${baseURL}/${id}`, updatedPerson);
+const update = async (id, newData) => {
+  const response = await axios.put(`${baseURL}/${id}`, newData);
   return response.data;
 };
 

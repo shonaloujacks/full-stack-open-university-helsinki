@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
 import phonebookService from "./services/phonebook";
+import "./index.css";
+
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null;
+  }
+
+  return <div className="confirm">{message}</div>;
+};
 
 const Name = (props) => {
   return (
@@ -63,6 +72,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterSearch, setFilterSearch] = useState("");
+  const [confirmationMessage, setConfirmationMessage] = useState(null);
 
   useEffect(() => {
     const getAll = async () => {
@@ -95,11 +105,16 @@ const App = () => {
 
         setPersons(
           persons.map((person) =>
-            person.id === repeatEntry.id ? updatedPerson.data : person
+            person.id === repeatEntry.id ? updatedPerson : person
           )
         );
+
         setNewName("");
         setNewNumber("");
+        setConfirmationMessage(`Updated ${newName}`);
+        setTimeout(() => {
+          setConfirmationMessage(null);
+        }, 5000);
       } else {
         setNewName("");
         setNewNumber("");
@@ -109,6 +124,10 @@ const App = () => {
       setPersons(persons.concat(newEntry));
       setNewName("");
       setNewNumber("");
+      setConfirmationMessage(`Added ${newName}`);
+      setTimeout(() => {
+        setConfirmationMessage(null);
+      }, 5000);
     }
   };
 
@@ -136,9 +155,12 @@ const App = () => {
     setPersons(persons.filter((person) => person.id !== id));
   };
 
+  console.log("confirmationMessage", confirmationMessage);
+
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={confirmationMessage} />
       <Filter
         filterSearch={filterSearch}
         handleFilterNames={handleFilterNames}
