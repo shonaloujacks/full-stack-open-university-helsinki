@@ -40,7 +40,7 @@ const Persons = (props) => {
     <div>
       {props.filteredPersons.map((person) => (
         <Name
-          key={person.name}
+          key={person.id}
           person={person}
           handleDeleteEntry={props.handleDeleteEntry}
         />
@@ -96,7 +96,6 @@ const App = () => {
     const personObject = {
       name: newName,
       number: newNumber,
-      id: String(persons.length + 1),
     };
 
     const repeatEntry = persons.find((person) => person.name === newName);
@@ -160,11 +159,14 @@ const App = () => {
   );
 
   const handleDeleteEntry = async (id) => {
+    const person = persons.find((person) => person.id === id);
     try {
       await phonebookService.deleteEntry(id);
       setPersons(persons.filter((person) => person.id !== id));
     } catch {
-      setErrorMessage("This person has already been removed from the server");
+      setErrorMessage(
+        `${person.name} has already been removed from the server`
+      );
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
