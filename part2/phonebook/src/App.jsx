@@ -10,6 +10,14 @@ const Notification = ({ message }) => {
   return <div className="confirm">{message}</div>;
 };
 
+const Error = ({ errorMessage }) => {
+  if (errorMessage === null) {
+    return null;
+  }
+
+  return <div className="error">{errorMessage}</div>;
+};
+
 const Name = (props) => {
   return (
     <div>
@@ -73,6 +81,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filterSearch, setFilterSearch] = useState("");
   const [confirmationMessage, setConfirmationMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     const getAll = async () => {
@@ -151,8 +160,15 @@ const App = () => {
   );
 
   const handleDeleteEntry = async (id) => {
-    await phonebookService.deleteEntry(id);
-    setPersons(persons.filter((person) => person.id !== id));
+    try {
+      await phonebookService.deleteEntry(id);
+      setPersons(persons.filter((person) => person.id !== id));
+    } catch {
+      setErrorMessage("This person has already been removed from the server");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
   };
 
   console.log("confirmationMessage", confirmationMessage);
@@ -161,6 +177,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={confirmationMessage} />
+      <Error errorMessage={errorMessage} />
       <Filter
         filterSearch={filterSearch}
         handleFilterNames={handleFilterNames}

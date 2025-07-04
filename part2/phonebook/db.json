@@ -2,43 +2,18 @@
   "persons": [
     {
       "id": "5",
-      "name": "Dead Sue",
-      "number": "77777"
-    },
-    {
-      "id": "3",
-      "name": "Shona Jackson",
-      "number": "111222"
+      "name": "Jeremy Clarkson",
+      "number": "123-5533"
     },
     {
       "id": "4",
-      "name": "Dobie BonBobie",
-      "number": "12453-31412"
+      "name": "Dobie Dibbly",
+      "number": "425-12312"
     },
     {
-      "id": "5",
-      "name": "Teddy Pebbles",
-      "number": "321-55312"
-    },
-    {
-      "id": "6",
-      "name": "Pablo Escobar",
-      "number": "991-31533"
-    },
-    {
-      "id": "5",
-      "name": "Pablo Escobad",
-      "number": "124314-121221"
-    },
-    {
-      "id": "7",
-      "name": "Shobie Boberson",
-      "number": "1124-13513"
-    },
-    {
-      "id": "8",
-      "name": "Pebbles McGee",
-      "number": "1213-12224"
+      "id": "4",
+      "name": "Dead Sue",
+      "number": "1242-12424"
     }
   ]
 }
