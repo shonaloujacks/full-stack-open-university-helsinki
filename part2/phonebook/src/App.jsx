@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import phonebookService from "./services/phonebook";
-import axios from "axios";
 
 const Name = (props) => {
   return (
@@ -8,10 +7,8 @@ const Name = (props) => {
       {props.person.name}: {props.person.number}
       <button
         onClick={() => {
-          if (window.confirm("Do you want to delete this phonebook entry?")) {
+          if (window.confirm(`"Delete ${props.person.name}?"`)) {
             props.handleDeleteEntry(props.person.id);
-          } else {
-            null;
           }
         }}
       >
@@ -84,9 +81,29 @@ const App = () => {
     };
 
     const repeatEntry = persons.find((person) => person.name === newName);
+    const updatedNumberEntry = { ...repeatEntry, number: newNumber };
     if (repeatEntry) {
-      alert(`${newName} is already added to phonebook`);
-      setNewName("");
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const updatedPerson = await phonebookService.update(
+          repeatEntry.id,
+          updatedNumberEntry
+        );
+
+        setPersons(
+          persons.map((person) =>
+            person.id === repeatEntry.id ? updatedPerson.data : person
+          )
+        );
+        setNewName("");
+        setNewNumber("");
+      } else {
+        setNewName("");
+        setNewNumber("");
+      }
     } else {
       const newEntry = await phonebookService.create(personObject);
       setPersons(persons.concat(newEntry));
@@ -115,7 +132,7 @@ const App = () => {
   );
 
   const handleDeleteEntry = async (id) => {
-    await axios.delete(`${"http://localhost:3001/persons"}/${id}`);
+    await phonebookService.deleteEntry(id);
     setPersons(persons.filter((person) => person.id !== id));
   };
 

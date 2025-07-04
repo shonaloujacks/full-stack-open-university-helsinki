@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": "4"
-    },
-    {
       "id": "5",
       "name": "Dead Sue",
       "number": "4135-249628246"
@@ -14,6 +9,11 @@
       "id": "6",
       "name": "Deaf Sue",
       "number": "4453-654691"
+    },
+    {
+      "id": "3",
+      "name": "Shona Jackson",
+      "number": "1254"
     }
   ]
 }

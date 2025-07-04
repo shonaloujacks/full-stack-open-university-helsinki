@@ -11,4 +11,14 @@ const create = async (personObject) => {
   return response.data;
 };
 
-export default { baseURL, getAll, create };
+const deleteEntry = async (id) => {
+  const response = axios.delete(`${baseURL}/${id}`);
+  return response.data;
+};
+
+const update = async (id, updatedPerson) => {
+  const response = axios.put(`${baseURL}/${id}`, updatedPerson);
+  return response.data;
+};
+
+export default { baseURL, getAll, create, deleteEntry, update };
