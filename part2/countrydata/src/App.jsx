@@ -20,6 +20,24 @@ const CountryList = (props) => {
   );
 };
 
+const Country = ({ country }) => {
+  console.log(country);
+  return (
+    <div>
+      <h1>{country.name.common}</h1>
+      <p>Capital: {country.capital[0]}</p>
+      <p>Area: {country.area}</p>
+      <h1>Languages</h1>
+      <ul>
+        {Object.values(country.languages).map((language) => (
+          <li key={language}>{language}</li>
+        ))}
+      </ul>
+      <img src={country.flags.png} alt={country.flags.alt} />
+    </div>
+  );
+};
+
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [countrySearch, setCountrySearch] = useState("");
@@ -50,7 +68,13 @@ const App = () => {
         setCountrySearch={setCountrySearch}
         handleCountrySearch={handleCountrySearch}
       />
-      <CountryList filteredCountries={filteredCountries} />
+      {countrySearch === "" ? null : filteredCountries.length > 10 ? (
+        <p>Too many matches, specify another filter</p>
+      ) : filteredCountries.length === 1 ? (
+        <Country country={filteredCountries[0]} />
+      ) : (
+        <CountryList filteredCountries={filteredCountries} />
+      )}
     </div>
   );
 };
