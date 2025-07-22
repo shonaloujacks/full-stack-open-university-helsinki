@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const Filter = (props) => {
+const Filter = ({ countrySearch, handleCountrySearch }) => {
   return (
     <p>
       Find countries:
-      <input value={props.countrySearch} onChange={props.handleCountrySearch} />
+      <input value={countrySearch} onChange={handleCountrySearch} />
     </p>
   );
 };
 
-const CountryList = (props) => {
+const CountryList = ({ filteredCountries, setSelectedCountry }) => {
   return (
     <ul>
-      {props.filteredCountries.map((country) => (
-        <li key={country.cca3}>{country.name.common}</li>
+      {filteredCountries.map((country) => (
+        <li key={country.cca3}>
+          {country.name.common}
+          <button onClick={() => setSelectedCountry(country)}> show </button>
+        </li>
       ))}
     </ul>
   );
@@ -41,6 +44,7 @@ const Country = ({ country }) => {
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [countrySearch, setCountrySearch] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   useEffect(() => {
     const getCountryData = async () => {
@@ -55,6 +59,7 @@ const App = () => {
   const handleCountrySearch = (event) => {
     console.log(event.target.value);
     setCountrySearch(event.target.value);
+    setSelectedCountry(null);
   };
 
   const filteredCountries = countries.filter((country) =>
@@ -70,10 +75,15 @@ const App = () => {
       />
       {countrySearch === "" ? null : filteredCountries.length > 10 ? (
         <p>Too many matches, specify another filter</p>
+      ) : selectedCountry ? (
+        <Country country={selectedCountry} />
       ) : filteredCountries.length === 1 ? (
         <Country country={filteredCountries[0]} />
       ) : (
-        <CountryList filteredCountries={filteredCountries} />
+        <CountryList
+          filteredCountries={filteredCountries}
+          setSelectedCountry={setSelectedCountry}
+        />
       )}
     </div>
   );
