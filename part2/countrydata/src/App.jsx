@@ -23,7 +23,7 @@ const CountryList = ({ filteredCountries, setSelectedCountry }) => {
   );
 };
 
-const Country = ({ country }) => {
+const Country = ({ country, weather }) => {
   console.log(country);
   return (
     <div>
@@ -37,6 +37,15 @@ const Country = ({ country }) => {
         ))}
       </ul>
       <img src={country.flags.png} alt={country.flags.alt} />
+      <h1>Weather in {country.name.common}</h1>
+      <p>Temperature: {weather && weather.main ? weather.main.temp : "N/A"}</p>
+      <p>Wind: {weather && weather.wind ? weather.wind.speed : "N/A"}</p>
+      {weather && weather.weather && weather.weather[0] && (
+        <img
+          src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+          alt={weather.weather[0].description}
+        />
+      )}
     </div>
   );
 };
@@ -45,6 +54,7 @@ const App = () => {
   const [countries, setCountries] = useState([]);
   const [countrySearch, setCountrySearch] = useState("");
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [weather, setWeather] = useState(null);
 
   useEffect(() => {
     const getCountryData = async () => {
@@ -55,6 +65,25 @@ const App = () => {
     };
     getCountryData();
   }, []);
+
+  useEffect(() => {
+    const getWeatherData = async () => {
+      if (!selectedCountry) return;
+      const api_key = import.meta.env.VITE_WEATHER_API_KEY;
+      const city = selectedCountry.capital[0];
+      const code = selectedCountry.cca2;
+      try {
+        const responseWeather = await axios.get(
+          `https://api.openweathermap.org/data/2.5/weather?q=${city},${code}&appid=${api_key}`
+        );
+        setWeather(responseWeather.data);
+      } catch (error) {
+        console.log(error);
+        setWeather(null);
+      }
+    };
+    getWeatherData();
+  }, [selectedCountry]);
 
   const handleCountrySearch = (event) => {
     console.log(event.target.value);
@@ -76,9 +105,9 @@ const App = () => {
       {countrySearch === "" ? null : filteredCountries.length > 10 ? (
         <p>Too many matches, specify another filter</p>
       ) : selectedCountry ? (
-        <Country country={selectedCountry} />
+        <Country country={selectedCountry} weather={weather} />
       ) : filteredCountries.length === 1 ? (
-        <Country country={filteredCountries[0]} />
+        <Country country={filteredCountries[0]} weather={weather} />
       ) : (
         <CountryList
           filteredCountries={filteredCountries}
