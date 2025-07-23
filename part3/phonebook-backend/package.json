@@ -1,0 +1,24 @@
+{
+  "name": "phonebook-backend",
+  "version": "1.0.0",
+  "description": "phonebook backend functionality",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shonaloujacks/full-stack-open-university-helsinki.git"
+  },
+  "author": "Shona Jackson",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/shonaloujacks/full-stack-open-university-helsinki/issues"
+  },
+  "homepage": "https://github.com/shonaloujacks/full-stack-open-university-helsinki#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
