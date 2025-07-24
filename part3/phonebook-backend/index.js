@@ -26,7 +26,11 @@ let phonebook = [
 ];
 
 app.use(express.json());
-app.use(morgan("tiny"));
+
+morgan.token("body", (request) => JSON.stringify(request.body));
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+);
 
 app.get("/", (request, response) => {
   response.send("<h1>Phonebook</h1>");
@@ -72,8 +76,6 @@ app.post("/api/persons", (request, response) => {
 
   const duplicateName = phonebook.find((person) => person.name === body.name);
 
-  console.log(body);
-
   if (!body.name || !body.number) {
     return response.status(400).json({
       error: "name or number missing",
@@ -84,7 +86,6 @@ app.post("/api/persons", (request, response) => {
       error: "name must be unique",
     });
   }
-  console.log(body);
 
   const phonebookEntry = {
     id: generateID(),
@@ -94,6 +95,12 @@ app.post("/api/persons", (request, response) => {
   phonebook = phonebook.concat(phonebookEntry);
   response.json(phonebookEntry);
 });
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+
+app.use(unknownEndpoint);
 
 const PORT = 3001;
 app.listen(PORT);
