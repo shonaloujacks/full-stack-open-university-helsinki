@@ -57,6 +57,42 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204).end();
 });
 
+const generateID = () => {
+  const maxID =
+    phonebook.length > 0
+      ? Math.max(...phonebook.map((person) => Number(person.id)))
+      : 0;
+  return String(maxID + 1);
+};
+
+app.post("/api/persons", (request, response) => {
+  const body = request.body;
+
+  const duplicateName = phonebook.find((person) => person.name === body.name);
+
+  console.log(body);
+
+  if (!body.name || !body.number) {
+    return response.status(400).json({
+      error: "name or number missing",
+    });
+  }
+  if (duplicateName) {
+    return response.status(400).json({
+      error: "name must be unique",
+    });
+  }
+  console.log(body);
+
+  const phonebookEntry = {
+    id: generateID(),
+    name: body.name,
+    number: body.number,
+  };
+  phonebook = phonebook.concat(phonebookEntry);
+  response.json(phonebookEntry);
+});
+
 const PORT = 3001;
 app.listen(PORT);
 console.log(`Server running on port ${PORT}`);
