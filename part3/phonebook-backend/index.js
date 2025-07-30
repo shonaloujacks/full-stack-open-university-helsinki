@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
-const cors = require("cors");
 let phonebook = [
   {
     id: "1",
@@ -27,7 +26,6 @@ let phonebook = [
 
 app.use(express.json());
 app.use(express.static("dist"));
-app.use(cors());
 
 morgan.token("body", (request) => JSON.stringify(request.body));
 app.use(
