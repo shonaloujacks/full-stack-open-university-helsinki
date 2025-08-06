@@ -6,6 +6,8 @@ if (process.argv.length < 3) {
 }
 
 const password = process.argv[2];
+const name = process.argv[3];
+const number = process.argv[4];
 
 const url = `mongodb+srv://wordsbyshonajackson:${password}@phonebook.rpvmrjp.mongodb.net/?retryWrites=true&w=majority&appName=Phonebook`;
 
@@ -21,8 +23,8 @@ const phonebookEntrySchema = new mongoose.Schema({
 const PhonebookEntry = mongoose.model("PhonebookEntry", phonebookEntrySchema);
 
 const person = new PhonebookEntry({
-  name: "Anna Michaels",
-  number: "045-123456",
+  name: name,
+  number: number,
 });
 
 person.save().then((result) => {
