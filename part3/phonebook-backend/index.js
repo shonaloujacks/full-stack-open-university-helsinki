@@ -1,28 +1,8 @@
+require("dotenv").config();
 const express = require("express");
+const PhonebookEntry = require("./models/phonebookentry");
 const app = express();
 const morgan = require("morgan");
-const mongoose = require("mongoose");
-
-const password = process.argv[2];
-const url = `mongodb+srv://wordsbyshonajackson:${password}@phonebook.rpvmrjp.mongodb.net/?retryWrites=true&w=majority&appName=Phonebook`;
-
-mongoose.set("strictQuery", false);
-mongoose.connect(url);
-
-const phonebookEntrySchema = new mongoose.Schema({
-  name: String,
-  number: String,
-});
-
-const PhonebookEntry = mongoose.model("PhonebookEntry", phonebookEntrySchema);
-
-phonebookEntrySchema.set("toJSON", {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject._id;
-    delete returnedObject.__v;
-  },
-});
 
 let phonebook = [];
 
@@ -105,7 +85,7 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint);
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
