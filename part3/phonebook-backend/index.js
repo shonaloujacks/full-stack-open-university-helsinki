@@ -16,6 +16,14 @@ const phonebookEntrySchema = new mongoose.Schema({
 
 const PhonebookEntry = mongoose.model("PhonebookEntry", phonebookEntrySchema);
 
+phonebookEntrySchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
+
 let phonebook = [];
 
 app.use(express.json());
