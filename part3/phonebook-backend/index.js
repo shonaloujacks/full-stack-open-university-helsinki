@@ -1,6 +1,21 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const mongoose = require("mongoose");
+
+const password = process.argv[2];
+const url = `mongodb+srv://wordsbyshonajackson:${password}@phonebook.rpvmrjp.mongodb.net/?retryWrites=true&w=majority&appName=Phonebook`;
+
+mongoose.set("strictQuery", false);
+mongoose.connect(url);
+
+const phonebookEntrySchema = new mongoose.Schema({
+  name: String,
+  number: String,
+});
+
+const PhonebookEntry = mongoose.model("PhonebookEntry", phonebookEntrySchema);
+
 let phonebook = [
   {
     id: "1",
@@ -36,7 +51,8 @@ app.get("/", (request, response) => {
   response.send("<h1>Phonebook</h1>");
 });
 
-app.get("/api/persons", (request, response) => {
+app.get("/api/persons", async (request, response) => {
+  const getPersons = await PhonebookEntry.find({});
   response.json(phonebook);
 });
 
