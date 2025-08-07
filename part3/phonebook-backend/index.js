@@ -29,9 +29,8 @@ app.get("/info", (request, response) => {
   response.send(info);
 });
 
-app.get("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  const person = phonebook.find((person) => person.id === id);
+app.get("/api/persons/:id", async (request, response) => {
+  const person = await PhonebookEntry.findById(request.params.id);
 
   if (person) {
     response.json(person);
@@ -54,7 +53,7 @@ const generateID = () => {
   return String(maxID + 1);
 };
 
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", async (request, response) => {
   const body = request.body;
 
   const duplicateName = phonebook.find((person) => person.name === body.name);
@@ -70,13 +69,12 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  const phonebookEntry = {
-    id: generateID(),
+  const phonebookEntry = new PhonebookEntry({
     name: body.name,
     number: body.number,
-  };
-  phonebook = phonebook.concat(phonebookEntry);
-  response.json(phonebookEntry);
+  });
+  const savedEntry = await phonebookEntry.save();
+  response.json(savedEntry);
 });
 
 const unknownEndpoint = (request, response) => {
