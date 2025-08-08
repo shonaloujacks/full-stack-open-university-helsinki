@@ -24,10 +24,15 @@ app.get("/api/persons", async (request, response) => {
   response.json(getPersons);
 });
 
-app.get("/info", (request, response) => {
-  const info = `<p>Phonebook has info for ${phonebook.length} people</p>
+app.get("/info", async (request, response, next) => {
+  try {
+    phonebook = await PhonebookEntry.find({});
+    const info = `<p>Phonebook has info for ${phonebook.length} people</p>
     <p> ${new Date()}</p>`;
-  response.send(info);
+    response.send(info);
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.get("/api/persons/:id", async (request, response, next) => {
@@ -79,8 +84,13 @@ app.post("/api/persons", async (request, response) => {
     name: body.name,
     number: body.number,
   });
-  const savedEntry = await phonebookEntry.save();
-  response.json(savedEntry);
+
+  try {
+    const savedEntry = await phonebookEntry.save();
+    response.json(savedEntry);
+  } catch (error) {
+    next(error);
+  }
 });
 
 const unknownEndpoint = (request, response) => {
@@ -90,10 +100,12 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint);
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
+  console.error(error.name, error.message);
 
   if (error.name === "CastError") {
-    return response.status(400).send({ error: "malformatted id" });
+    return response.status(400).json({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
   next(error);
 };
