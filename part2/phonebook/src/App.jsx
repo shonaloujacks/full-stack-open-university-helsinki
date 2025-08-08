@@ -100,42 +100,48 @@ const App = () => {
 
     const repeatEntry = persons.find((person) => person.name === newName);
     const updatedNumberEntry = { ...repeatEntry, number: newNumber };
-    if (repeatEntry) {
-      if (
-        window.confirm(
-          `${newName} is already added to phonebook, replace the old number with a new one?`
-        )
-      ) {
-        const updatedPerson = await phonebookService.update(
-          repeatEntry.id,
-          updatedNumberEntry
-        );
 
-        setPersons(
-          persons.map((person) =>
-            person.id === repeatEntry.id ? updatedPerson : person
+    try {
+      if (repeatEntry) {
+        if (
+          window.confirm(
+            `${newName} is already added to phonebook, replace the old number with a new one?`
           )
-        );
+        ) {
+          const updatedPerson = await phonebookService.update(
+            repeatEntry.id,
+            updatedNumberEntry
+          );
 
+          setPersons(
+            persons.map((person) =>
+              person.id === repeatEntry.id ? updatedPerson : person
+            )
+          );
+
+          setNewName("");
+          setNewNumber("");
+          setConfirmationMessage(`Updated ${newName}`);
+          setTimeout(() => {
+            setConfirmationMessage(null);
+          }, 5000);
+        } else {
+          setNewName("");
+          setNewNumber("");
+        }
+      } else {
+        const newEntry = await phonebookService.create(personObject);
+        setPersons(persons.concat(newEntry));
         setNewName("");
         setNewNumber("");
-        setConfirmationMessage(`Updated ${newName}`);
+        setConfirmationMessage(`Added ${newName}`);
         setTimeout(() => {
           setConfirmationMessage(null);
         }, 5000);
-      } else {
-        setNewName("");
-        setNewNumber("");
       }
-    } else {
-      const newEntry = await phonebookService.create(personObject);
-      setPersons(persons.concat(newEntry));
-      setNewName("");
-      setNewNumber("");
-      setConfirmationMessage(`Added ${newName}`);
-      setTimeout(() => {
-        setConfirmationMessage(null);
-      }, 5000);
+    } catch (error) {
+      console.log(error.response.data.error);
+      setErrorMessage(error.response.data.error);
     }
   };
 
