@@ -3,6 +3,7 @@ const express = require("express");
 const PhonebookEntry = require("./models/phonebookentry");
 const app = express();
 const morgan = require("morgan");
+const phonebookentry = require("./models/phonebookentry");
 
 let phonebook = [];
 
@@ -29,7 +30,7 @@ app.get("/info", (request, response) => {
   response.send(info);
 });
 
-app.get("/api/persons/:id", async (request, response) => {
+app.get("/api/persons/:id", async (request, response, next) => {
   const person = await PhonebookEntry.findById(request.params.id);
   try {
     if (person) {
@@ -42,7 +43,7 @@ app.get("/api/persons/:id", async (request, response) => {
   }
 });
 
-app.delete("/api/persons/:id", async (request, response) => {
+app.delete("/api/persons/:id", async (request, response, next) => {
   try {
     phonebook = await PhonebookEntry.findByIdAndDelete(request.params.id);
     response.status(204).end();
@@ -51,18 +52,26 @@ app.delete("/api/persons/:id", async (request, response) => {
   }
 });
 
+app.put("/api/persons/:id", async (request, response, next) => {
+  const newNumber = request.body.number;
+  try {
+    const updatedPerson = await PhonebookEntry.findByIdAndUpdate(
+      request.params.id,
+      { number: newNumber },
+      { new: true }
+    );
+    response.json(updatedPerson);
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.post("/api/persons", async (request, response) => {
   const body = request.body;
-  const duplicateName = phonebook.find((person) => person.name === body.name);
 
   if (!body.name || !body.number) {
     return response.status(400).json({
       error: "name or number missing",
-    });
-  }
-  if (duplicateName) {
-    return response.status(400).json({
-      error: "name must be unique",
     });
   }
 
