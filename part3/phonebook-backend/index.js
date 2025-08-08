@@ -39,19 +39,14 @@ app.get("/api/persons/:id", async (request, response) => {
   }
 });
 
-app.delete("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  phonebook = phonebook.filter((person) => person.id !== id);
-  response.status(204).end();
+app.delete("/api/persons/:id", async (request, response) => {
+  try {
+    phonebook = await PhonebookEntry.findByIdAndDelete(request.params.id);
+    response.status(204).end();
+  } catch (error) {
+    next(error);
+  }
 });
-
-const generateID = () => {
-  const maxID =
-    phonebook.length > 0
-      ? Math.max(...phonebook.map((person) => Number(person.id)))
-      : 0;
-  return String(maxID + 1);
-};
 
 app.post("/api/persons", async (request, response) => {
   const body = request.body;
@@ -82,6 +77,16 @@ const unknownEndpoint = (request, response) => {
 };
 
 app.use(unknownEndpoint);
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+  next(error);
+};
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
