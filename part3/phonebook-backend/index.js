@@ -31,11 +31,14 @@ app.get("/info", (request, response) => {
 
 app.get("/api/persons/:id", async (request, response) => {
   const person = await PhonebookEntry.findById(request.params.id);
-
-  if (person) {
-    response.json(person);
-  } else {
-    response.status(404).end();
+  try {
+    if (person) {
+      response.json(person);
+    } else {
+      response.status(404).end();
+    }
+  } catch (error) {
+    next(error);
   }
 });
 
@@ -50,7 +53,6 @@ app.delete("/api/persons/:id", async (request, response) => {
 
 app.post("/api/persons", async (request, response) => {
   const body = request.body;
-
   const duplicateName = phonebook.find((person) => person.name === body.name);
 
   if (!body.name || !body.number) {
