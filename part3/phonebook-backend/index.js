@@ -63,7 +63,7 @@ app.put("/api/persons/:id", async (request, response, next) => {
     const updatedPerson = await PhonebookEntry.findByIdAndUpdate(
       request.params.id,
       { number: newNumber },
-      { new: true }
+      { new: true, runValidators: true }
     );
     response.json(updatedPerson);
   } catch (error) {
@@ -71,7 +71,7 @@ app.put("/api/persons/:id", async (request, response, next) => {
   }
 });
 
-app.post("/api/persons", async (request, response) => {
+app.post("/api/persons", async (request, response, next) => {
   const body = request.body;
 
   if (!body.name || !body.number) {
