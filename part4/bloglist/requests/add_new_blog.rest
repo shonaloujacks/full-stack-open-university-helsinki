@@ -1,0 +1,11 @@
+POST http://localhost:3003/api/blogs
+content-type: application/json
+
+{
+    "title": "Blueberry muffins",
+    "author": "Janine Ratcliffe",
+    "url": "https://www.olivemagazine.com/recipes/blueberry-breakfast-muffins/",
+    "likes": 6
+    
+}
+
