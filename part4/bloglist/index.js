@@ -16,11 +16,11 @@ app.get('/api/blogs', async (request, response) => {
         response.json(blogs)
     }
     catch (error) {
-        response.status(500).json({ error: 'Something went wrong' })
+        next(error)
     }
 })
 
-app.post('/api/blogs', async (request, response) => {
+app.post('/api/blogs', async (request, response, next) => {
     const body = request.body
     try {
 
@@ -36,13 +36,26 @@ app.post('/api/blogs', async (request, response) => {
         const savedBlog = await blog.save()
         const allBlogs = await Blog.find({})
         console.log('Current blogs in database:', allBlogs)
-        response.status(201).json(savedBlog)
+        response.json(savedBlog)
     }
     catch (error) {
-        response.status(400).json({ error: 'Something went wrong' })
+        next(error)
     }
 
 })
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError') {
+        return response.status(400).send({ error: 'malformatted id' })
+    }
+    if (error.name === 'ValidationError') {
+        return response.status(400).json({ error: error.message })
+    }
+    response.status(500).json({ error: 'Internal server error' })
+}
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3003
 app.listen(PORT, () => {

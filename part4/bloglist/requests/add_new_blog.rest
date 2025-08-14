@@ -2,10 +2,10 @@ POST http://localhost:3003/api/blogs
 content-type: application/json
 
 {
-    "title": "Blueberry muffins",
-    "author": "Janine Ratcliffe",
-    "url": "https://www.olivemagazine.com/recipes/blueberry-breakfast-muffins/",
-    "likes": 6
+    "title": "Jerusalem artichoke fritters",
+    "author": "Marie Mitchell",
+    "url": "https://www.theguardian.com/food/2024/dec/02/marie-mitchells-jerusalem-artichoke-fritters-with-clementine-sauce-recipe",
+    "likes": 4
     
 }
 
