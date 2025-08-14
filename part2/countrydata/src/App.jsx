@@ -24,7 +24,6 @@ const CountryList = ({ filteredCountries, setSelectedCountry }) => {
 };
 
 const Country = ({ country, weather }) => {
-  console.log(country);
   return (
     <div>
       <h1>{country.name.common}</h1>
@@ -39,13 +38,13 @@ const Country = ({ country, weather }) => {
       <img src={country.flags.png} alt={country.flags.alt} />
       <h1>Weather in {country.name.common}</h1>
       <p>Temperature: {weather && weather.main ? weather.main.temp : "N/A"}</p>
-      <p>Wind: {weather && weather.wind ? weather.wind.speed : "N/A"}</p>
       {weather && weather.weather && weather.weather[0] && (
         <img
-          src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+          src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@4x.png`}
           alt={weather.weather[0].description}
         />
       )}
+      <p>Wind: {weather && weather.wind ? weather.wind.speed : "N/A"}</p>
     </div>
   );
 };
@@ -76,6 +75,7 @@ const App = () => {
         const responseWeather = await axios.get(
           `https://api.openweathermap.org/data/2.5/weather?q=${city},${code}&appid=${api_key}`
         );
+        console.log(responseWeather.data);
         setWeather(responseWeather.data);
       } catch (error) {
         console.log(error);
