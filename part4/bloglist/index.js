@@ -1,37 +1,10 @@
 require('dotenv').config()
 const express = require('express')
-const mongoose = require('mongoose')
+const Blog = require('./models/blog')
 
 const app = express()
 app.use(express.json())
 
-const mongoUrl = process.env.MONGODB_URI
-const connectToMongoDB = async () => {
-    try {
-        await mongoose.connect(mongoUrl)
-        console.log('Connected to Mongo')
-    } catch (error) {
-        console.error('Error connecting to MongoDB@', error.message)
-    }
-}
-connectToMongoDB()
-
-const blogSchema = mongoose.Schema({
-    title: String,
-    author: String,
-    url: String,
-    likes: Number,
-})
-
-blogSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString()
-        delete returnedObject._id
-        delete returnedObject.__v
-    }
-})
-
-const Blog = mongoose.model('Blog', blogSchema)
 
 app.get('/', (request, response) => {
     response.send('Backend is running!')
@@ -48,12 +21,22 @@ app.get('/api/blogs', async (request, response) => {
 })
 
 app.post('/api/blogs', async (request, response) => {
-    const blog = new Blog(request.body)
+    const body = request.body
     try {
-        const newBlog = await blog.save()
+
+        if (!body.title || !body.url) {
+            return response.status(400).json({ error: 'title or url missing' })
+        }
+        const blog = new Blog({
+            title: body.title,
+            author: body.author,
+            url: body.url,
+            likes: body.likes || 0,
+        })
+        const savedBlog = await blog.save()
         const allBlogs = await Blog.find({})
         console.log('Current blogs in database:', allBlogs)
-        response.status(201).json(newBlog)
+        response.status(201).json(savedBlog)
     }
     catch (error) {
         response.status(400).json({ error: 'Something went wrong' })
