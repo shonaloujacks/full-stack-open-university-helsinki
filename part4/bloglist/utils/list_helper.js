@@ -62,6 +62,10 @@ const mostLikes = (blogs) => {
   return { author: maxKey, likes: highestLikes }
 }
 
+// const myArr = [1,2,3,4]
+
+// for (const num of myArr) console.log(num)
+
 module.exports = {
   dummy, totalLikes, favouriteBlog, mostBlogs, mostLikes
 }
