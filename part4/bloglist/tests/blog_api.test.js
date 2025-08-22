@@ -28,7 +28,7 @@ beforeEach(async() => {
   await Blog.insertMany(initialBlogs)
 })
 
-test('all notes are returned as json', async () => {
+test('all blogs are returned as json', async () => {
   const response = await api
     .get('/api/blogs')
     .expect(200)
@@ -38,7 +38,7 @@ test('all notes are returned as json', async () => {
   assert.strictEqual(response.body.length, 2)
 })
 
-test.only('verify id property name', async () => {
+test('verify id property name', async () => {
   await api
     .get('/api/blogs')
     .expect(response => {
@@ -46,11 +46,51 @@ test.only('verify id property name', async () => {
         if (!blog.id) {
           throw new Error(`Missing id key in blog ${JSON.stringify(blog)}`)
         }
+        if (blog._id) {
+          throw new Error(`Old _id key in blog ${JSON.stringify(blog)}`)
+        }
       })
     })
 })
 
+test('verify a new blog can be added', async () => {
+  const newBlog = {
+    title: 'Simple sushi recipe',
+    author: 'Barney Desmazery',
+    url: 'https://www.bbcgoodfood.com/recipes/simple-sushi',
+    likes: 5,
+  }
 
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+
+  const contents = response.body.map(blog => blog.title)
+
+  assert.strictEqual(response.body.length, initialBlogs.length + 1)
+  assert(contents.includes('Simple sushi recipe'))
+
+})
+
+test.only ('if missing likes property, value will default to 0', async () => {
+  const newBlog = {
+    title: 'Simple sushi recipe',
+    author: 'Barney Desmazery',
+    url: 'https://www.bbcgoodfood.com/recipes/simple-sushi',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+  const response = await api.get('/api/blogs')
+  const contents = response.body
+  const newBlogContent = contents[contents.length -1]
+  assert.strictEqual(newBlogContent.likes, 0)
+})
 
 after(async () => {
   await mongoose.connection.close()

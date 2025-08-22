@@ -29,7 +29,7 @@ blogRouter.post('/', async (request, response) => {
     const savedBlog = await blog.save()
     const allBlogs = await Blog.find({})
     console.log('Current blogs in database:', allBlogs)
-    response.json(savedBlog)
+    response.status(201).json(savedBlog)
   }
   catch (error) {
     logger.error(error)
