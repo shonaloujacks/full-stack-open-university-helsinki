@@ -119,6 +119,24 @@ test ('if url property if missing, respond with 400', async () => {
     .expect(400)
 })
 
+test.only ('a note can be deleted', async () => {
+  const blogsAtStart = await Blog.find({})
+  const blogToDelete = blogsAtStart[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = await Blog.find({})
+  const contents = blogsAtEnd.map(blog => blog.content)
+  assert(!contents.include(blogToDelete.content))
+
+  assert.strictEqual(blogsAtEnd.length, initialBlogs.length -1 )
+})
+
+
+
+
 after(async () => {
   await mongoose.connection.close()
 })
