@@ -28,14 +28,28 @@ beforeEach(async() => {
   await Blog.insertMany(initialBlogs)
 })
 
-test.only('notes are returned as json', async () => {
+test('all notes are returned as json', async () => {
   const response = await api
     .get('/api/blogs')
     .expect(200)
     .expect('Content-Type', /application\/json/)
+  console.log(response.body)
 
   assert.strictEqual(response.body.length, 2)
 })
+
+test.only('verify id property name', async () => {
+  await api
+    .get('/api/blogs')
+    .expect(response => {
+      response.body.forEach(blog => {
+        if (!blog.id) {
+          throw new Error(`Missing id key in blog ${JSON.stringify(blog)}`)
+        }
+      })
+    })
+})
+
 
 
 after(async () => {
