@@ -12,14 +12,14 @@ const initialBlogs = [
     title: 'Courgette & lemon risotto',
     author: 'Chelsie Collins',
     url: 'https://www.bbcgoodfood.com/recipes/courgette-lemon-risotto',
-    likes: 5
+    likes: 5,
   },
 
   {
     title: 'Jerusalem artichoke fritters',
     author: 'Marie Mitchell',
     url: 'https://www.theguardian.com/food/2024/dec/02/marie-mitchells-jerusalem-artichoke-fritters-with-clementine-sauce-recipe',
-    likes: 4
+    likes: 4,
   }
 ]
 
@@ -119,7 +119,7 @@ test ('if url property if missing, respond with 400', async () => {
     .expect(400)
 })
 
-test.only ('a note can be deleted', async () => {
+test ('a blog can be deleted', async () => {
   const blogsAtStart = await Blog.find({})
   const blogToDelete = blogsAtStart[0]
 
@@ -128,14 +128,31 @@ test.only ('a note can be deleted', async () => {
     .expect(204)
 
   const blogsAtEnd = await Blog.find({})
-  const contents = blogsAtEnd.map(blog => blog.content)
-  assert(!contents.include(blogToDelete.content))
+
+  assert(!blogsAtEnd.includes(blogToDelete))
 
   assert.strictEqual(blogsAtEnd.length, initialBlogs.length -1 )
 })
 
+test ('a blog can be updated', async () => {
+  const updatedLikes = {
+    likes: 6
+  }
+  const response = await api.get('/api/blogs')
+  const blogs = response.body
+  const blogToUpdate = blogs[0]
+  const blogToUpdateId = blogToUpdate.id
 
 
+  await api
+    .put(`/api/blogs/${blogToUpdateId}`)
+    .send(updatedLikes)
+
+  const updatedBlog = await api.get(`/api/blogs/${blogToUpdateId}`)
+  const contents = updatedBlog.body
+  assert.strictEqual(contents.likes, 6)
+
+})
 
 after(async () => {
   await mongoose.connection.close()

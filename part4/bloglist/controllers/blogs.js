@@ -46,7 +46,7 @@ blogRouter.delete('/:id', async (request, response) => {
 })
 
 blogRouter.put('/:id', async (request, response) => {
-  const likes = request.body
+  const likes = request.body.likes
   try {
     let blog = await Blog.findById(request.params.id)
     if (!blog) {
@@ -59,5 +59,19 @@ blogRouter.put('/:id', async (request, response) => {
     logger.error(error)
   }
 })
+
+blogRouter.get('/:id', async (request, response) => {
+  const id = request.params.id
+  try {
+    const blog = await Blog.findById(id)
+    if (blog) {
+      response.json(blog)
+    }
+    response.status(404).end()
+  } catch (error) {
+    logger.error(error)
+  }
+}
+)
 
 module.exports = blogRouter
