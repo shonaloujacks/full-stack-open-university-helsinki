@@ -76,7 +76,7 @@ test('verify a new blog can be added', async () => {
 
 })
 
-test.only ('if missing likes property, value will default to 0', async () => {
+test ('if missing likes property, value will default to 0', async () => {
   const newBlog = {
     title: 'Simple sushi recipe',
     author: 'Barney Desmazery',
@@ -86,10 +86,37 @@ test.only ('if missing likes property, value will default to 0', async () => {
   await api
     .post('/api/blogs')
     .send(newBlog)
+
   const response = await api.get('/api/blogs')
   const contents = response.body
   const newBlogContent = contents[contents.length -1]
   assert.strictEqual(newBlogContent.likes, 0)
+})
+
+test ('if title property if missing, respond with 400', async () => {
+  const newBlog = {
+    author: 'Barney Desmazery',
+    url: 'https://www.bbcgoodfood.com/recipes/simple-sushi',
+    likes: 3,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
+
+test ('if url property if missing, respond with 400', async () => {
+  const newBlog = {
+    title: 'Simple sushi recipe',
+    author: 'Barney Desmazery',
+    likes: 3,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
 })
 
 after(async () => {
