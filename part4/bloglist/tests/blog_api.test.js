@@ -1,5 +1,5 @@
 const assert = require('node:assert')
-const { test, after, beforeEach } = require('node:test')
+const { test, after, beforeEach, describe } = require('node:test')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
@@ -23,37 +23,38 @@ const initialBlogs = [
   }
 ]
 
-beforeEach(async() => {
-  await Blog.deleteMany({})
-  await Blog.insertMany(initialBlogs)
-})
+describe('when there are initially some blogs saved', () => {
+  beforeEach(async() => {
+    await Blog.deleteMany({})
+    await Blog.insertMany(initialBlogs)
+  })
 
-test('all blogs are returned as json', async () => {
-  const response = await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-  console.log(response.body)
+  test('all blogs are returned as json', async () => {
+    const response = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    console.log(response.body)
 
-  assert.strictEqual(response.body.length, 2)
-})
+    assert.strictEqual(response.body.length, 2)
+  })
 
-test('verify id property name', async () => {
-  await api
-    .get('/api/blogs')
-    .expect(response => {
-      response.body.forEach(blog => {
-        if (!blog.id) {
-          throw new Error(`Missing id key in blog ${JSON.stringify(blog)}`)
-        }
-        if (blog._id) {
-          throw new Error(`Old _id key in blog ${JSON.stringify(blog)}`)
-        }
+  test('verify id property name', async () => {
+    await api
+      .get('/api/blogs')
+      .expect(response => {
+        response.body.forEach(blog => {
+          if (!blog.id) {
+            throw new Error(`Missing id key in blog ${JSON.stringify(blog)}`)
+          }
+          if (blog._id) {
+            throw new Error(`Old _id key in blog ${JSON.stringify(blog)}`)
+          }
+        })
       })
-    })
+  })
 })
-
-test('verify a new blog can be added', async () => {
+describe('adding a new blog', () => { test('verify a new blog can be added', async () => {
   const newBlog = {
     title: 'Simple sushi recipe',
     author: 'Barney Desmazery',
@@ -118,8 +119,9 @@ test ('if url property if missing, respond with 400', async () => {
     .send(newBlog)
     .expect(400)
 })
+})
 
-test ('a blog can be deleted', async () => {
+describe('deletion of a blog', () => {  test ('a blog can be deleted', async () => {
   const blogsAtStart = await Blog.find({})
   const blogToDelete = blogsAtStart[0]
 
@@ -131,10 +133,11 @@ test ('a blog can be deleted', async () => {
 
   assert(!blogsAtEnd.includes(blogToDelete))
 
-  assert.strictEqual(blogsAtEnd.length, initialBlogs.length -1 )
+  assert.strictEqual(blogsAtEnd.length, blogsAtStart.length -1 )
+})
 })
 
-test ('a blog can be updated', async () => {
+describe('updating a blog', () => { test ('a blog can be updated', async () => {
   const updatedLikes = {
     likes: 6
   }
@@ -152,6 +155,7 @@ test ('a blog can be updated', async () => {
   const contents = updatedBlog.body
   assert.strictEqual(contents.likes, 6)
 
+})
 })
 
 after(async () => {
