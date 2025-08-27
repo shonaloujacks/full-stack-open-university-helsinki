@@ -4,24 +4,9 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const { initialBlogs, blogsInDB } = require('./test_helper')
 
 const api = supertest(app)
-
-const initialBlogs = [
-  {
-    title: 'Courgette & lemon risotto',
-    author: 'Chelsie Collins',
-    url: 'https://www.bbcgoodfood.com/recipes/courgette-lemon-risotto',
-    likes: 5,
-  },
-
-  {
-    title: 'Jerusalem artichoke fritters',
-    author: 'Marie Mitchell',
-    url: 'https://www.theguardian.com/food/2024/dec/02/marie-mitchells-jerusalem-artichoke-fritters-with-clementine-sauce-recipe',
-    likes: 4,
-  }
-]
 
 describe('when there are initially some blogs saved', () => {
   beforeEach(async() => {
@@ -122,8 +107,12 @@ test ('if url property if missing, respond with 400', async () => {
 })
 
 describe('deletion of a blog', () => {  test ('a blog can be deleted', async () => {
-  const blogsAtStart = await Blog.find({})
-  const blogToDelete = blogsAtStart[0]
+  beforeEach(async() => {
+    await Blog.deleteMany({})
+    await Blog.insertMany(initialBlogs)
+  })
+  const allBlogs = await blogsInDB()
+  const blogToDelete = allBlogs[0]
 
   await api
     .delete(`/api/blogs/${blogToDelete.id}`)
@@ -133,7 +122,7 @@ describe('deletion of a blog', () => {  test ('a blog can be deleted', async () 
 
   assert(!blogsAtEnd.includes(blogToDelete))
 
-  assert.strictEqual(blogsAtEnd.length, blogsAtStart.length -1 )
+  assert.strictEqual(blogsAtEnd.length, allBlogs.length -1 )
 })
 })
 
