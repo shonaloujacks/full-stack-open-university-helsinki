@@ -201,22 +201,86 @@ describe('when there is initially one user in db', () => {
 
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
-  test.only('Creation fails with proper status code and message if username is less than 3 characters', async () => {
+  test('Creation fails with proper status code and message if username is less than 3 characters', async () => {
+    const usersAtStart = await usersInDB()
     const newUser = {
       username: 'Ed',
       name: 'Ed',
       password: 'salainen',
     }
 
+    const result =
     await api
       .post('/api/users')
       .send(newUser)
       .expect(400)
       .expect('Content-Type', /application\/json/)
 
+    const usersAtEnd = await usersInDB()
+    assert(result.body.error.includes('`username` (`Ed`) is shorter than the minimum allowed length'))
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
 
+  test('Creation fails with proper status code and message if password is less than 3 characters', async () => {
+    const usersAtStart = await usersInDB()
+    const newUser = {
+      username: 'Edward',
+      name: 'Edward',
+      password: 'it',
+    }
+
+    const result =
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await usersInDB()
+    console.log ('THIS IS BODY ERROR', result.body.error)
+    assert(result.body.error.includes('Password must be 3 or more characters'))
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
+  test('Creation fails with proper status code and message if password is missing', async () => {
+    const usersAtStart = await usersInDB()
+    const newUser = {
+      username: 'Edward',
+      name: 'Edward',
+    }
+
+    const result =
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await usersInDB()
+    console.log ('THIS IS BODY ERROR', result.body.error)
+    assert(result.body.error.includes('Password missing'))
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+  test.only('Creation fails with proper status code and message if username is missing', async () => {
+    const usersAtStart = await usersInDB()
+    const newUser = {
+      name: 'Edward',
+      password: 'testpassword'
+    }
+
+    const result =
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await usersInDB()
+    assert(result.body.error.includes('Username missing'))
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
 })
+
 
 after(async () => {
   await mongoose.connection.close()
