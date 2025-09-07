@@ -21,7 +21,6 @@ describe('when there are initially some blogs saved', () => {
       .get('/api/blogs')
       .expect(200)
       .expect('Content-Type', /application\/json/)
-    console.log(response.body)
 
     assert.strictEqual(response.body.length, 2)
   })
@@ -190,11 +189,12 @@ describe('when there is initially one user in db', () => {
       password: 'salainen',
     }
 
-    const result = await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(400)
-      .expect('Content-Type', /application\/json/)
+    const result =
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await usersInDB()
     assert(result.body.error.includes('expected `username` to be unique'))
@@ -217,6 +217,8 @@ describe('when there is initially one user in db', () => {
       .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await usersInDB()
+    console.log ('THIS IS BODY ERROR', result.body.error)
+
     assert(result.body.error.includes('`username` (`Ed`) is shorter than the minimum allowed length'))
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
@@ -237,7 +239,8 @@ describe('when there is initially one user in db', () => {
       .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await usersInDB()
-    console.log ('THIS IS BODY ERROR', result.body.error)
+
+
     assert(result.body.error.includes('Password must be 3 or more characters'))
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
@@ -257,11 +260,11 @@ describe('when there is initially one user in db', () => {
       .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await usersInDB()
-    console.log ('THIS IS BODY ERROR', result.body.error)
-    assert(result.body.error.includes('Password missing'))
+
+    assert(result.body.error.includes('Password must be 3 or more characters'))
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
-  test.only('Creation fails with proper status code and message if username is missing', async () => {
+  test('Creation fails with proper status code and message if username is missing', async () => {
     const usersAtStart = await usersInDB()
     const newUser = {
       name: 'Edward',
@@ -276,7 +279,9 @@ describe('when there is initially one user in db', () => {
       .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await usersInDB()
-    assert(result.body.error.includes('Username missing'))
+    console.log ('THIS IS ERROR BODY:',result.body.error)
+
+    assert(result.body.error.includes('Path `username` is required'))
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
 })
