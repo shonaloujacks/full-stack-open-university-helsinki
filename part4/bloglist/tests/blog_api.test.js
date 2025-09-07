@@ -177,7 +177,7 @@ describe('when there is initially one user in db', () => {
     const usersAtEnd = await usersInDB()
     assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
 
-    const usernames = usersAtEnd.map(u => u.username)
+    const usernames = usersAtEnd.map(user => user.username)
     assert(usernames.includes(newUser.username))
   })
 
@@ -200,6 +200,21 @@ describe('when there is initially one user in db', () => {
     assert(result.body.error.includes('expected `username` to be unique'))
 
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+  test.only('Creation fails with proper status code and message if username is less than 3 characters', async () => {
+    const newUser = {
+      username: 'Ed',
+      name: 'Ed',
+      password: 'salainen',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+
   })
 })
 
