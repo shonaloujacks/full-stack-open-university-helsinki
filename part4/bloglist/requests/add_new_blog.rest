@@ -1,11 +1,19 @@
 POST http://localhost:3003/api/blogs
 content-type: application/json
 
-{
-    "title": "Courgette & lemon risotto",
-    "author": "Chelsie Collins",
-    "url": "hhttps://www.bbcgoodfood.com/recipes/courgette-lemon-risotto",
-    "likes": 5
+# {
+#     "title": "Lemon tart",
+#     "author": "Mary Berry",
+#     "url": "https://www.bbc.co.uk/food/recipes/tarte_au_citron_94480",
+#     "likes": 7,
+#     "userId": "68be9fd0d7bccab561ebefe8"
     
-}
+# }
 
+{   "title": "Pina Colada",
+     "author": "Jamie Oliver",
+     "url": "https://www.jamieoliver.com/recipes/cocktails/pina-colada/",
+     "likes": 4,
+     "userId": "68be9e1bd7bccab561ebefc9"
+}
+    
