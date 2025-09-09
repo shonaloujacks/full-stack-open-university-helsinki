@@ -1,19 +1,20 @@
 POST http://localhost:3003/api/blogs
-content-type: application/json
+Content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNob2JpIiwiaWQiOiI2OGJlOWUxYmQ3YmNjYWI1NjFlYmVmYzkiLCJpYXQiOjE3NTc0MjQ2Mzd9.g_jHz5Xf4kokPwK5pZwj8LrSNga3g93ww8I1z2kL6No
 
-# {
-#     "title": "Lemon tart",
-#     "author": "Mary Berry",
-#     "url": "https://www.bbc.co.uk/food/recipes/tarte_au_citron_94480",
-#     "likes": 7,
-#     "userId": "68be9fd0d7bccab561ebefe8"
+{
+    "title": "Easy gnocchi recipe",
+    "author": "Jamie Oliver",
+    "url": "https://www.jamieoliver.com/recipes/potato/potato-gnocchi/",
+    "likes": 7,
+    "userId": "68be9e1bd7bccab561ebefc9"
     
-# }
-
-{   "title": "Pina Colada",
-     "author": "Jamie Oliver",
-     "url": "https://www.jamieoliver.com/recipes/cocktails/pina-colada/",
-     "likes": 4,
-     "userId": "68be9e1bd7bccab561ebefc9"
 }
+
+# {   "title": "Pina Colada",
+#      "author": "Jamie Oliver",
+#      "url": "https://www.jamieoliver.com/recipes/cocktails/pina-colada/",
+#      "likes": 4,
+#      "userId": "68be9e1bd7bccab561ebefc9"
+# }
     
