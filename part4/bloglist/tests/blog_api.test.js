@@ -204,28 +204,30 @@ describe('deletion of a blog', () => {
   })
 })
 
-describe('updating a blog', () => { test ('a blog can be updated', async () => {
-  const updatedLikes = {
-    likes: 6
-  }
-  const response = await api.get('/api/blogs')
-  const blogs = response.body
-  const blogToUpdate = blogs[0]
-  const blogToUpdateId = blogToUpdate.id
+describe('updating a blog', () => {
+
+  test ('a blog can be updated', async () => {
+    const updatedLikes = {
+      likes: 6
+    }
+    const response = await api.get('/api/blogs')
+    const blogs = response.body
+    const blogToUpdate = blogs[0]
+    const blogToUpdateId = blogToUpdate.id
 
 
-  await api
-    .put(`/api/blogs/${blogToUpdateId}`)
-    .send(updatedLikes)
+    await api
+      .put(`/api/blogs/${blogToUpdateId}`)
+      .send(updatedLikes)
 
-  const updatedBlog = await api.get(`/api/blogs/${blogToUpdateId}`)
-  const contents = updatedBlog.body
-  assert.strictEqual(contents.likes, 6)
+    const updatedBlog = await api.get(`/api/blogs/${blogToUpdateId}`)
+    const contents = updatedBlog.body
+    assert.strictEqual(contents.likes, 6)
 
+  })
 })
-})
 
-describe('when there is initially one user in db', () => {
+describe('creating new users', () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
@@ -359,6 +361,55 @@ describe('when there is initially one user in db', () => {
     assert(result.body.error.includes('Path `username` is required'))
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
+})
+describe('blog post api call sent without token', () => {
+  let loginResponse
+
+  beforeEach(async() => {
+
+    await Blog.deleteMany({})
+    await User.deleteMany({})
+    await Blog.insertMany(initialBlogs)
+
+    const newUser = {
+      username: 'dobiesdobersoasdn',
+      name: 'Dobie Shoberson',
+      password: 'testpassword'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+
+    loginResponse =
+      await api
+        .post('/api/login')
+        .send ({ username: newUser.username, password: newUser.password })
+        .expect(200)
+  })
+})
+test('Creation fails with proper status code and message if token is missing', async () => {
+  let token = null
+  const usersAtStart = await usersInDB()
+
+  const newBlog = {
+    title: 'Simple sushi',
+    author: 'Barney Desmazery',
+    url: 'https://www.bbcgoodfood.com/recipes/simple-sushi',
+    likes: 3,
+  }
+
+  await api
+    .post('/api/blogs')
+    .set('Authorization', `Bearer ${token}`)
+    .send(newBlog)
+    .expect(401)
+
+
+  const usersAtEnd = await usersInDB()
+  assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+
 })
 
 after(async () => {
