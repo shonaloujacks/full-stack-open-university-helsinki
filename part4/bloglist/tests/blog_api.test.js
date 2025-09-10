@@ -363,35 +363,16 @@ describe('creating new users', () => {
   })
 })
 describe('blog post api call sent without token', () => {
-  let loginResponse
 
   beforeEach(async() => {
 
     await Blog.deleteMany({})
     await User.deleteMany({})
     await Blog.insertMany(initialBlogs)
-
-    const newUser = {
-      username: 'dobiesdobersoasdn',
-      name: 'Dobie Shoberson',
-      password: 'testpassword'
-    }
-
-    await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(201)
-
-    loginResponse =
-      await api
-        .post('/api/login')
-        .send ({ username: newUser.username, password: newUser.password })
-        .expect(200)
   })
 })
 test('Creation fails with proper status code and message if token is missing', async () => {
-  let token = null
-  const usersAtStart = await usersInDB()
+  const blogsAtStart = await blogsInDB()
 
   const newBlog = {
     title: 'Simple sushi',
@@ -402,13 +383,13 @@ test('Creation fails with proper status code and message if token is missing', a
 
   await api
     .post('/api/blogs')
-    .set('Authorization', `Bearer ${token}`)
+    .set('Authorization', 'Bearer ')
     .send(newBlog)
     .expect(401)
 
 
-  const usersAtEnd = await usersInDB()
-  assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  const blogsAtEnd = await blogsInDB()
+  assert.strictEqual(blogsAtEnd.length, blogsAtStart.length)
 
 })
 
