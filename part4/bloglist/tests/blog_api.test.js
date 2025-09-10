@@ -51,8 +51,8 @@ describe('Blogs API', () => {
     beforeEach(async () => {
 
       const newUser = {
-        username: 'dobiesdobersoasdn',
-        name: 'Dobie Shoberson',
+        username: 'shobieshoberson',
+        name: 'Shobie Shoberson',
         password: 'testpassword'
       }
 
@@ -103,16 +103,19 @@ describe('Blogs API', () => {
         url: 'https://www.bbcgoodfood.com/recipes/simple-sushi',
       }
 
+      const postResponse =
       await api
         .post('/api/blogs')
         .set('Authorization', `Bearer ${token}`)
         .send(newBlog)
         .expect(201)
 
-      const response = await api.get('/api/blogs')
-      const contents = response.body
-      const newBlogContent = contents[contents.length -1]
-      assert.strictEqual(newBlogContent.likes, 0)
+
+      const newBlogId = postResponse.body.id
+
+      const getResponse = await api.get(`/api/blogs/${newBlogId}`)
+      const blog = getResponse.body
+      assert.strictEqual(blog.likes, 0)
     })
 
     test ('missing title returns 400', async () => {
@@ -148,6 +151,7 @@ describe('Blogs API', () => {
 
   describe('Deleting a blog', () => {
     let token
+    let postResponse
 
     beforeEach(async() => {
       const newUser = {
@@ -175,6 +179,7 @@ describe('Blogs API', () => {
         likes: 3,
       }
 
+      postResponse =
       await api
         .post('/api/blogs')
         .set('Authorization', `Bearer ${token}`)
@@ -182,11 +187,11 @@ describe('Blogs API', () => {
         .expect(201)
 
     })
+
     test ('succeeds with valid token', async () => {
 
       const allBlogs = await blogsInDB()
-      const blogToDelete = allBlogs[allBlogs.length - 1]
-
+      const blogToDelete = postResponse.body
       await api
         .delete(`/api/blogs/${blogToDelete.id}`)
         .set('Authorization', `Bearer ${token}`)
@@ -224,39 +229,35 @@ describe('Blogs API', () => {
   })
 
   describe('Authorization', () => {
-  })
-  test('Creation fails with 401 if token missing', async () => {
-    const blogsAtStart = await blogsInDB()
+    test('Creation fails with 401 if token missing', async () => {
+      const blogsAtStart = await blogsInDB()
 
-    const newBlog = {
-      title: 'Simple sushi',
-      author: 'Barney Desmazery',
-      url: 'https://www.bbcgoodfood.com/recipes/simple-sushi',
-      likes: 3,
-    }
+      const newBlog = {
+        title: 'Simple sushi',
+        author: 'Barney Desmazery',
+        url: 'https://www.bbcgoodfood.com/recipes/simple-sushi',
+        likes: 3,
+      }
 
-    await api
-      .post('/api/blogs')
-      .set('Authorization', 'Bearer ')
-      .send(newBlog)
-      .expect(401)
+      await api
+        .post('/api/blogs')
+        .set('Authorization', 'Bearer ')
+        .send(newBlog)
+        .expect(401)
 
 
-    const blogsAtEnd = await blogsInDB()
-    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length)
-
+      const blogsAtEnd = await blogsInDB()
+      assert.strictEqual(blogsAtEnd.length, blogsAtStart.length)
+    })
   })
 })
 
 describe('Users API', () => {
   beforeEach(async () => {
-
     await User.deleteMany({})
     const passwordHash = await bcrypt.hash('sekret', 10)
     const user = new User({ username: 'root', name: 'testUser', passwordHash })
     await user.save()
-
-
   })
 
   test('creation succeeds with fresh username', async () => {
@@ -298,10 +299,11 @@ describe('Users API', () => {
         .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await usersInDB()
-    assert(result.body.error.includes('expected `username` to be unique'))
 
+    assert(result.body.error.includes('expected `username` to be unique'))
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
+
   test('Creation fails if username less than 3 characters', async () => {
     const usersAtStart = await usersInDB()
     const newUser = {
@@ -339,7 +341,6 @@ describe('Users API', () => {
       .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await usersInDB()
-
 
     assert(result.body.error.includes('Password must be 3 or more characters'))
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
