@@ -1,7 +1,8 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
-const jwt = require('jsonwebtoken')
+const { userExtractor } = require('../utils/middleware')
+
 
 blogRouter.get('/', async (request, response, next) => {
   try {
@@ -14,30 +15,20 @@ blogRouter.get('/', async (request, response, next) => {
 })
 
 
-blogRouter.post('/', async (request, response, next) => {
+blogRouter.post('/', userExtractor, async (request, response, next) => {
   const body = request.body
-
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-  const user = await User.findById(decodedToken.id)
-
+  const user = await User.findById(request.user)
   try {
 
-    if (!user) {
-      return response.status(400).json({ error: 'userId missing or not valid' })
-    }
-
     if (!body.title || !body.url) {
-      return response.status(400).json({ error: 'title or url missing' })
+      return response.status(400).json({ error: 'Title or url missing' })
     }
     const blog = new Blog({
       title: body.title,
       author: body.author,
       url: body.url,
       likes: body.likes || 0,
-      user: user._id
+      user: user
 
     })
     const savedBlog = await blog.save()
@@ -51,16 +42,12 @@ blogRouter.post('/', async (request, response, next) => {
   }
 })
 
-blogRouter.delete('/:id', async (request, response, next) => {
-
+blogRouter.delete('/:id', userExtractor, async (request, response, next) => {
+  const user = request.user
+  const blog = await Blog.findById(request.params.id)
   try {
-    const decodedToken = jwt.verify(request.token, process.env.SECRET)
-    if (!decodedToken.id) {
-      return response.status(401).json({ error: 'Token invalid' })
-    }
-    const blog = await Blog.findById(request.params.id)
 
-    if (blog.user.toString() !== decodedToken.id) {
+    if (blog.user.toString() !== user) {
       return response.status(403).json({ error: 'Invalid user' })
     }
     await Blog.findByIdAndDelete(request.params.id)

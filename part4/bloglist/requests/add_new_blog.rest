@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNob2JpIiwiaWQiOiI2OGJlOWUxYmQ3YmNjYWI1NjFlYmVmYzkiLCJpYXQiOjE3NTc0OTgzNDJ9.cyoCuxpT3xUk71Ulrl4gaxbHadw-oUyrAmgh8Mzc5A0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNob2JpIiwiaWQiOiI2OGJlOWUxYmQ3YmNjYWI1NjFlYmVmYzkiLCJpYXQiOjE3NTc1MDEyMTl9.xCgCSIiddfUyXKd-wdwGKgWaxRjWFCJNyIGQ9O9H5t8
 
 {
     "title": "Easy gnocchi recipe",
