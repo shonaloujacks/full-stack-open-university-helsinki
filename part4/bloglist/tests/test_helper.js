@@ -17,6 +17,9 @@ const initialBlogs = [
   }
 ]
 
+
+
+
 const blogsInDB = async () => {
   console.log('*****************')
   const blogs = await Blog.find({})
@@ -31,5 +34,5 @@ const usersInDB = async () => {
 module.exports = {
   initialBlogs,
   blogsInDB,
-  usersInDB
+  usersInDB,
 }

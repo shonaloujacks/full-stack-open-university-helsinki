@@ -1,20 +1,20 @@
 POST http://localhost:3003/api/blogs
-Content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNob2JpIiwiaWQiOiI2OGJlOWUxYmQ3YmNjYWI1NjFlYmVmYzkiLCJpYXQiOjE3NTc1MDEyMTl9.xCgCSIiddfUyXKd-wdwGKgWaxRjWFCJNyIGQ9O9H5t8
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNob2JpIiwiaWQiOiI2OGMxOTJiNTcwMDQ2ZGM2YTUxM2ZhYjkiLCJpYXQiOjE3NTc1MTcwODh9.dkUCQASU3JUkjXHKo9CNwazB-KyPHRJcb6PuZS8Mkbg
 
-{
-    "title": "Easy gnocchi recipe",
-    "author": "Jamie Oliver",
-    "url": "https://www.jamieoliver.com/recipes/potato/potato-gnocchi/",
-    "likes": 7,
-    "userId": "68be9e1bd7bccab561ebefc9"
+# {
+#     "title": "Easy gnocchi recipe",
+#     "author": "Jamie Oliver",
+#     "url": "https://www.jamieoliver.com/recipes/potato/potato-gnocchi/",
+#     "likes": 7,
+#     "userId": "68c192b570046dc6a513fab9"
     
-}
-
-# {   "title": "Pina Colada",
-#      "author": "Jamie Oliver",
-#      "url": "https://www.jamieoliver.com/recipes/cocktails/pina-colada/",
-#      "likes": 4,
-#      "userId": "68be9e1bd7bccab561ebefc9"
 # }
+
+{   "title": "Pina Colada",
+     "author": "Jamie Oliver",
+     "url": "https://www.jamieoliver.com/recipes/cocktails/pina-colada/",
+     "likes": 4,
+     "userId": "68c194f8b1777ad37a5fd697"
+}
 

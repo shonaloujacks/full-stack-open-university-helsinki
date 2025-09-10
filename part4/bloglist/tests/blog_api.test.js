@@ -14,6 +14,7 @@ describe('when there are initially some blogs saved', () => {
   beforeEach(async() => {
     await Blog.deleteMany({})
     await Blog.insertMany(initialBlogs)
+    await User.deleteMany({})
   })
 
   test('all blogs are returned as json', async () => {
@@ -40,91 +41,167 @@ describe('when there are initially some blogs saved', () => {
       })
   })
 })
-describe('adding a new blog', () => { test('verify a new blog can be added', async () => {
-  const newBlog = {
-    title: 'Simple sushi recipe',
-    author: 'Barney Desmazery',
-    url: 'https://www.bbcgoodfood.com/recipes/simple-sushi',
-    likes: 5,
-  }
 
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
+describe('adding a new blog', () => {
+  let loginResponse
 
-  const response = await api.get('/api/blogs')
-
-  const contents = response.body.map(blog => blog.title)
-
-  assert.strictEqual(response.body.length, initialBlogs.length + 1)
-  assert(contents.includes('Simple sushi recipe'))
-
-})
-
-test ('if missing likes property, value will default to 0', async () => {
-  const newBlog = {
-    title: 'Simple sushi recipe',
-    author: 'Barney Desmazery',
-    url: 'https://www.bbcgoodfood.com/recipes/simple-sushi',
-  }
-
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-
-  const response = await api.get('/api/blogs')
-  const contents = response.body
-  const newBlogContent = contents[contents.length -1]
-  assert.strictEqual(newBlogContent.likes, 0)
-})
-
-test ('if title property if missing, respond with 400', async () => {
-  const newBlog = {
-    author: 'Barney Desmazery',
-    url: 'https://www.bbcgoodfood.com/recipes/simple-sushi',
-    likes: 3,
-  }
-
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(400)
-})
-
-test ('if url property if missing, respond with 400', async () => {
-  const newBlog = {
-    title: 'Simple sushi recipe',
-    author: 'Barney Desmazery',
-    likes: 3,
-  }
-
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(400)
-})
-})
-
-describe('deletion of a blog', () => {  test ('a blog can be deleted', async () => {
-  beforeEach(async() => {
+  beforeEach(async () => {
     await Blog.deleteMany({})
     await Blog.insertMany(initialBlogs)
+    await User.deleteMany({})
+
+    const newUser = {
+      username: 'dobiesdobersoasdn',
+      name: 'Dobie Shoberson',
+      password: 'testpassword'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+
+    loginResponse =
+      await api
+        .post('/api/login')
+        .send ({ username: newUser.username, password: newUser.password })
+        .expect(200)
   })
-  const allBlogs = await blogsInDB()
-  const blogToDelete = allBlogs[0]
 
-  await api
-    .delete(`/api/blogs/${blogToDelete.id}`)
-    .expect(204)
+  test('verify a new blog can be added', async () => {
+    const token = loginResponse.body.token
 
-  const blogsAtEnd = await Blog.find({})
+    const newBlog = {
+      title: 'Simple sushi recipe',
+      author: 'Barney Desmazery',
+      url: 'https://www.bbcgoodfood.com/recipes/simple-sushi',
+    }
 
-  assert(!blogsAtEnd.includes(blogToDelete))
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
 
-  assert.strictEqual(blogsAtEnd.length, allBlogs.length -1 )
+
+    const response = await api.get('/api/blogs')
+
+    const contents = response.body.map(blog => blog.title)
+
+    assert.strictEqual(response.body.length, initialBlogs.length + 1)
+    assert(contents.includes('Simple sushi recipe'))
+
+  })
+
+  test('if missing likes property, value will default to 0', async () => {
+    const token = loginResponse.body.token
+
+    const newBlog = {
+      title: 'Simple sushi recipe',
+      author: 'Barney Desmazery',
+      url: 'https://www.bbcgoodfood.com/recipes/simple-sushi',
+    }
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
+      .expect(201)
+
+    const response = await api.get('/api/blogs')
+    const contents = response.body
+    const newBlogContent = contents[contents.length -1]
+    assert.strictEqual(newBlogContent.likes, 0)
+  })
+
+  test ('if title property if missing, respond with 400', async () => {
+    const token = loginResponse.body.token
+    const newBlog = {
+      author: 'Barney Desmazery',
+      url: 'https://www.bbcgoodfood.com/recipes/simple-sushi',
+      likes: 3,
+    }
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
+      .expect(400)
+  })
+
+  test('if url property if missing, respond with 400', async () => {
+    const token = loginResponse.body.token
+    const newBlog = {
+      title: 'Simple sushi recipe',
+      author: 'Barney Desmazery',
+      likes: 3,
+    }
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
+      .expect(400)
+  })
 })
+
+describe('deletion of a blog', () => {
+  let loginResponse
+
+  beforeEach(async() => {
+
+    await Blog.deleteMany({})
+    await User.deleteMany({})
+    await Blog.insertMany(initialBlogs)
+
+    const newUser = {
+      username: 'dobiesdobersoasdn',
+      name: 'Dobie Shoberson',
+      password: 'testpassword'
+    }
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+
+    loginResponse =
+      await api
+        .post('/api/login')
+        .send ({ username: newUser.username, password: newUser.password })
+        .expect(200)
+
+  })
+  test ('a blog can be deleted', async () => {
+    const token = loginResponse.body.token
+
+    const newBlog = {
+      title: 'Simple sushi',
+      author: 'Barney Desmazery',
+      url: 'https://www.bbcgoodfood.com/recipes/simple-sushi',
+      likes: 3,
+    }
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
+      .expect(201)
+
+    const allBlogs = await blogsInDB()
+    const blogToDelete = allBlogs[allBlogs.length - 1]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(204)
+
+    const blogsAtEnd = await Blog.find({})
+
+    assert(!blogsAtEnd.includes(blogToDelete))
+
+    assert.strictEqual(blogsAtEnd.length, allBlogs.length -1 )
+  })
 })
 
 describe('updating a blog', () => { test ('a blog can be updated', async () => {
@@ -153,7 +230,7 @@ describe('when there is initially one user in db', () => {
     await User.deleteMany({})
 
     const passwordHash = await bcrypt.hash('sekret', 10)
-    const user = new User({ username: 'root', passwordHash })
+    const user = new User({ username: 'root', name: 'testUser', passwordHash })
 
     await user.save()
   })
@@ -217,7 +294,6 @@ describe('when there is initially one user in db', () => {
       .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await usersInDB()
-    console.log ('THIS IS BODY ERROR', result.body.error)
 
     assert(result.body.error.includes('`username` (`Ed`) is shorter than the minimum allowed length'))
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
@@ -279,13 +355,11 @@ describe('when there is initially one user in db', () => {
       .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await usersInDB()
-    console.log ('THIS IS ERROR BODY:',result.body.error)
 
     assert(result.body.error.includes('Path `username` is required'))
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
 })
-
 
 after(async () => {
   await mongoose.connection.close()
