@@ -22,7 +22,7 @@ const App = () => {
     )  
   }, [])
 
-    useEffect(() => {
+  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
@@ -63,20 +63,20 @@ const App = () => {
   }
 
   const Notification = ({ message }) => {
-  if (message === null) {
-    return null;
-  }
+    if (message === null) {
+      return null;
+    }
 
-  return <div className="error">{message}</div>;
-};
+    return <div className="error">{message}</div>;
+  };
 
 
-    const handleLogin = async (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault()
     try {
       const user = await loginService.login({ username, password })
       
-         window.localStorage.setItem(
+      window.localStorage.setItem(
         'loggedNoteappUser', JSON.stringify(user)
       ) 
       setUser(user)
@@ -85,7 +85,7 @@ const App = () => {
     } catch {
       setErrorMessage('wrong credentials')
       setTimeout(() => {
-      setErrorMessage(null)
+        setErrorMessage(null)
       }, 5000)
     }
     console.log('logging in with', username, password)
@@ -94,10 +94,10 @@ const App = () => {
   const handleLogout = () => {
 
     window.localStorage.removeItem(
-        'loggedNoteappUser'
-      )
-      setUser("") 
-      console.log("Logged out user:", user)
+      'loggedNoteappUser'
+    )
+    setUser("") 
+    console.log("Logged out user:", user)
   }
 
   return (
@@ -105,32 +105,32 @@ const App = () => {
       <Notification message={errorMessage} />
     
       {!user && ( 
-      <LoginForm 
-      handleLogin={handleLogin}
-      setUsername={setUsername}
-      setPassword={setPassword}
-      username={username}
-      password={password}/>
+        <LoginForm 
+          handleLogin={handleLogin}
+          setUsername={setUsername}
+          setPassword={setPassword}
+          username={username}
+          password={password}/>
       )}
-    {user && (
-      <div>
-        <p>{user.name} logged in </p> 
-        <h2>Blogs</h2>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
-        <h2>Add blog</h2>
-        <BlogForm 
-          addBlog={addBlog}
-          newAuthor={newAuthor}
-          newTitle={newTitle}
-          newURL={newURL}
-          handleBlogChange={handleBlogChange}
-        />
-        <LogoutForm 
-        handleLogout={handleLogout}/>
-      </div>
-    )}
+      {user && (
+        <div>
+          <p>{user.name} logged in </p> 
+          <h2>Blogs</h2>
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} />
+          )}
+          <h2>Add blog</h2>
+          <BlogForm 
+            addBlog={addBlog}
+            newAuthor={newAuthor}
+            newTitle={newTitle}
+            newURL={newURL}
+            handleBlogChange={handleBlogChange}
+          />
+          <LogoutForm 
+            handleLogout={handleLogout}/>
+        </div>
+      )}
     </div>
 
   )
