@@ -5,6 +5,7 @@ import LoginForm from './components/LoginForm'
 import loginService from './services/login' 
 import LogoutForm from './components/LogoutForm'
 import BlogForm from './components/BlogForm'
+import "./index.css";
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -15,6 +16,7 @@ const App = () => {
   const [newAuthor, setNewAuthor] = useState('')
   const [newURL, setNewURL] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -32,18 +34,30 @@ const App = () => {
   }, [])
 
   const addBlog = async (event) => {
-    event.preventDefault();
     const blogObject = {
       title: newTitle,
       author: newAuthor,
       url: newURL,
     }
+    try {
+      event.preventDefault();
 
-    const returnedBlog = await blogService.create(blogObject)
-    setBlogs(blogs.concat(returnedBlog));
-    setNewTitle('')
-    setNewAuthor('')
-    setNewURL('')
+      const returnedBlog = await blogService.create(blogObject)
+      setBlogs(blogs.concat(returnedBlog));
+      setNewTitle('')
+      setNewAuthor('')
+      setNewURL('')
+      setSuccessMessage(`Blog '${blogObject.title}' added`)
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+
+    } catch {
+      setErrorMessage(`Blog '${blogObject.title}' could not be added`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
   }
 
   const handleBlogChange = (event) => {
@@ -62,12 +76,21 @@ const App = () => {
     }
   }
 
-  const Notification = ({ message }) => {
+  const ErrorNotification = ({ message }) => {
     if (message === null) {
       return null;
     }
 
     return <div className="error">{message}</div>;
+  };
+
+  
+  const SuccessNotification = ({ message }) => {
+    if (message === null) {
+      return null;
+    }
+
+    return <div className="success">{message}</div>;
   };
 
 
@@ -83,7 +106,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch {
-      setErrorMessage('wrong credentials')
+      setErrorMessage('Wrong username or password')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -102,7 +125,8 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={errorMessage} />
+      <ErrorNotification message={errorMessage} />
+      <SuccessNotification message={successMessage} />
     
       {!user && ( 
         <LoginForm 
