@@ -13,9 +13,6 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newURL, setNewURL] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
 
@@ -35,20 +32,10 @@ const App = () => {
     }
   }, [])
 
-  const addBlog = async (event) => {
-    const blogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newURL,
-    }
+  const addBlog = async (blogObject) => {
     try {
-      event.preventDefault();
-
       const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(returnedBlog));
-      setNewTitle('')
-      setNewAuthor('')
-      setNewURL('')
       setSuccessMessage(`Blog '${blogObject.title}' added`)
       setTimeout(() => {
         setSuccessMessage(null)
@@ -59,22 +46,6 @@ const App = () => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
-    }
-  }
-
-  const handleBlogChange = (event) => {
-    const { name, value } = event.target
-    if (name === 'title') {
-      setNewTitle(value)
-      console.log(value)
-    }
-    if (name === 'author') {
-      setNewAuthor(value)
-      console.log(value) 
-    }
-    if (name === 'url') {
-      setNewURL(value)
-      console.log(value)
     }
   }
 
@@ -127,13 +98,9 @@ const App = () => {
 
   const blogForm = () => (
     <Togglable 
-      buttonLabel='Create'>
+      buttonLabel='Create new blog'>
       <BlogForm
-        addBlog={addBlog}
-        newAuthor={newAuthor}
-        newTitle={newTitle}
-        newURL={newURL}
-        handleBlogChange={handleBlogChange}
+        createBlog={addBlog}
       />
     </Togglable>
   )
@@ -154,15 +121,14 @@ const App = () => {
       {user && (
         <div>
           <p>{user.name} logged in </p> 
-          <h2>Add blog</h2>
-          {blogForm()}
+          <LogoutForm 
+            handleLogout={handleLogout}/>
           <h2>Blogs</h2>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
+          {blogForm()}
 
-          <LogoutForm 
-            handleLogout={handleLogout}/>
         </div>
       )}
     </div>
