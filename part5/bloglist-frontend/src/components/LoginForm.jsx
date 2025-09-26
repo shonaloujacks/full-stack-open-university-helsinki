@@ -3,26 +3,28 @@ const LoginForm = ({ handleLogin, username, password, setUsername, setPassword }
     <h2>Login</h2>
     <form onSubmit={handleLogin}>
       <div>
-        <label>
+        <label htmlFor="username-input">
             username
-          <input
-            type="text"
-            autoComplete="username"
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
-          />
         </label>
+        <input
+          id="username-input"
+          type="text"
+          autoComplete="username"
+          value={username}
+          onChange={({ target }) => setUsername(target.value)}
+        />
       </div>
       <div>
-        <label>
+        <label htmlFor='password-input'>
             password
-          <input
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
         </label>
+        <input
+          id='password-input'
+          type="password"
+          autoComplete="current-password"
+          value={password}
+          onChange={({ target }) => setPassword(target.value)}
+        />
       </div>
       <button type="submit">login</button>
     </form>
