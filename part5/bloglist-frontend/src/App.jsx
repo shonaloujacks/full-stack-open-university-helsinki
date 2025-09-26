@@ -5,6 +5,7 @@ import LoginForm from './components/LoginForm'
 import loginService from './services/login' 
 import LogoutForm from './components/LogoutForm'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 import "./index.css";
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
+      console.log(user)
     }
   }, [])
 
@@ -123,6 +125,19 @@ const App = () => {
     console.log("Logged out user:", user)
   }
 
+  const blogForm = () => (
+    <Togglable 
+      buttonLabel='Create'>
+      <BlogForm
+        addBlog={addBlog}
+        newAuthor={newAuthor}
+        newTitle={newTitle}
+        newURL={newURL}
+        handleBlogChange={handleBlogChange}
+      />
+    </Togglable>
+  )
+
   return (
     <div>
       <ErrorNotification message={errorMessage} />
@@ -139,18 +154,13 @@ const App = () => {
       {user && (
         <div>
           <p>{user.name} logged in </p> 
+          <h2>Add blog</h2>
+          {blogForm()}
           <h2>Blogs</h2>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
-          <h2>Add blog</h2>
-          <BlogForm 
-            addBlog={addBlog}
-            newAuthor={newAuthor}
-            newTitle={newTitle}
-            newURL={newURL}
-            handleBlogChange={handleBlogChange}
-          />
+
           <LogoutForm 
             handleLogout={handleLogout}/>
         </div>
