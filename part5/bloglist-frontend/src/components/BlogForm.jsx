@@ -16,8 +16,7 @@ const BlogForm = ({ createBlog }) => {
 
     setNewTitle('')
     setNewAuthor('')
-    setNewURL('')
-    
+    setNewURL('') 
   }
   
   const handleBlogChange = (event) => {

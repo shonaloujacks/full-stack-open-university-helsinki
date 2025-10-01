@@ -125,7 +125,8 @@ const App = () => {
             handleLogout={handleLogout}/>
           <h2>Blogs</h2>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog 
+              key={blog.id} blog={blog} />
           )}
           {blogForm()}
 
