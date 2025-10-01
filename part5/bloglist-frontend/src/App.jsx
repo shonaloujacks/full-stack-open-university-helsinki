@@ -17,10 +17,16 @@ const App = () => {
   const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
-  }, [])
+    const getBlogs = async () => {
+      try { 
+        const blogs = await blogService.getAll()
+        setBlogs(blogs)
+      } catch {
+        setErrorMessage('Failed to fetch blogs')
+      }
+    }
+    getBlogs()
+  }, []) 
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
@@ -106,6 +112,10 @@ const App = () => {
   )
 
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes )
+
+  // const updateLikes = () => {
+
+  // }
 
   return (
     <div>
