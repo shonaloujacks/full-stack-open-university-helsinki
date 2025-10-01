@@ -105,6 +105,8 @@ const App = () => {
     </Togglable>
   )
 
+  const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes )
+
   return (
     <div>
       <ErrorNotification message={errorMessage} />
@@ -124,7 +126,7 @@ const App = () => {
           <LogoutForm 
             handleLogout={handleLogout}/>
           <h2>Blogs</h2>
-          {blogs.map(blog =>
+          {sortedBlogs.map(blog =>
             <Blog 
               key={blog.id} blog={blog} />
           )}

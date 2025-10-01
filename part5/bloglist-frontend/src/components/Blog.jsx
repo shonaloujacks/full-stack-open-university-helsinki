@@ -22,7 +22,7 @@ const Blog = ({ blog }) => {
         <div>by {blog.author}</div>
         <div>{blog.url}</div>
 
-        <div>Likes: {blog.likes}</div>
+        <div>Likes: {blog.likes}<button> Like</button></div>
         <div>{blog?.user?.name && <div>Posted by: {blog?.user?.name}</div>}</div>
         <button onClick={toggleVisibility}>Hide</button>
       </div>
