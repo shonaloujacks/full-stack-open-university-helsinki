@@ -21,7 +21,9 @@ const Blog = ({ blog }) => {
       <div className='blogName' style={showWhenVisible}><b>{blog.title}</b>
         <div>by {blog.author}</div>
         <div>{blog.url}</div>
+
         <div>Likes: {blog.likes}</div>
+        <div>{blog?.user?.name && <div>Posted by: {blog?.user?.name}</div>}</div>
         <button onClick={toggleVisibility}>Hide</button>
       </div>
     
