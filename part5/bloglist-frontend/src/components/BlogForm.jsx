@@ -1,5 +1,5 @@
-import { useState } from "react"
-  
+import { useState } from 'react'
+
 const BlogForm = ({ createBlog }) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
@@ -7,7 +7,7 @@ const BlogForm = ({ createBlog }) => {
 
 
   const addBlog = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     createBlog({
       title: newTitle,
       author: newAuthor,
@@ -16,9 +16,9 @@ const BlogForm = ({ createBlog }) => {
 
     setNewTitle('')
     setNewAuthor('')
-    setNewURL('') 
+    setNewURL('')
   }
-  
+
   const handleBlogChange = (event) => {
     const { name, value } = event.target
     if (name === 'title') {
@@ -27,7 +27,7 @@ const BlogForm = ({ createBlog }) => {
     }
     if (name === 'author') {
       setNewAuthor(value)
-      console.log(value) 
+      console.log(value)
     }
     if (name === 'url') {
       setNewURL(value)
@@ -36,30 +36,30 @@ const BlogForm = ({ createBlog }) => {
   }
 
   return (
-    <div> 
+    <div>
       <h2>Create new</h2>
       <form onSubmit={addBlog}>
         <div>
           <label htmlFor='title-input'>
-          Title: 
+          Title:
           </label>
-          <input 
+          <input
             id='title-input'
             type='text'
             name='title'
-            value={newTitle} 
-            onChange={handleBlogChange} 
-          />  
+            value={newTitle}
+            onChange={handleBlogChange}
+          />
         </div>
         <div>
           <label htmlFor="author-input">
           Author:
           </label>
-          <input 
+          <input
             id='author-input'
             type='text'
             name='author'
-            value={newAuthor} 
+            value={newAuthor}
             onChange={handleBlogChange}
           />
         </div>
@@ -67,12 +67,12 @@ const BlogForm = ({ createBlog }) => {
           <label htmlFor="url-input">
           URL:
           </label>
-          <input 
+          <input
             id='url-input'
             type='text'
             name='url'
-            value={newURL} 
-            onChange={handleBlogChange} 
+            value={newURL}
+            onChange={handleBlogChange}
           />
         </div>
         <button type ="submit">Create</button>

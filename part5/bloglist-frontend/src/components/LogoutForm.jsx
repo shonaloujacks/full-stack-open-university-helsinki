@@ -1,5 +1,5 @@
 const LogoutForm = ({ handleLogout }) => {
-    
+
   return (
     <div>
       <label>
@@ -10,4 +10,4 @@ const LogoutForm = ({ handleLogout }) => {
 }
 
 
-export default LogoutForm;
+export default LogoutForm
