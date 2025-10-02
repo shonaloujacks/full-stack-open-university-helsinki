@@ -115,10 +115,6 @@ const App = () => {
 
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes )
 
-  // const updateLikes = () => {
-
-  // }
-
   const handleBlogDelete = async (id) => {
     const blogToDelete = blogs.find((blog) => blog.id === id)
     console.log('Blog to delete:', blogToDelete, 'USER.NAME', user.name, 'blogToDelete.user.name', blogToDelete.user.name)
@@ -127,6 +123,7 @@ const App = () => {
       try {
         await blogService.deleteBlog(id)
         setBlogs(blogs.filter((blogToDelete) => blogToDelete.id !== id))
+        setSuccessMessage(`${blogToDelete.title} has been deleted`)
       } catch {
         setErrorMessage(`${blogToDelete.title} has already been removed`)
         setTimeout(() => {
@@ -135,6 +132,26 @@ const App = () => {
       }
   }
 
+  const updateLikes = async (id) => {
+    const blogToUpdate = blogs.find((blog) => blog.id === id)
+    const updatedEntry = {...blogToUpdate, likes: blogToUpdate.likes + 1}
+
+    console.log('BLOG TO UPDATE', blogToUpdate)
+
+    try {
+      await blogService.update(blogToUpdate.id, updatedEntry)
+      setBlogs(blogs.map((blog) => blog.id === blogToUpdate.id ? updatedEntry : blog))
+
+    }
+    catch {
+      setErrorMessage(`${blogToUpdate.title} could not be liked`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+
+    }
+
+  }
 
 
   return (
@@ -158,7 +175,7 @@ const App = () => {
           <h2>Blogs</h2>
           {sortedBlogs.map(blog =>
             <Blog 
-              key={blog.id} blog={blog} deleteBlog={handleBlogDelete} name={user.name}/>
+              key={blog.id} blog={blog} deleteBlog={handleBlogDelete} name={user.name} updateLikes={updateLikes}/>
           )}
           {blogForm()}
 
