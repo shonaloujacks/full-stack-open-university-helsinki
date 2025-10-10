@@ -13,7 +13,7 @@ const Blog = ({ blog, deleteBlog, name, updateLikes }) => {
   }
 
   const isCurrentUser = () => {
-    if (name === blog.user.name) {
+    if (name === blog?.user?.name) {
       return true
     }
   }
@@ -21,16 +21,16 @@ const Blog = ({ blog, deleteBlog, name, updateLikes }) => {
   return (
     <div>
       <div className='blogName' style={hideWhenVisible}><b>{blog.title}</b>
-        <div>by {blog.author}</div>
+        <div className='blogAuthor'>by {blog.author}</div>
         <button onClick={toggleVisibility}>View</button>
       </div>
 
       <div className='blogName' style={showWhenVisible}><b>{blog.title}</b><button onClick={toggleVisibility}>Hide</button>
         <div>by {blog.author}</div>
-        <div>{blog.url}</div>
+        <div className='blogUrl'>{blog.url}</div>
 
         <div>Likes: {blog.likes}<button onClick={() => updateLikes(blog.id)}> Like</button></div>
-        <div>{blog.user.name && <div>Posted by: {blog.user.name}</div>}</div>
+        <div>{blog?.user?.name && <div>Posted by: {blog.user.name}</div>}</div>
         <div>{isCurrentUser() && <button onClick={() => deleteBlog(blog.id)}>Remove</button>}</div>
 
 
