@@ -29,7 +29,7 @@ const Blog = ({ blog, deleteBlog, name, updateLikes }) => {
         <div>by {blog.author}</div>
         <div data-testid="blog-url">{blog.url}</div>
 
-        <div data-testid="blog-likes">Likes: {blog.likes}<button onClick={() => updateLikes(blog.id)}> Like</button></div>
+        <div data-testid="blog-likes">Likes: {blog.likes}<button data-testid='blog-likes-button' onClick={() => updateLikes(blog.id)}> Like</button></div>
         <div>{blog?.user?.name && <div>Posted by: {blog.user.name}</div>}</div>
         <div>{isCurrentUser() && <button onClick={() => deleteBlog(blog.id)}>Remove</button>}</div>
 

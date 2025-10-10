@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import Blog from './Blog'
-import { expect, test, describe } from 'vitest'
+import { expect, test, describe, vi } from 'vitest'
 
 import userEvent from '@testing-library/user-event'
 
@@ -34,15 +34,33 @@ describe('renders correct content', () => {
     render(<Blog blog={blog}/>)
 
     const user = userEvent.setup()
-    const button = screen.getByTestId('blog-view')
+    const viewButton = screen.getByTestId('blog-view')
 
-    await user.click(button)
+    await user.click(viewButton)
 
     const likes = screen.getByTestId('blog-likes')
     const url = screen.getByTestId('blog-url')
 
     expect(likes).toBeVisible()
     expect(url).toBeVisible()
+
+  })
+
+  test('after clicking like button twice, event handler called twice', async () => {
+
+    const increaseLikes = vi.fn()
+    render(<Blog blog={blog} updateLikes={increaseLikes}/>)
+
+    const user = userEvent.setup()
+
+    const viewButton = screen.getByTestId('blog-view')
+    await user.click(viewButton)
+
+    const likesButton = screen.getByTestId('blog-likes-button')
+    await user.click(likesButton)
+    await user.click(likesButton)
+
+    expect(increaseLikes.mock.calls).toHaveLength(2)
 
   })
 
