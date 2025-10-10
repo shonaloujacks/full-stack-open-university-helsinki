@@ -5,7 +5,7 @@ import Togglable from './Togglable'
 import BlogForm from './BlogForm'
 
 
-test('form calls even handler with right details when new blog created', async () => {
+test('form calls event handler with right details when new blog created', async () => {
 
   const submitBlog = vi.fn()
   render(<Togglable buttonLabel='Create new blog'/>)
