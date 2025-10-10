@@ -12,10 +12,15 @@ test('renders content', () => {
 
   render(<Blog blog={blog}/>)
 
-  const title = screen.getAllByText('Gluten-free apple crumble')
-  const author = screen.getAllByText((text) => text.includes('Silvana Franco'))
+  const title = screen.getByTestId('blog-name')
+  const author = screen.getByTestId('blog-author')
 
-  expect(title).toBeDefined()
-  expect(author).toBeDefined()
+  const url = screen.queryByTestId('blog-url')
+  const likes = screen.queryByTestId('blog-likes')
+
+  expect(title).toBeVisible()
+  expect(author).toBeVisible()
+  expect(url).not.toBeVisible()
+  expect(likes).not.toBeVisible()
 
 })
