@@ -1,4 +1,7 @@
+import { loginWith } from './helper'
+
 const { test, expect, beforeEach, describe } = require('@playwright/test')
+export { loginWith } from './helper'
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -22,17 +25,13 @@ describe('Blog app', () => {
   })
    describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-      await page.getByTestId('username-input').fill('mluukkai')
-      await page.getByTestId('password-input').fill('salainen')
-      await page.getByRole('button', {name: 'login'}).click()
+      await loginWith(page, 'mluukkai', 'salainen')
 
       await expect(page.getByText('Matti Luukkainen logged in')).toBeVisible();
     })
 
-    test.only('fails with wrong credentials', async ({ page }) => {
-      await page.getByTestId('username-input').fill('mluukkai')
-      await page.getByTestId('password-input').fill('wrong')
-      await page.getByRole('button', {name: 'login'}).click()
+    test('fails with wrong credentials', async ({ page }) => {
+        await loginWith(page, 'mluukkai', 'wrong')
 
       const errorDiv = page.locator('.error')
       await expect(errorDiv).toContainText('Wrong username or password')
