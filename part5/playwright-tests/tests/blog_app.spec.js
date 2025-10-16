@@ -1,3 +1,4 @@
+import { Agent } from 'http'
 import { loginWith } from './helper'
 
 const { test, expect, beforeEach, describe } = require('@playwright/test')
@@ -40,4 +41,21 @@ describe('Blog app', () => {
       await expect(page.getByText('Matti Luukkainen logged in')).not.toBeVisible();
     })
     })
+
+  describe('When logged in',  () => {
+  beforeEach (async ({page}) => {
+    await loginWith( page,'mluukkai', 'salainen') 
+  })
+  
+  test.only('a new blog can be created', async ({page}) => {
+    await page.getByRole('button', {name: 'Create new blog'}).click()
+    await page.getByTestId('title-input').fill('Slow cooker cinnamon & orange beef')
+    await page.getByTestId('author-input').fill('Ailsa Burt')
+    await page.getByTestId('url-input').fill('https://www.bbcgoodfood.com/recipes/slow-cooker-cinnamon-orange-beef')
+    await page.getByRole('button', { name: 'Create'}).click()
+
+    await expect(page.getByText('Slow cooker cinnamon & orange beef')).toBeVisible();
+  })
+
+  })
 })
