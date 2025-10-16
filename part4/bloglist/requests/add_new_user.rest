@@ -7,8 +7,14 @@ content-type: application/json
 #  }
 
 
+# {
+#     "username": "Emilytest",
+#     "name": "Emily Taylor",
+#     "password": "test2345"
+# }
+
 {
-    "username": "shobi",
-    "name": "shobieShoberson",
-    "password": "salainen"
+  "username": "Teddy",
+  "name": "Teddybear",
+  "password": "dobie"
 }

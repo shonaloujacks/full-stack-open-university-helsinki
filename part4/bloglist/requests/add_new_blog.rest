@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNob2JpIiwiaWQiOiI2OGMxOTJiNTcwMDQ2ZGM2YTUxM2ZhYjkiLCJpYXQiOjE3NTc1MTcwODh9.dkUCQASU3JUkjXHKo9CNwazB-KyPHRJcb6PuZS8Mkbg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRlZGR5IiwiaWQiOiI2OGRlNmFjOTI4ZDQxNDY2YWI1OGE2ZGUiLCJpYXQiOjE3NTk0MDY4Mjh9.5VGriBQR3yrCGr7SUGy7t33cGenPU4t4oMSq-iEBmzw
 
 # {
 #     "title": "Easy gnocchi recipe",
@@ -11,10 +11,10 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNob
     
 # }
 
-{   "title": "Pina Colada",
-     "author": "Jamie Oliver",
-     "url": "https://www.jamieoliver.com/recipes/cocktails/pina-colada/",
-     "likes": 4,
-     "userId": "68c194f8b1777ad37a5fd697"
+{   "title": "Chicken korma",
+     "author": "Good Food team",
+     "url": "https://www.bbcgoodfood.com/recipes/chicken-korma",
+     "likes": 2,
+     "userId": "68c4374448704766b4178ec9"
 }
 
