@@ -1,5 +1,5 @@
-import { Agent } from 'http'
-import { loginWith } from './helper'
+
+import { loginWith, createBlog } from './helper'
 
 const { test, expect, beforeEach, describe } = require('@playwright/test')
 export { loginWith } from './helper'
@@ -48,12 +48,8 @@ describe('Blog app', () => {
   })
   
   test.only('a new blog can be created', async ({page}) => {
-    await page.getByRole('button', {name: 'Create new blog'}).click()
-    await page.getByTestId('title-input').fill('Slow cooker cinnamon & orange beef')
-    await page.getByTestId('author-input').fill('Ailsa Burt')
-    await page.getByTestId('url-input').fill('https://www.bbcgoodfood.com/recipes/slow-cooker-cinnamon-orange-beef')
-    await page.getByRole('button', { name: 'Create'}).click()
-
+    await createBlog(page, 'Slow cooker cinnamon & orange beef', 'Ailsa Burt', 'https://www.bbcgoodfood.com/recipes/slow-cooker-cinnamon-orange-beef' )
+ 
     await expect(page.getByText('Slow cooker cinnamon & orange beef')).toBeVisible();
   })
 
