@@ -1,8 +1,7 @@
 
 import { loginWith, createBlog } from './helper'
-
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-export { loginWith } from './helper'
+
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -47,11 +46,28 @@ describe('Blog app', () => {
     await loginWith( page,'mluukkai', 'salainen') 
   })
   
-  test.only('a new blog can be created', async ({page}) => {
+  test('a new blog can be created', async ({page}) => {
     await createBlog(page, 'Slow cooker cinnamon & orange beef', 'Ailsa Burt', 'https://www.bbcgoodfood.com/recipes/slow-cooker-cinnamon-orange-beef' )
- 
-    await expect(page.getByText('Slow cooker cinnamon & orange beef')).toBeVisible();
+    await expect(page.getByTestId('blog-name')).toBeVisible();
   })
+   })
+
+  describe('When a blog exists', () => { 
+    beforeEach (async ({page}) => {
+      await loginWith( page,'mluukkai', 'salainen')
 
   })
+    test('a blog can be liked', async ({page}) => {
+      await createBlog(page, 'Mustard pork and apples', 'Good Food team', 'https://www.bbcgoodfood.com/recipes/mustardy-pork-apples')
+      await page.pause()
+
+      await page.getByRole('button', { name: 'View'}).click()
+      const likesButton = page.getByTestId('blog-likes-button')
+      await likesButton.click()
+
+      await expect(page.getByTestId('blog-likes')).toContainText('Likes: 1')
+
+  })
+})
+
 })
