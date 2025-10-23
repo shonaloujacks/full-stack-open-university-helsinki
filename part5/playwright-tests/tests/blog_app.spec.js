@@ -13,6 +13,14 @@ describe('Blog app', () => {
         password: 'salainen'
       }
     })
+    await request.post('/api/users', {
+      data: {
+        name: 'Emily Taylor',
+        username: 'Emilytest',
+        password: 'test2345'
+      }
+    })
+
     await page.goto('/')
   })
 
@@ -87,5 +95,18 @@ describe('Blog app', () => {
       await expect(blogToDelete).not.toBeVisible();
 
   })
+   test('the delete button is only visible to the blog creator', async ({page}) => {
+      await createBlog(page, 'Mustard pork and apples', 'Good Food team', 'https://www.bbcgoodfood.com/recipes/mustardy-pork-apples')
+
+       await page.getByTestId('logout-button').click()
+       await loginWith( page,'Emilytest', 'test2345')
+
+       await page.getByRole('button', { name: 'View' }).click()
+       
+       const removeButton = page.getByTestId('blog-remove')
+       await expect(removeButton).not.toBeVisible();
+
+  })
+
   })
 })
