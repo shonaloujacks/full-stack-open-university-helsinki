@@ -31,7 +31,7 @@ const Blog = ({ blog, deleteBlog, name, updateLikes }) => {
 
         <div data-testid="blog-likes">Likes: {blog.likes}<button data-testid='blog-likes-button' onClick={() => updateLikes(blog.id)}> Like</button></div>
         <div>{blog?.user?.name && <div>Posted by: {blog.user.name}</div>}</div>
-        <div>{isCurrentUser() && <button onClick={() => deleteBlog(blog.id)}>Remove</button>}</div>
+        <div>{isCurrentUser() && <button data-testid="blog-remove" onClick={() => deleteBlog(blog.id)}>Remove</button>}</div>
 
 
       </div>

@@ -9,6 +9,7 @@ const LoginForm = ({ handleLogin, username, password, setUsername, setPassword }
           </label>
           <input
             id="username-input"
+            data-testid="username-input"
             type="text"
             autoComplete="username"
             value={username}
@@ -16,11 +17,12 @@ const LoginForm = ({ handleLogin, username, password, setUsername, setPassword }
           />
         </div>
         <div>
-          <label htmlFor='password-input'>
+          <label htmlFor="password-input">
             password
           </label>
           <input
-            id='password-input'
+            id="password-input"
+            data-testid="password-input"
             type="password"
             autoComplete="current-password"
             value={password}
