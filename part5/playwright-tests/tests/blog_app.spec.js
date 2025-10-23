@@ -59,7 +59,6 @@ describe('Blog app', () => {
   })
     test('a blog can be liked', async ({page}) => {
       await createBlog(page, 'Mustard pork and apples', 'Good Food team', 'https://www.bbcgoodfood.com/recipes/mustardy-pork-apples')
-      await page.pause()
 
       await page.getByRole('button', { name: 'View'}).click()
       const likesButton = page.getByTestId('blog-likes-button')
@@ -70,4 +69,23 @@ describe('Blog app', () => {
   })
 })
 
+  describe('When deleting a blog', () => { 
+    beforeEach (async ({page}) => {
+      await loginWith( page,'mluukkai', 'salainen')
+
+  })
+     test('a blog can be deleted by its creator', async ({page}) => {
+      await createBlog(page, 'Mustard pork and apples', 'Good Food team', 'https://www.bbcgoodfood.com/recipes/mustardy-pork-apples')
+    
+      await page.getByRole('button', { name: 'View'}).click()
+      const removeButton = page.getByTestId('blog-remove')
+      const blogToDelete =  page.getByTestId('blog-name').filter({ hasText: 'Mustard pork and apples' })
+
+      page.once('dialog', async dialog => { await dialog.accept() });
+      await removeButton.click()
+
+      await expect(blogToDelete).not.toBeVisible();
+
+  })
+  })
 })
