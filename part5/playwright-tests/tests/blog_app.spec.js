@@ -130,7 +130,6 @@ describe('Blog app', () => {
       await createBlog(page, 'Peanut chicken and gnocchi traybake', 'Nadiya Hussain', 'https://www.bbc.co.uk/food/recipes/one-tray_peanut_chicken_19540')
       await expect(page.getByTestId('blog').filter({ hasText: 'Peanut chicken and gnocchi traybake' })).toBeVisible();
 
-    
       // Helper function to get up-to-date locator
       const getBlog = (title) => page.getByTestId('blog').filter({ hasText: title })
 
