@@ -55,8 +55,9 @@ describe('Blog app', () => {
   })
   
   test('a new blog can be created', async ({page}) => {
+    await page.getByRole('button', {name: 'Create new blog'}).click()
     await createBlog(page, 'Slow cooker cinnamon & orange beef', 'Ailsa Burt', 'https://www.bbcgoodfood.com/recipes/slow-cooker-cinnamon-orange-beef' )
-    await expect(page.getByTestId('blog-name')).toBeVisible();
+    await expect(page.getByTestId('blog')).toBeVisible();
   })
    })
 
@@ -66,6 +67,7 @@ describe('Blog app', () => {
 
   })
     test('a blog can be liked', async ({page}) => {
+      await page.getByRole('button', {name: 'Create new blog'}).click()
       await createBlog(page, 'Mustard pork and apples', 'Good Food team', 'https://www.bbcgoodfood.com/recipes/mustardy-pork-apples')
 
       await page.getByRole('button', { name: 'View'}).click()
@@ -83,11 +85,12 @@ describe('Blog app', () => {
 
   })
      test('a blog can be deleted by its creator', async ({page}) => {
+      await page.getByRole('button', {name: 'Create new blog'}).click()
       await createBlog(page, 'Mustard pork and apples', 'Good Food team', 'https://www.bbcgoodfood.com/recipes/mustardy-pork-apples')
     
       await page.getByRole('button', { name: 'View'}).click()
       const removeButton = page.getByTestId('blog-remove')
-      const blogToDelete =  page.getByTestId('blog-name').filter({ hasText: 'Mustard pork and apples' })
+      const blogToDelete =  page.getByTestId('blog').filter({ hasText: 'Mustard pork and apples' })
 
       page.once('dialog', async dialog => { await dialog.accept() });
       await removeButton.click()
@@ -96,17 +99,56 @@ describe('Blog app', () => {
 
   })
    test('the delete button is only visible to the blog creator', async ({page}) => {
+      await page.getByRole('button', {name: 'Create new blog'}).click()
       await createBlog(page, 'Mustard pork and apples', 'Good Food team', 'https://www.bbcgoodfood.com/recipes/mustardy-pork-apples')
 
-       await page.getByTestId('logout-button').click()
-       await loginWith( page,'Emilytest', 'test2345')
+      await page.getByTestId('logout-button').click()
+      await loginWith( page,'Emilytest', 'test2345')
 
-       await page.getByRole('button', { name: 'View' }).click()
+      await page.getByRole('button', { name: 'View' }).click()
        
-       const removeButton = page.getByTestId('blog-remove')
-       await expect(removeButton).not.toBeVisible();
+      const removeButton = page.getByTestId('blog-remove')
+      await expect(removeButton).not.toBeVisible();
 
   })
+  })
+
+  describe('Blog layout', () => { 
+    beforeEach (async ({page}) => {
+      await loginWith( page,'mluukkai', 'salainen')
 
   })
+    test('blogs are ordered according to most likes', async ({page}) => {
+      // Create first blog
+      await page.getByRole('button', {name: 'Create new blog'}).click()
+      await createBlog(page, 'Mustard pork and apples', 'Good Food team', 'https://www.bbcgoodfood.com/recipes/mustardy-pork-apples')
+      await expect(page.getByTestId('blog').filter({ hasText: 'Mustard pork and apples' })).toBeVisible();
+      // Create second blog
+      await createBlog(page, 'Chicken & tzatziki wraps', 'Claire Thomson', 'https://www.bbcgoodfood.com/recipes/chicken-tzatziki-wraps')
+      await expect(page.getByTestId('blog').filter({ hasText: 'Chicken & tzatziki wraps' })).toBeVisible();
+      // Create third blog
+      await createBlog(page, 'Peanut chicken and gnocchi traybake', 'Nadiya Hussain', 'https://www.bbc.co.uk/food/recipes/one-tray_peanut_chicken_19540')
+      await expect(page.getByTestId('blog').filter({ hasText: 'Peanut chicken and gnocchi traybake' })).toBeVisible();
+
+    
+      // Helper function to get up-to-date locator
+      const getBlog = (title) => page.getByTestId('blog').filter({ hasText: title })
+
+      // Open view button for all blogs
+      await getBlog('Mustard pork and apples').getByRole('button', {name: 'View' }).click()
+      await getBlog('Chicken & tzatziki wraps').getByRole('button', {name: 'View' }).click()
+      await getBlog('Peanut chicken and gnocchi traybake').getByRole('button', {name: 'View' }).click()
+
+      // Increase blog likes
+      await getBlog('Chicken & tzatziki wraps').getByTestId('blog-likes-button').click()
+      await getBlog('Chicken & tzatziki wraps').getByTestId('blog-likes-button').click()
+      await getBlog('Peanut chicken and gnocchi traybake').getByTestId('blog-likes-button').click()
+
+      // Check they're in the right order
+      await expect(page.getByTestId('blog').first()).toContainText('Chicken & tzatziki wraps')
+      await expect(page.getByTestId('blog').nth(1)).toContainText('Peanut chicken and gnocchi traybake')
+      await expect(page.getByTestId('blog').nth(2)).toContainText('Mustard pork and apples')
+
+  })
+})
 })
