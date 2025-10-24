@@ -1,5 +1,5 @@
 
-import { loginWith, createBlog } from './helper'
+import { loginWith, createBlog, getBlog } from './helper'
 const { test, expect, beforeEach, describe } = require('@playwright/test')
 
 
@@ -130,18 +130,15 @@ describe('Blog app', () => {
       await createBlog(page, 'Peanut chicken and gnocchi traybake', 'Nadiya Hussain', 'https://www.bbc.co.uk/food/recipes/one-tray_peanut_chicken_19540')
       await expect(page.getByTestId('blog').filter({ hasText: 'Peanut chicken and gnocchi traybake' })).toBeVisible();
 
-      // Helper function to get up-to-date locator
-      const getBlog = (title) => page.getByTestId('blog').filter({ hasText: title })
-
       // Open view button for all blogs
-      await getBlog('Mustard pork and apples').getByRole('button', {name: 'View' }).click()
-      await getBlog('Chicken & tzatziki wraps').getByRole('button', {name: 'View' }).click()
-      await getBlog('Peanut chicken and gnocchi traybake').getByRole('button', {name: 'View' }).click()
+      await getBlog(page, 'Mustard pork and apples').getByRole('button', {name: 'View' }).click()
+      await getBlog(page, 'Chicken & tzatziki wraps').getByRole('button', {name: 'View' }).click()
+      await getBlog(page, 'Peanut chicken and gnocchi traybake').getByRole('button', {name: 'View' }).click()
 
       // Increase blog likes
-      await getBlog('Chicken & tzatziki wraps').getByTestId('blog-likes-button').click()
-      await getBlog('Chicken & tzatziki wraps').getByTestId('blog-likes-button').click()
-      await getBlog('Peanut chicken and gnocchi traybake').getByTestId('blog-likes-button').click()
+      await getBlog(page, 'Chicken & tzatziki wraps').getByTestId('blog-likes-button').click()
+      await getBlog(page, 'Chicken & tzatziki wraps').getByTestId('blog-likes-button').click()
+      await getBlog(page, 'Peanut chicken and gnocchi traybake').getByTestId('blog-likes-button').click()
 
       // Check they're in the right order
       await expect(page.getByTestId('blog').first()).toContainText('Chicken & tzatziki wraps')
