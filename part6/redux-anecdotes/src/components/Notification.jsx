@@ -1,3 +1,5 @@
+import { displayNotification } from "../reducers/notificationReducer"
+
 const Notification = () => {
   const style = {
     border: 'solid',
@@ -6,7 +8,7 @@ const Notification = () => {
     marginBottom: 10
   }
 
-  return <div style={style}>render here notification...</div>
+  return <div style={style}>{displayNotification}</div>
 }
 
 export default Notification
