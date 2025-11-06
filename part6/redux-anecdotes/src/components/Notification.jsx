@@ -12,12 +12,9 @@ const Notification = () => {
   const message = useSelector(state => state.notification)
   console.log(message)
 
-  if (message) {
-  return <div style={style}>{message}</div>
-}
 
-  else return null
-  
+  return message ? <div style={style}>{message}</div> : null
+
 }
 
 export default Notification
