@@ -7,8 +7,8 @@ const getAll = async () => {
     throw new Error('Failed to fetch notes')
   }
 
-  const data = await response.json()
-  return data
+  return await response.json()
+
 }
 
 export default { getAll }
