@@ -45,4 +45,5 @@ export const increaseVote = (anecdoteToUpdate) => {
   }
 }
 
+
 export default anecdoteSlice.reducer
