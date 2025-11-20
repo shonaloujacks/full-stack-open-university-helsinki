@@ -1,9 +1,12 @@
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getAnecdotes } from './requests'
 
 const App = () => {
+  const queryClient = useQueryClient()
+
+
   const handleVote = (anecdote) => {
     console.log('vote')
   }
