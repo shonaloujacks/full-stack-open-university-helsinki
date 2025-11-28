@@ -12,6 +12,11 @@ const AnecdoteForm = (type) => {
     onSuccess: (newAnecdote) => {
       const anecdotes = queryClient.getQueryData(['anecdotes'])
       queryClient.setQueryData(['anecdotes'], anecdotes.concat(newAnecdote))
+      notificationDispatch({ type: 'ADD', payload: newAnecdote})
+    },
+    onError: () => {
+      notificationDispatch({ type: 'ERROR'})
+
     }
   })
   
@@ -20,7 +25,7 @@ const AnecdoteForm = (type) => {
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
     newAnecdoteMutation.mutate({ content, votes: '0' })
-    notificationDispatch({ type: 'ADD', payload: content})
+    
   }
   
 
