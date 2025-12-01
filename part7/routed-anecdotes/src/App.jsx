@@ -21,7 +21,7 @@ const Anecdote = ({ anecdote }) => {
     <div>
       <h2>{anecdote.content}</h2>
       <div>has {anecdote.votes}</div>
-      <div>for more info see <a href={anecdote.info} target="blank" rel="noopener norefferer">{anecdote.info}</a></div>
+      <div>for more info see <a href={anecdote.info} target="_blank" rel="norefferer noreferrer">{anecdote.info}</a></div>
 
     </div>
   )
@@ -63,6 +63,9 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    setContent('')
+    setAuthor('')
+    setInfo('')
   }
 
   return (
@@ -88,6 +91,19 @@ const CreateNew = (props) => {
 
 }
 
+const Notification = ({notification}) => {
+
+  if (notification)
+
+  return (
+    <div>
+      A new anecdote {notification} created!
+    </div>
+  )
+  else null
+}
+
+
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -111,6 +127,10 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(anecdote.content)
+    setTimeout(() => {
+      setNotification('')}, 5000
+    )
   }
 
   const anecdoteById = (id) =>
@@ -141,6 +161,7 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <div>
+      <Notification notification={notification}/>
       <Link style={padding} to='/anecdotes'>anecdotes</Link>
       <Link style={padding} to='/create'>create new</Link>
       <Link style={padding} to='/about'>about</Link>
@@ -148,7 +169,15 @@ const App = () => {
       <Routes>
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path='/anecdotes' element={<AnecdoteList anecdotes={anecdotes} />} />
-        <Route path='/create' element={<CreateNew addNew={addNew}/>}/>
+        <Route 
+          path='/create' 
+          element={
+            <div> 
+              <CreateNew addNew={addNew}/> 
+              <AnecdoteList anecdotes={anecdotes} />
+            </div>
+          }
+        />
         <Route path='/about' element={<About/>}/>
         <Route path='/anecdotes/:id' element={<Anecdote anecdote={anecdote}/>} />
       </Routes>
