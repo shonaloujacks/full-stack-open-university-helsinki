@@ -3,6 +3,7 @@ import {
   Routes, Route, Link,
   useMatch
 } from 'react-router-dom'
+import { useField } from './hooks'
 
 const AnecdoteList = ({ anecdotes }) => (
   <div>
@@ -50,22 +51,23 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const {reset: resetContent, ...content} = useField('text')
+  const {reset: resetAuthor, ...author} = useField('text')
+  const {reset: resetInfo, ...info} = useField('text')
 
 
   const handleSubmit = (event) => {
     event.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
-    setContent('')
-    setAuthor('')
-    setInfo('')
+    resetContent()
+    resetAuthor()
+    resetInfo()
+    console.log('THIS IS CONTENT:', content, 'THIS IS AUTHOR:', author, 'THIS IS INFO:', info)
   }
 
   return (
@@ -74,15 +76,15 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(event) => setContent(event.target.value)} />
+          <input {...content} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(event) => setAuthor(event.target.value)} />
+          <input {...author} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(event)=> setInfo(event.target.value)} />
+          <input {...info} />
         </div>
         <button>create</button>
       </form>
@@ -97,7 +99,7 @@ const Notification = ({notification}) => {
 
   return (
     <div>
-      A new anecdote {notification} created!
+      A new anecdote '{notification}' created!
     </div>
   )
   else null
