@@ -8,10 +8,13 @@ const useField = (type) => {
     setValue(event.target.value)
   }
 
+  const reset = () => setValue('')
+
   return {
     type,
     value,
-    onChange
+    onChange,
+    reset
   }
 }
 
@@ -32,7 +35,7 @@ const useResource = (baseUrl) => {
   }
 
   const service = {
-    create
+    create,
   }
 
   return [
@@ -41,9 +44,9 @@ const useResource = (baseUrl) => {
 }
 
 const App = () => {
-  const content = useField('text')
-  const name = useField('text')
-  const number = useField('text')
+  const {reset: resetContent, ...content} = useField('text')
+  const {reset: resetName, ...name} = useField('text')
+  const {reset: resetNumber, ...number} = useField('text')
 
   const [notes, noteService] = useResource('http://localhost:3005/notes')
   const [persons, personService] = useResource('http://localhost:3005/persons')
@@ -51,11 +54,15 @@ const App = () => {
   const handleNoteSubmit = (event) => {
     event.preventDefault()
     noteService.create({ content: content.value })
+    resetContent()
+
   }
  
   const handlePersonSubmit = (event) => {
     event.preventDefault()
     personService.create({ name: name.value, number: number.value})
+    resetName()
+    resetNumber()
   }
 
   return (
@@ -65,7 +72,7 @@ const App = () => {
         <input {...content} />
         <button>create</button>
       </form>
-      {notes.map(n => <p key={n.id}>{n.content}</p>)}
+      {notes.map(note => <p key={note.id}>{note.content}</p>)}
 
       <h2>persons</h2>
       <form onSubmit={handlePersonSubmit}>
@@ -73,7 +80,7 @@ const App = () => {
         number <input {...number} />
         <button>create</button>
       </form>
-      {persons.map(n => <p key={n.id}>{n.name} {n.number}</p>)}
+      {persons.map(person => <p key={person.id}>{person.name} {person.number}</p> )}
     </div>
   )
 }
