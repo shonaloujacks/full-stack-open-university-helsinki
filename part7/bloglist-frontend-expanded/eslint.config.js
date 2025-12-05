@@ -3,9 +3,10 @@ import globals from 'globals'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
+import prettierPlugin from 'eslint-plugin-prettier'
+import prettierConfig from 'eslint-config-prettier' // import the rules
 
 export default [
-  // Default config (equivalent to `extends: "eslint:recommended"`)
   js.configs.recommended,
   { ignores: ['dist'] },
   {
@@ -24,8 +25,11 @@ export default [
       react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      prettier: prettierPlugin,
     },
     rules: {
+      ...prettierConfig.rules, // <-- add Prettier rules here
+      'prettier/prettier': 'error', // enforce Prettier formatting
       indent: ['error', 2],
       'linebreak-style': ['error', 'unix'],
       quotes: ['error', 'single'],
@@ -35,7 +39,7 @@ export default [
       'object-curly-spacing': ['error', 'always'],
       'arrow-spacing': ['error', { before: true, after: true }],
       'no-console': 'off',
-      'react/jsx-uses-vars': 'error'
+      'react/jsx-uses-vars': 'error',
     },
   },
 ]

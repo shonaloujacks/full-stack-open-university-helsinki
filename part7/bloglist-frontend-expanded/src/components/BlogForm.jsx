@@ -5,7 +5,6 @@ const BlogForm = ({ createBlog }) => {
   const [newAuthor, setNewAuthor] = useState('')
   const [newURL, setNewURL] = useState('')
 
-
   const addBlog = async (event) => {
     event.preventDefault()
     createBlog({
@@ -40,49 +39,44 @@ const BlogForm = ({ createBlog }) => {
       <h2>Create new</h2>
       <form onSubmit={addBlog}>
         <div>
-          <label htmlFor='title-input'>
-          Title:
-          </label>
+          <label htmlFor="title-input">Title:</label>
           <input
-            id='title-input'
-            data-testid='title-input'
-            type='text'
-            name='title'
+            id="title-input"
+            data-testid="title-input"
+            type="text"
+            name="title"
             value={newTitle}
             onChange={handleBlogChange}
           />
         </div>
         <div>
-          <label htmlFor="author-input">
-          Author:
-          </label>
+          <label htmlFor="author-input">Author:</label>
           <input
-            id='author-input'
-            data-testid='author-input'
-            type='text'
-            name='author'
+            id="author-input"
+            data-testid="author-input"
+            type="text"
+            name="author"
             value={newAuthor}
             onChange={handleBlogChange}
           />
         </div>
         <div>
-          <label htmlFor="url-input">
-          URL:
-          </label>
+          <label htmlFor="url-input">URL:</label>
           <input
-            id='url-input'
-            data-testid='url-input'
-            type='text'
-            name='url'
+            id="url-input"
+            data-testid="url-input"
+            type="text"
+            name="url"
             value={newURL}
             onChange={handleBlogChange}
           />
         </div>
-        <button data-testid='submit-button' type="submit">Create</button>
+        <button data-testid="submit-button" type="submit">
+          Create
+        </button>
       </form>
     </div>
-  )}
-
-
+  )
+}
 
 export default BlogForm

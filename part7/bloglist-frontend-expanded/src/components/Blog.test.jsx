@@ -7,14 +7,12 @@ const blog = {
   title: 'Gluten-free apple crumble',
   author: 'Silvana Franco',
   url: 'https://www.bbcgoodfood.com/recipes/gluten-free-apple-crumble',
-  likes: 4
+  likes: 4,
 }
 
 describe('renders correct content', () => {
-
   test('renders author and title by default', () => {
-
-    render(<Blog blog={blog}/>)
+    render(<Blog blog={blog} />)
 
     const title = screen.getByTestId('blog-name')
     const author = screen.getByTestId('blog-author')
@@ -26,11 +24,10 @@ describe('renders correct content', () => {
     expect(author).toBeVisible()
     expect(url).not.toBeVisible()
     expect(likes).not.toBeVisible()
-
   })
 
   test('renders url and likes when view button clicked', async () => {
-    render(<Blog blog={blog}/>)
+    render(<Blog blog={blog} />)
 
     const user = userEvent.setup()
     const viewButton = screen.getByTestId('blog-view')
@@ -42,13 +39,11 @@ describe('renders correct content', () => {
 
     expect(likes).toBeVisible()
     expect(url).toBeVisible()
-
   })
 
   test('after clicking like button twice, event handler called twice', async () => {
-
     const increaseLikes = vi.fn()
-    render(<Blog blog={blog} updateLikes={increaseLikes}/>)
+    render(<Blog blog={blog} updateLikes={increaseLikes} />)
 
     const user = userEvent.setup()
 
@@ -60,9 +55,5 @@ describe('renders correct content', () => {
     await user.click(likesButton)
 
     expect(increaseLikes.mock.calls).toHaveLength(2)
-
   })
-
 })
-
-
