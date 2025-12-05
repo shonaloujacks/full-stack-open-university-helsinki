@@ -1,6 +1,8 @@
 import globals from 'globals'
 import js from '@eslint/js'
 import stylisticJs from '@stylistic/eslint-plugin-js'
+import prettierConfig from 'eslint-config-prettier'
+import prettierPlugin from 'eslint-plugin-prettier'
 
 export default [
   js.configs.recommended,
@@ -13,8 +15,11 @@ export default [
     },
     plugins: {
       '@stylistic/js': stylisticJs,
+      prettier: prettierPlugin,
     },
     rules: {
+      'prettier/prettier': 'error',      // enforce Prettier formatting
+      ...prettierConfig.rules,           // include Prettier rules
       '@stylistic/js/indent': ['error', 2],
       '@stylistic/js/linebreak-style': ['error', 'unix'],
       '@stylistic/js/quotes': ['error', 'single'],

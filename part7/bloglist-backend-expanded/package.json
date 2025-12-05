@@ -8,7 +8,6 @@
     "test": "cross-env NODE_ENV=test node --test",
     "lint": "eslint .",
     "start:test": "cross-env NODE_ENV=test node --watch index.js"
-
   },
   "keywords": [],
   "author": "",
@@ -27,8 +26,11 @@
   "devDependencies": {
     "@eslint/js": "^9.33.0",
     "@stylistic/eslint-plugin-js": "^4.4.1",
-    "eslint": "^9.33.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.3.0",
+    "prettier": "^3.7.4",
     "supertest": "^7.1.4"
   }
 }

@@ -12,7 +12,8 @@ const app = express()
 logger.info('connecting to', config.MONGODB_URI)
 
 const connectToMongoDB = async () => {
-  try { await mongoose.connect(config.MONGODB_URI)
+  try {
+    await mongoose.connect(config.MONGODB_URI)
     logger.info('Connected to Mongo')
   } catch (error) {
     logger.error('Error connecting to MongoDB', error.message)
