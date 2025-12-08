@@ -10,7 +10,12 @@ import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import './index.css'
 import { showNotification } from './reducers/notificationReducer'
-import { initialiseBlogs, appendBlog, removeBlog } from './reducers/blogReducer'
+import {
+  initialiseBlogs,
+  appendBlog,
+  removeBlog,
+  increaseLikes,
+} from './reducers/blogReducer'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -110,21 +115,10 @@ const App = () => {
       }
   }
 
-  const updateLikes = async (id) => {
+  const updateLikes = (id) => {
     const blogToUpdate = blogs.find((blog) => blog.id === id)
-    const updatedEntry = { ...blogToUpdate, likes: blogToUpdate.likes + 1 }
-
-    console.log('BLOG TO UPDATE', blogToUpdate)
-
     try {
-      await blogService.update(blogToUpdate.id, updatedEntry)
-      dispatch(
-        initialiseBlogs(
-          blogs.map((blog) =>
-            blog.id === blogToUpdate.id ? updatedEntry : blog
-          )
-        )
-      )
+      dispatch(increaseLikes(id))
       dispatch(showNotification(`${blogToUpdate.title} liked`, 'success', 5000))
     } catch {
       dispatch(
