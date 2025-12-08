@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
@@ -6,15 +7,17 @@ import loginService from './services/login'
 import LogoutForm from './components/LogoutForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import Notification from './components/Notification'
 import './index.css'
+import { showNotification } from './reducers/notificationReducer'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [successMessage, setSuccessMessage] = useState(null)
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const getBlogs = async () => {
@@ -22,7 +25,7 @@ const App = () => {
         const blogs = await blogService.getAll()
         setBlogs(blogs)
       } catch {
-        setErrorMessage('Failed to fetch blogs')
+        dispatch(showNotification('error', 'Failed to fetch blogs'))
       }
     }
     getBlogs()
@@ -44,32 +47,18 @@ const App = () => {
     try {
       const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(returnedBlog))
-      setSuccessMessage(`Blog '${blogObject.title}' added`)
-      setTimeout(() => {
-        setSuccessMessage(null)
-      }, 5000)
+      dispatch(
+        showNotification(`Blog '${blogObject.title}' added`, 'success', 5000)
+      )
     } catch {
-      setErrorMessage(`Blog '${blogObject.title}' could not be added`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(
+        showNotification(
+          `Blog '${blogObject.title}' could not be added`,
+          'error',
+          5000
+        )
+      )
     }
-  }
-
-  const ErrorNotification = ({ message }) => {
-    if (message === null) {
-      return null
-    }
-
-    return <div className="error">{message}</div>
-  }
-
-  const SuccessNotification = ({ message }) => {
-    if (message === null) {
-      return null
-    }
-
-    return <div className="success">{message}</div>
   }
 
   const handleLogin = async (event) => {
@@ -84,10 +73,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch {
-      setErrorMessage('Wrong username or password')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(showNotification('Wrong username or password', 'error', 5000))
     }
     console.log('logging in with', username, password)
   }
@@ -120,12 +106,17 @@ const App = () => {
       try {
         await blogService.deleteBlog(id)
         setBlogs(blogs.filter((blogToDelete) => blogToDelete.id !== id))
-        setSuccessMessage(`${blogToDelete.title} has been deleted`)
+        dispatch(
+          showNotification(`${blogToDelete.title} has been deleted`),
+          'success',
+          5000
+        )
       } catch {
-        setErrorMessage(`${blogToDelete.title} has already been removed`)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+        dispatch(
+          showNotification(`${blogToDelete.title} has already been removed`),
+          'error',
+          5000
+        )
       }
   }
 
@@ -140,18 +131,21 @@ const App = () => {
       setBlogs(
         blogs.map((blog) => (blog.id === blogToUpdate.id ? updatedEntry : blog))
       )
+      dispatch(showNotification(`${blogToUpdate.title} liked`, 'success', 5000))
     } catch {
-      setErrorMessage(`${blogToUpdate.title} could not be liked`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(
+        showNotification(
+          `${blogToUpdate.title} could not be liked`,
+          'error',
+          5000
+        )
+      )
     }
   }
 
   return (
     <div>
-      <ErrorNotification message={errorMessage} />
-      <SuccessNotification message={successMessage} />
+      <Notification />
 
       {!user && (
         <LoginForm

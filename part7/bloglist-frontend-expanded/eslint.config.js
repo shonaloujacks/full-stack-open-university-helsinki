@@ -4,7 +4,7 @@ import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import prettierPlugin from 'eslint-plugin-prettier'
-import prettierConfig from 'eslint-config-prettier' // import the rules
+import prettierConfig from 'eslint-config-prettier'
 
 export default [
   js.configs.recommended,
