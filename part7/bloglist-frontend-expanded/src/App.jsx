@@ -16,13 +16,15 @@ import {
   removeBlog,
   increaseLikes,
 } from './reducers/blogReducer'
+import { setUser, clearUser } from './reducers/userReducer'
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
 
   const dispatch = useDispatch()
+
+  const user = useSelector((state) => state.users)
 
   useEffect(() => {
     dispatch(initialiseBlogs())
@@ -31,14 +33,12 @@ const App = () => {
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-      console.log(user)
+      const storedUser = JSON.parse(loggedUserJSON)
+      dispatch(setUser(storedUser))
+      blogService.setToken(storedUser.token)
+      console.log(storedUser)
     }
   }, [])
-
-  console.log(user)
 
   const addBlog = async (blogObject) => {
     try {
@@ -66,7 +66,7 @@ const App = () => {
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
 
       blogService.setToken(user.token)
-      setUser(user)
+      dispatch(setUser(user))
       setUsername('')
       setPassword('')
     } catch {
@@ -77,7 +77,7 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedNoteappUser')
-    setUser('')
+    dispatch(clearUser())
     console.log('Logged out user:', user)
   }
 
