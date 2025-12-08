@@ -10,7 +10,7 @@ import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import './index.css'
 import { showNotification } from './reducers/notificationReducer'
-import { initialiseBlogs, appendBlog } from './reducers/blogReducer'
+import { initialiseBlogs, appendBlog, removeBlog } from './reducers/blogReducer'
 
 const App = () => {
   const [username, setUsername] = useState('')
@@ -83,23 +83,14 @@ const App = () => {
   )
 
   const blogs = useSelector((state) => state.blogs)
-  console.log('THIS IS BLOGS', blogs)
 
   const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
 
   const handleBlogDelete = async (id) => {
     const blogToDelete = blogs.find((blog) => blog.id === id)
-    console.log(
-      'Blog to delete:',
-      blogToDelete,
-      'USER.NAME',
-      user.name,
-      'blogToDelete.user.name',
-      blogToDelete.user.name
-    )
     if (window.confirm(`Delete ${blogToDelete.title}?`))
       try {
-        await blogService.deleteBlog(id)
+        dispatch(removeBlog(id))
         dispatch(
           initialiseBlogs(
             blogs.filter((blogToDelete) => blogToDelete.id !== id)

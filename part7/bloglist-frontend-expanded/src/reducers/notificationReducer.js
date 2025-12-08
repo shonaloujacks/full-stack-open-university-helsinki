@@ -13,8 +13,6 @@ const notificationSlice = createSlice({
   },
 })
 
-console.log('THIS IS NOTIFICATIONSLICE:', notificationSlice)
-
 export const { setNotification, clearNotification } = notificationSlice.actions
 
 export const showNotification = (message, type, time) => {
