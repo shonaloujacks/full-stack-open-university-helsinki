@@ -30,7 +30,7 @@ export default [
     rules: {
       ...prettierConfig.rules, // <-- add Prettier rules here
       'prettier/prettier': 'error', // enforce Prettier formatting
-      indent: ['error', 2],
+      indent: 'off',
       'linebreak-style': ['error', 'unix'],
       quotes: ['error', 'single'],
       semi: ['error', 'never'],

@@ -1,18 +1,13 @@
-import { useSelector } from 'react-redux'
-
-const Notification = () => {
-  const { message, type } = useSelector((state) => state.notifications)
-
-  if (!message) return null
-
-  const style = {
-    border: 'solid',
-    padding: 10,
-    marginBottom: 10,
-    color: type === 'error' ? 'red' : 'green',
-  }
-
-  return <div style={style}>{message}</div>
+const LogoutForm = ({ handleLogout }) => {
+  return (
+    <div>
+      <label>
+        <button data-testid="logout-button" onClick={handleLogout}>
+          Logout
+        </button>
+      </label>
+    </div>
+  )
 }
 
-export default Notification
+export default LogoutForm

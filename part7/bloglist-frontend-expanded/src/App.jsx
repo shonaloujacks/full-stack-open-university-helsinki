@@ -1,167 +1,146 @@
-import { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useState, useContext } from 'react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import NotificationContext from './contexts/NotificationContext'
+import { useUser } from './contexts/UserContext'
+
 import Blog from './components/Blog'
-import blogService from './services/blogs'
-import LoginForm from './components/LoginForm'
-import loginService from './services/login'
-import LogoutForm from './components/LogoutForm'
 import BlogForm from './components/BlogForm'
-import Togglable from './components/Togglable'
+import LoginForm from './components/LoginForm'
+import LogoutForm from './components/LogoutForm'
 import Notification from './components/Notification'
-import './index.css'
-import { showNotification } from './reducers/notificationReducer'
-import {
-  initialiseBlogs,
-  appendBlog,
-  removeBlog,
-  increaseLikes,
-} from './reducers/blogReducer'
-import { setUser, clearUser } from './reducers/userReducer'
+import Togglable from './components/Togglable'
+
+import blogService from './services/blogs'
+import loginService from './services/login'
 
 const App = () => {
+  const { showNotification } = useContext(NotificationContext)
+  const { user, login, logout } = useUser()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const queryClient = useQueryClient()
 
-  const dispatch = useDispatch()
+  // Fetch blogs
+  const blogsQuery = useQuery({
+    queryKey: ['blogs'],
+    queryFn: blogService.getAll,
+  })
 
-  const user = useSelector((state) => state.users)
+  const blogs = blogsQuery.data || []
 
-  useEffect(() => {
-    dispatch(initialiseBlogs())
-  }, [dispatch])
+  // Mutations
+  const addBlogMutation = useMutation({
+    mutationFn: blogService.create,
+    onSuccess: () => queryClient.invalidateQueries(['blogs']),
+  })
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
-    if (loggedUserJSON) {
-      const storedUser = JSON.parse(loggedUserJSON)
-      dispatch(setUser(storedUser))
-      blogService.setToken(storedUser.token)
-      console.log(storedUser)
-    }
-  }, [])
+  const updateLikesMutation = useMutation({
+    mutationFn: ({ id, updatedBlog }) => blogService.update(id, updatedBlog),
+    onSuccess: () => queryClient.invalidateQueries(['blogs']),
+  })
 
-  const addBlog = async (blogObject) => {
+  const deleteBlogMutation = useMutation({
+    mutationFn: (id) => blogService.deleteBlog(id),
+    onSuccess: () => queryClient.invalidateQueries(['blogs']),
+  })
+
+  // Handlers
+  const handleLogin = async (e) => {
+    e.preventDefault()
     try {
-      const returnedBlog = await blogService.create(blogObject)
-      dispatch(appendBlog(returnedBlog))
-      dispatch(
-        showNotification(`Blog '${blogObject.title}' added`, 'success', 5000)
-      )
-    } catch {
-      dispatch(
-        showNotification(
-          `Blog '${blogObject.title}' could not be added`,
-          'error',
-          5000
-        )
-      )
-    }
-  }
-
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      const user = await loginService.login({ username, password })
-
-      window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
-
-      blogService.setToken(user.token)
-      dispatch(setUser(user))
+      const userData = await loginService.login({ username, password })
+      login(userData)
       setUsername('')
       setPassword('')
+      showNotification(`Welcome ${userData.name}`, 'success')
     } catch {
-      dispatch(showNotification('Wrong username or password', 'error', 5000))
+      showNotification('Wrong username or password', 'error')
     }
-    console.log('logging in with', username, password)
   }
 
   const handleLogout = () => {
-    window.localStorage.removeItem('loggedNoteappUser')
-    dispatch(clearUser())
-    console.log('Logged out user:', user)
+    logout()
+    showNotification('Logged out', 'success')
   }
 
-  const blogForm = () => (
-    <Togglable buttonLabel="Create new blog">
-      <BlogForm createBlog={addBlog} />
-    </Togglable>
-  )
-
-  const blogs = useSelector((state) => state.blogs)
-
-  const sortedBlogs = [...blogs].sort((a, b) => b.likes - a.likes)
-
-  const handleBlogDelete = async (id) => {
-    const blogToDelete = blogs.find((blog) => blog.id === id)
-    if (window.confirm(`Delete ${blogToDelete.title}?`))
-      try {
-        dispatch(removeBlog(id))
-        dispatch(
-          initialiseBlogs(
-            blogs.filter((blogToDelete) => blogToDelete.id !== id)
-          )
-        )
-        dispatch(
-          showNotification(`${blogToDelete.title} has been deleted`),
-          'success',
-          5000
-        )
-      } catch {
-        dispatch(
-          showNotification(`${blogToDelete.title} has already been removed`),
-          'error',
-          5000
-        )
-      }
-  }
-
-  const updateLikes = (id) => {
-    const blogToUpdate = blogs.find((blog) => blog.id === id)
+  const addBlog = async (blogObject) => {
     try {
-      dispatch(increaseLikes(id))
-      dispatch(showNotification(`${blogToUpdate.title} liked`, 'success', 5000))
+      await addBlogMutation.mutateAsync(blogObject)
+      showNotification(`Blog '${blogObject.title}' added`, 'success')
     } catch {
-      dispatch(
-        showNotification(
-          `${blogToUpdate.title} could not be liked`,
-          'error',
-          5000
-        )
-      )
+      showNotification(`Failed to add '${blogObject.title}'`, 'error')
     }
   }
+
+  const updateLikes = async (id) => {
+    const blog = blogs.find((b) => b.id === id)
+    if (!blog) return
+
+    const updatedBlog = { ...blog, likes: blog.likes + 1 }
+
+    try {
+      await updateLikesMutation.mutateAsync({ id, updatedBlog })
+      showNotification(`Liked '${blog.title}'`, 'success')
+    } catch {
+      showNotification(`Could not like '${blog.title}'`, 'error')
+    }
+  }
+
+  const deleteBlog = async (id) => {
+    const blog = blogs.find((b) => b.id === id)
+    if (!blog) return
+
+    if (!window.confirm(`Delete blog '${blog.title}' by ${blog.author}?`))
+      return
+
+    try {
+      await deleteBlogMutation.mutateAsync(id)
+      showNotification(`Deleted '${blog.title}'`, 'success')
+    } catch {
+      showNotification(`Could not delete '${blog.title}'`, 'error')
+    }
+  }
+
+  // Render
+  if (blogsQuery.isLoading) return <div>Loading blogs...</div>
+  if (blogsQuery.isError) return <div>Blog service not available</div>
 
   return (
     <div>
       <Notification />
 
-      {!user && (
+      {!user ? (
         <LoginForm
           handleLogin={handleLogin}
-          setUsername={setUsername}
-          setPassword={setPassword}
           username={username}
           password={password}
+          setUsername={setUsername}
+          setPassword={setPassword}
         />
-      )}
-      {user && (
+      ) : (
         <div>
-          <p>{user.name} logged in </p>
+          <p>{user.name} logged in</p>
           <LogoutForm handleLogout={handleLogout} />
           <h2>Blogs</h2>
-          {sortedBlogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              deleteBlog={handleBlogDelete}
-              name={user.name}
-              updateLikes={updateLikes}
-            />
-          ))}
-          {blogForm()}
+          {blogs
+            .slice()
+            .sort((a, b) => b.likes - a.likes)
+            .map((blog) => (
+              <Blog
+                key={blog.id}
+                blog={blog}
+                name={user.name}
+                updateLikes={() => updateLikes(blog.id)}
+                deleteBlog={() => deleteBlog(blog.id)}
+              />
+            ))}
+          <Togglable buttonLabel="Create new blog">
+            <BlogForm createBlog={addBlog} />
+          </Togglable>
         </div>
       )}
     </div>
   )
 }
+
 export default App
