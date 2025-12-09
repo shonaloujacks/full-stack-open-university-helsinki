@@ -24,9 +24,10 @@ const App = () => {
   const blogsQuery = useQuery({
     queryKey: ['blogs'],
     queryFn: blogService.getAll,
+    initialData: [],
   })
 
-  const blogs = blogsQuery.data || []
+  const blogs = blogsQuery.data
 
   // Mutations
   const addBlogMutation = useMutation({
@@ -45,8 +46,8 @@ const App = () => {
   })
 
   // Handlers
-  const handleLogin = async (e) => {
-    e.preventDefault()
+  const handleLogin = async (event) => {
+    event.preventDefault()
     try {
       const userData = await loginService.login({ username, password })
       login(userData)
@@ -63,17 +64,17 @@ const App = () => {
     showNotification('Logged out', 'success')
   }
 
-  const addBlog = async (blogObject) => {
+  const addBlog = async (newBlog) => {
     try {
-      await addBlogMutation.mutateAsync(blogObject)
-      showNotification(`Blog '${blogObject.title}' added`, 'success')
+      await addBlogMutation.mutateAsync(newBlog)
+      showNotification(`Blog '${newBlog.title}' added`, 'success')
     } catch {
-      showNotification(`Failed to add '${blogObject.title}'`, 'error')
+      showNotification(`Failed to add '${newBlog.title}'`, 'error')
     }
   }
 
   const updateLikes = async (id) => {
-    const blog = blogs.find((b) => b.id === id)
+    const blog = blogs.find((blog) => blog.id === id)
     if (!blog) return
 
     const updatedBlog = { ...blog, likes: blog.likes + 1 }
@@ -122,8 +123,7 @@ const App = () => {
           <p>{user.name} logged in</p>
           <LogoutForm handleLogout={handleLogout} />
           <h2>Blogs</h2>
-          {blogs
-            .slice()
+          {[...blogs]
             .sort((a, b) => b.likes - a.likes)
             .map((blog) => (
               <Blog
