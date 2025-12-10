@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import NotificationContext from './contexts/NotificationContext'
 import { useUser } from './contexts/UserContext'
 
@@ -28,6 +29,22 @@ const App = () => {
   })
 
   const blogs = blogsQuery.data
+
+  const usersQuery = useQuery({
+    queryKey: ['users'],
+    queryFn: blogService.fetchUsers,
+    initialData: [],
+  })
+
+  const users = usersQuery.data
+
+  console.log('THIS IS USERS', users)
+
+  // Render
+  if (blogsQuery.isLoading) return <div>Loading blogs...</div>
+  if (blogsQuery.isError) return <div>Blog service not available</div>
+  if (usersQuery.isLoading) return <div>Loading users...</div>
+  if (usersQuery.isError) return <div>Users not availble</div>
 
   // Mutations
   const addBlogMutation = useMutation({
@@ -102,9 +119,9 @@ const App = () => {
     }
   }
 
-  // Render
-  if (blogsQuery.isLoading) return <div>Loading blogs...</div>
-  if (blogsQuery.isError) return <div>Blog service not available</div>
+  const padding = {
+    padding: 5,
+  }
 
   return (
     <div>
