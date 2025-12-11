@@ -1,6 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
 import blogService from '../services/blogs'
 import { Link } from 'react-router-dom'
+import {
+  TableContainer,
+  Paper,
+  TableBody,
+  TableRow,
+  TableCell,
+  Table,
+  TableHead,
+} from '@mui/material'
 
 const UsersList = () => {
   const usersQuery = useQuery({
@@ -16,16 +25,32 @@ const UsersList = () => {
 
   return (
     <div>
-      <h3>Users</h3>
-      <ul>
-        {users.map((user) => (
-          <li key={user.id}>
-            <Link to={`/users/${user.id}`}>
-              {user.name} — blogs created: {user.blogs.length}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <h2>Users</h2>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <b>Name</b>
+              </TableCell>
+              <TableCell>
+                <b>Number of blogs created</b>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {users.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell>
+                  <Link to={`/users/${user.id}`}>{user.name}</Link>
+                </TableCell>
+                <TableCell>{user.blogs.length}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }

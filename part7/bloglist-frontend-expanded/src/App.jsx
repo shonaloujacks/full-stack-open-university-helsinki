@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom'
 import NotificationContext from './contexts/NotificationContext'
 import { useUser } from './contexts/UserContext'
 
@@ -18,6 +18,7 @@ import loginService from './services/login'
 import BlogList from './components/BlogList'
 
 const App = () => {
+  const navigate = useNavigate()
   const { showNotification } = useContext(NotificationContext)
   const { user, login, logout } = useUser()
   const [username, setUsername] = useState('')
@@ -63,6 +64,7 @@ const App = () => {
       setUsername('')
       setPassword('')
       showNotification(`Welcome ${userData.name}`, 'success')
+      navigate('/')
     } catch {
       showNotification('Wrong username or password', 'error')
     }
@@ -117,27 +119,57 @@ const App = () => {
 
   return (
     <div>
-      <h1>Blogs</h1>
-      {user ? (
-        <em>{user.name} logged in</em>
-      ) : (
-        <Link style={padding} to="/login">
-          Login
-        </Link>
-      )}
-      <LogoutForm handleLogout={handleLogout} />
+      <h1>Blog app</h1>
       <div>
-        <Notification />
         <Link style={padding} to="/users">
           Users
         </Link>
         <Link style={padding} to="/">
           Blogs
         </Link>
+        {user ? (
+          <em>{user.name} logged in</em>
+        ) : (
+          <Link style={padding} to="/login">
+            Login
+          </Link>
+        )}
+        {user && <LogoutForm handleLogout={handleLogout} />}
       </div>
+      <div>
+        <Notification />
+      </div>
+
       <Routes>
-        <Route path="/" element={<BlogList blogs={blogs} />}></Route>
-        <Route path="/users" element={<UsersList />} />
+        <Route
+          path="/"
+          element={
+            <div>
+              <BlogList blogs={blogs} />
+              {user && (
+                <Togglable buttonLabel="Create new blog">
+                  <BlogForm createBlog={addBlog} />
+                </Togglable>
+              )}
+            </div>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <LoginForm
+              handleLogin={handleLogin}
+              username={username}
+              password={password}
+              setUsername={setUsername}
+              setPassword={setPassword}
+            />
+          }
+        ></Route>
+        <Route
+          path="/users"
+          element={user ? <UsersList /> : <Navigate replace to="/login" />}
+        />
         <Route path="/users/:id" element={<User />} />
         <Route
           path="/blogs/:id"
@@ -151,22 +183,6 @@ const App = () => {
           }
         />
       </Routes>
-
-      {!user ? (
-        <LoginForm
-          handleLogin={handleLogin}
-          username={username}
-          password={password}
-          setUsername={setUsername}
-          setPassword={setPassword}
-        />
-      ) : (
-        <div>
-          <Togglable buttonLabel="Create new blog">
-            <BlogForm createBlog={addBlog} />
-          </Togglable>
-        </div>
-      )}
     </div>
   )
 }
