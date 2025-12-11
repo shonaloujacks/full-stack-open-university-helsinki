@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom'
 import NotificationContext from './contexts/NotificationContext'
 import { useUser } from './contexts/UserContext'
+import { Toolbar, AppBar, Button, Container, Box } from '@mui/material'
 
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
@@ -113,77 +114,81 @@ const App = () => {
     }
   }
 
-  const padding = {
-    padding: 5,
-  }
-
   return (
-    <div>
-      <h1>Blog app</h1>
+    <Container>
       <div>
-        <Link style={padding} to="/users">
-          Users
-        </Link>
-        <Link style={padding} to="/">
-          Blogs
-        </Link>
-        {user ? (
-          <em>{user.name} logged in</em>
-        ) : (
-          <Link style={padding} to="/login">
-            Login
-          </Link>
-        )}
-        {user && <LogoutForm handleLogout={handleLogout} />}
-      </div>
-      <div>
-        <Notification />
-      </div>
+        <h1>Blog app</h1>
+        <AppBar position="static" sx={{ backgroundColor: 'teal' }}>
+          <Toolbar>
+            <Button color="inherit" component={Link} to="/users">
+              Users
+            </Button>
+            <Button color="inherit" component={Link} to="/">
+              Blogs
+            </Button>
+            {user ? (
+              <em>{user.name} logged in</em>
+            ) : (
+              <Button color="inherit" component={Link} to="/login">
+                Login
+              </Button>
+            )}
+            {user && (
+              <Box sx={{ ml: 2 }}>
+                <LogoutForm handleLogout={handleLogout} />
+              </Box>
+            )}
+          </Toolbar>
+        </AppBar>
+        <div>
+          <Notification />
+        </div>
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              <BlogList blogs={blogs} />
-              {user && (
-                <Togglable buttonLabel="Create new blog">
-                  <BlogForm createBlog={addBlog} />
-                </Togglable>
-              )}
-            </div>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <LoginForm
-              handleLogin={handleLogin}
-              username={username}
-              password={password}
-              setUsername={setUsername}
-              setPassword={setPassword}
-            />
-          }
-        ></Route>
-        <Route
-          path="/users"
-          element={user ? <UsersList /> : <Navigate replace to="/login" />}
-        />
-        <Route path="/users/:id" element={<User />} />
-        <Route
-          path="/blogs/:id"
-          element={
-            <Blog
-              blogs={blogs}
-              updateLikes={updateLikes}
-              deleteBlog={deleteBlog}
-              user={user}
-            />
-          }
-        />
-      </Routes>
-    </div>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <div>
+                <BlogList blogs={blogs} />
+                {user && (
+                  <Togglable buttonLabel="Create new blog">
+                    <BlogForm createBlog={addBlog} />
+                  </Togglable>
+                )}
+              </div>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <LoginForm
+                handleLogin={handleLogin}
+                username={username}
+                password={password}
+                setUsername={setUsername}
+                setPassword={setPassword}
+              />
+            }
+          ></Route>
+          <Route
+            path="/users"
+            element={user ? <UsersList /> : <Navigate replace to="/login" />}
+          />
+          <Route path="/users/:id" element={<User />} />
+          <Route
+            path="/blogs/:id"
+            element={
+              <Blog
+                blogs={blogs}
+                updateLikes={updateLikes}
+                deleteBlog={deleteBlog}
+                user={user}
+              />
+            }
+          />
+        </Routes>
+      </div>
+    </Container>
   )
 }
 
