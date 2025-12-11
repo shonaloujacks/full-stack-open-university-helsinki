@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 import NotificationContext from './contexts/NotificationContext'
 import { useUser } from './contexts/UserContext'
 
@@ -10,9 +10,12 @@ import LoginForm from './components/LoginForm'
 import LogoutForm from './components/LogoutForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import UsersList from './components/UsersList'
+import User from './components/User'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
+import BlogList from './components/BlogList'
 
 const App = () => {
   const { showNotification } = useContext(NotificationContext)
@@ -29,22 +32,11 @@ const App = () => {
   })
 
   const blogs = blogsQuery.data
-
-  const usersQuery = useQuery({
-    queryKey: ['users'],
-    queryFn: blogService.fetchUsers,
-    initialData: [],
-  })
-
-  const users = usersQuery.data
-
-  console.log('THIS IS USERS', users)
+  console.log('THIS IS BLOGS', blogs)
 
   // Render
   if (blogsQuery.isLoading) return <div>Loading blogs...</div>
   if (blogsQuery.isError) return <div>Blog service not available</div>
-  if (usersQuery.isLoading) return <div>Loading users...</div>
-  if (usersQuery.isError) return <div>Users not availble</div>
 
   // Mutations
   const addBlogMutation = useMutation({
@@ -105,7 +97,7 @@ const App = () => {
   }
 
   const deleteBlog = async (id) => {
-    const blog = blogs.find((b) => b.id === id)
+    const blog = blogs.find((blog) => blog.id === id)
     if (!blog) return
 
     if (!window.confirm(`Delete blog '${blog.title}' by ${blog.author}?`))
@@ -125,7 +117,40 @@ const App = () => {
 
   return (
     <div>
-      <Notification />
+      <h1>Blogs</h1>
+      {user ? (
+        <em>{user.name} logged in</em>
+      ) : (
+        <Link style={padding} to="/login">
+          Login
+        </Link>
+      )}
+      <LogoutForm handleLogout={handleLogout} />
+      <div>
+        <Notification />
+        <Link style={padding} to="/users">
+          Users
+        </Link>
+        <Link style={padding} to="/">
+          Blogs
+        </Link>
+      </div>
+      <Routes>
+        <Route path="/" element={<BlogList blogs={blogs} />}></Route>
+        <Route path="/users" element={<UsersList />} />
+        <Route path="/users/:id" element={<User />} />
+        <Route
+          path="/blogs/:id"
+          element={
+            <Blog
+              blogs={blogs}
+              updateLikes={updateLikes}
+              deleteBlog={deleteBlog}
+              user={user}
+            />
+          }
+        />
+      </Routes>
 
       {!user ? (
         <LoginForm
@@ -137,20 +162,6 @@ const App = () => {
         />
       ) : (
         <div>
-          <p>{user.name} logged in</p>
-          <LogoutForm handleLogout={handleLogout} />
-          <h2>Blogs</h2>
-          {[...blogs]
-            .sort((a, b) => b.likes - a.likes)
-            .map((blog) => (
-              <Blog
-                key={blog.id}
-                blog={blog}
-                name={user.name}
-                updateLikes={() => updateLikes(blog.id)}
-                deleteBlog={() => deleteBlog(blog.id)}
-              />
-            ))}
           <Togglable buttonLabel="Create new blog">
             <BlogForm createBlog={addBlog} />
           </Togglable>

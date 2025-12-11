@@ -1,51 +1,43 @@
-import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 
-const Blog = ({ blog, deleteBlog, name, updateLikes }) => {
-  const [visible, setVisible] = useState(false)
+const Blog = ({ blogs, updateLikes, deleteBlog, user }) => {
+  const { id } = useParams()
 
-  const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
+  const blog = blogs.find((blog) => blog.id === id)
+  if (!blog) return <div>Blog not found</div>
 
-  const toggleVisibility = () => setVisible(!visible)
   const isCurrentUser = () => {
-    if (name === blog?.user?.name) {
+    if (user?.name === blog?.user?.name) {
       return true
     }
   }
 
   return (
-    <div data-testid="blog">
-      <div className="blogName" data-testid="blog-name" style={hideWhenVisible}>
-        <b>{blog.title}</b>
-        <div data-testid="blog-author">by {blog.author}</div>
-        <button data-testid="blog-view" onClick={toggleVisibility}>
-          View
+    <div className="blogName">
+      <h2>{blog.title}</h2>
+      <div>by {blog.author}</div>
+      <div data-testid="blog-url">
+        <a href={blog.url} target="_blank">
+          {blog.url}
+        </a>
+      </div>
+
+      <div data-testid="blog-likes">
+        Likes: {blog.likes}
+        <button
+          data-testid="blog-likes-button"
+          onClick={() => updateLikes(blog.id)}
+        >
+          Like
         </button>
+        <div>Uploaded by {blog.user.name}</div>
       </div>
 
-      <div className="blogName" style={showWhenVisible}>
-        <b>{blog.title}</b>
-        <button onClick={toggleVisibility}>Hide</button>
-        <div>by {blog.author}</div>
-        <div data-testid="blog-url">{blog.url}</div>
-
-        <div data-testid="blog-likes">
-          Likes: {blog.likes}
-          <button
-            data-testid="blog-likes-button"
-            onClick={() => updateLikes(blog.id)}
-          >
-            Like
-          </button>
-        </div>
-
-        {blog.user?.name && <div>Posted by: {blog.user.name}</div>}
-        {isCurrentUser() && (
-          <button data-testid="blog-remove" onClick={() => deleteBlog(blog.id)}>
-            Remove
-          </button>
-        )}
-      </div>
+      {isCurrentUser() && (
+        <button data-testid="blog-remove" onClick={() => deleteBlog(blog.id)}>
+          Remove
+        </button>
+      )}
     </div>
   )
 }

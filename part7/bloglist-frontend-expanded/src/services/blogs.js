@@ -43,4 +43,17 @@ const fetchUsers = async () => {
   return response.data
 }
 
-export default { getAll, create, setToken, update, deleteBlog, fetchUsers }
+const getById = async (id) => {
+  const response = await axios.get(`${baseUrl}/${id}`)
+  return response.data
+}
+
+export default {
+  getAll,
+  create,
+  setToken,
+  update,
+  deleteBlog,
+  fetchUsers,
+  getById,
+}
