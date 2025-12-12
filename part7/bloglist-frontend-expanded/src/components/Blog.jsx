@@ -16,7 +16,7 @@ const Blog = ({ blogs, updateLikes, deleteBlog, user }) => {
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom sx={{ mt: 2 }}>
         {blog.title}
       </Typography>
 
@@ -24,27 +24,36 @@ const Blog = ({ blogs, updateLikes, deleteBlog, user }) => {
         by {blog.author}
       </Typography>
 
-      <Typography variant="body1" data-testid="blog-url" gutterBottom>
-        URL:{' '}
+      <Typography
+        variant="body1"
+        data-testid="blog-url"
+        sx={{ mt: 2 }}
+        gutterBottom
+      >
         <MuiLink href={blog.url} target="_blank" rel="noopener noreferrer">
           {blog.url}
         </MuiLink>
       </Typography>
 
-      <Typography variant="body1" gutterBottom data-testid="blog-likes">
+      <Typography
+        variant="body1"
+        gutterBottom
+        sx={{ mt: 2 }}
+        data-testid="blog-likes"
+      >
         Likes: {blog.likes}
         <Button
           variant="contained"
           size="small"
           data-testid="blog-likes-button"
           onClick={() => updateLikes(blog.id)}
-          sx={{ ml: 1 }}
+          sx={{ ml: 2 }}
         >
           Like
         </Button>
       </Typography>
 
-      <Typography variant="body2" gutterBottom>
+      <Typography variant="body1" sx={{ mt: 2 }} gutterBottom>
         Uploaded by {blog.user.name}
       </Typography>
 
@@ -56,8 +65,9 @@ const Blog = ({ blogs, updateLikes, deleteBlog, user }) => {
           size="small"
           data-testid="blog-remove"
           onClick={() => deleteBlog(blog.id)}
+          sx={{ mt: 2, mb: 3 }}
         >
-          Remove
+          Delete
         </Button>
       )}
     </div>

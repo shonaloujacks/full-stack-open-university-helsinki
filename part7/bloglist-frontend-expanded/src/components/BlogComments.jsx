@@ -2,6 +2,7 @@ import blogService from '../services/blogs'
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { useState } from 'react'
+import { Typography, Button, TextField } from '@mui/material'
 
 const BlogComments = () => {
   const [commentText, setCommentText] = useState('')
@@ -34,22 +35,31 @@ const BlogComments = () => {
 
   return (
     <div>
+      <Typography variant="h4" sx={{ mt: 3 }} gutterBottom>
+        Comments
+      </Typography>
       <form onSubmit={handleAddComment}>
-        <input
+        <TextField
           type="text"
           label="comment"
           value={commentText}
           onChange={({ target }) => setCommentText(target.value)}
-        ></input>
-        <button type="submit">Add comment</button>
+          sx={{ mb: 3 }}
+        ></TextField>
+        <Button type="submit" sx={{ mt: 1 }}>
+          Add comment
+        </Button>
       </form>
       <div>
-        <h2>Comments</h2>
         {[...comments].map((comment) => (
-          <li key={comment._id}>
-            <b>{comment.text}</b>
-            <p>{new Date(comment.date).toLocaleDateString('en-GB')}</p>
-          </li>
+          <div key={comment._id}>
+            <Typography>
+              <b>{comment.text}</b>
+            </Typography>
+            <Typography sx={{ mb: 3 }}>
+              {new Date(comment.date).toLocaleDateString('en-GB')}
+            </Typography>
+          </div>
         ))}
       </div>
     </div>
