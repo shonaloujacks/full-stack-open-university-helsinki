@@ -1,4 +1,4 @@
-import { TextField, Button } from '@mui/material'
+import { TextField, Button, Typography } from '@mui/material'
 const LoginForm = ({
   handleLogin,
   username,
@@ -8,7 +8,7 @@ const LoginForm = ({
 }) => {
   return (
     <div>
-      <h2>Login</h2>
+      <Typography variant="h4">Login</Typography>
       <form onSubmit={handleLogin}>
         <div>
           <TextField

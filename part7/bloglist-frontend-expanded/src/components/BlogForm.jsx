@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { TextField, Button, Typography } from '@mui/material'
 
 const BlogForm = ({ createBlog }) => {
   const [newTitle, setNewTitle] = useState('')
@@ -36,11 +37,11 @@ const BlogForm = ({ createBlog }) => {
 
   return (
     <div>
-      <h2>Create new</h2>
+      <Typography variant="h4">Create new</Typography>
       <form onSubmit={addBlog}>
         <div>
-          <label htmlFor="title-input">Title:</label>
-          <input
+          <TextField
+            label="Recipe title"
             id="title-input"
             data-testid="title-input"
             type="text"
@@ -50,8 +51,8 @@ const BlogForm = ({ createBlog }) => {
           />
         </div>
         <div>
-          <label htmlFor="author-input">Author:</label>
-          <input
+          <TextField
+            label="author"
             id="author-input"
             data-testid="author-input"
             type="text"
@@ -61,8 +62,8 @@ const BlogForm = ({ createBlog }) => {
           />
         </div>
         <div>
-          <label htmlFor="url-input">URL:</label>
-          <input
+          <TextField
+            label="url"
             id="url-input"
             data-testid="url-input"
             type="text"
@@ -71,9 +72,9 @@ const BlogForm = ({ createBlog }) => {
             onChange={handleBlogChange}
           />
         </div>
-        <button data-testid="submit-button" type="submit">
+        <Button data-testid="submit-button" type="submit">
           Create
-        </button>
+        </Button>
       </form>
     </div>
   )

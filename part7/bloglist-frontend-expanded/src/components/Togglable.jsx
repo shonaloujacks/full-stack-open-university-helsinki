@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Button } from '@mui/material'
 
 const Togglable = (props) => {
   const [visible, setVisible] = useState(false)
@@ -13,13 +14,21 @@ const Togglable = (props) => {
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button data-testid="togglable-visible" onClick={toggleVisibility}>
+        <Button
+          size="large"
+          data-testid="togglable-visible"
+          variant="contained"
+          color="primary"
+          onClick={toggleVisibility}
+        >
           {props.buttonLabel}
-        </button>
+        </Button>
       </div>
       <div style={showWhenVisible}>
         {props.children}
-        <button onClick={toggleVisibility}>Cancel</button>
+        <Button color="error" onClick={toggleVisibility}>
+          Cancel
+        </Button>
       </div>
     </div>
   )

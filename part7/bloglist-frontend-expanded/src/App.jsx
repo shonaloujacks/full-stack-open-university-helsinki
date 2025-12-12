@@ -3,7 +3,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom'
 import NotificationContext from './contexts/NotificationContext'
 import { useUser } from './contexts/UserContext'
-import { Toolbar, AppBar, Button, Container, Box } from '@mui/material'
+import {
+  Toolbar,
+  AppBar,
+  Button,
+  Container,
+  Box,
+  Typography,
+} from '@mui/material'
 
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
@@ -117,8 +124,8 @@ const App = () => {
   return (
     <Container>
       <div>
-        <h1>Blog app</h1>
-        <AppBar position="static" sx={{ backgroundColor: 'teal' }}>
+        <Typography variant="h1">Blog app</Typography>
+        <AppBar position="static" sx={{ backgroundColor: 'primary' }}>
           <Toolbar>
             <Button color="inherit" component={Link} to="/users">
               Users

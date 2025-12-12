@@ -9,6 +9,7 @@ import {
   TableCell,
   Table,
   TableHead,
+  Typography,
 } from '@mui/material'
 
 const UsersList = () => {
@@ -25,7 +26,7 @@ const UsersList = () => {
 
   return (
     <div>
-      <h2>Users</h2>
+      <Typography variant="h3">Users</Typography>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

@@ -1,10 +1,18 @@
+import { Button } from '@mui/material'
+
 const LogoutForm = ({ handleLogout }) => {
   return (
     <div>
       <label>
-        <button data-testid="logout-button" onClick={handleLogout}>
+        <Button
+          data-testid="logout-button"
+          color="white"
+          onClick={handleLogout}
+          variant="outlined"
+          size="small"
+        >
           Logout
-        </button>
+        </Button>
       </label>
     </div>
   )
