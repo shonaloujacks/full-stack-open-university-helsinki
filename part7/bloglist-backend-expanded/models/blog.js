@@ -1,8 +1,6 @@
 const mongoose = require('mongoose')
 
-
 const blogSchema = new mongoose.Schema({
-
   title: String,
   author: String,
   url: String,
@@ -10,7 +8,13 @@ const blogSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-  }
+  },
+  comments: [
+    {
+      text: String,
+      date: { type: Date, default: Date.now },
+    },
+  ],
 })
 
 blogSchema.set('toJSON', {
@@ -18,7 +22,7 @@ blogSchema.set('toJSON', {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
     delete returnedObject.__v
-  }
+  },
 })
 
 module.exports = mongoose.model('Blog', blogSchema)

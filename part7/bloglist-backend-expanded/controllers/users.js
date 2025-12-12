@@ -3,17 +3,23 @@ const usersRouter = require('express').Router()
 const User = require('../models/user')
 
 usersRouter.get('/', async (request, response) => {
-  const users = await User.find({}).populate('blogs', { title: 1, author: 1, url: 1, likes: 1 })
+  const users = await User.find({}).populate('blogs', {
+    title: 1,
+    author: 1,
+    url: 1,
+    likes: 1,
+  })
   response.json(users)
 })
 
 usersRouter.post('/', async (request, response, next) => {
-
   try {
     const { username, name, password } = request.body
 
-    if (!password || password.length < 3 ) {
-      return response.status(400).json ({ error: 'Password must be 3 or more characters' })
+    if (!password || password.length < 3) {
+      return response
+        .status(400)
+        .json({ error: 'Password must be 3 or more characters' })
     }
 
     const saltRounds = 10
@@ -32,6 +38,5 @@ usersRouter.post('/', async (request, response, next) => {
     next(error)
   }
 })
-
 
 module.exports = usersRouter
