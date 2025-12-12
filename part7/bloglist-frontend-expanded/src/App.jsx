@@ -24,6 +24,7 @@ import User from './components/User'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogList from './components/BlogList'
+import BlogComments from './components/BlogComments'
 
 const App = () => {
   const navigate = useNavigate()
@@ -134,7 +135,9 @@ const App = () => {
               Blogs
             </Button>
             {user ? (
-              <em>{user.name} logged in</em>
+              <Typography fontSize={14}>
+                <em>{user.name} logged in</em>
+              </Typography>
             ) : (
               <Button color="inherit" component={Link} to="/login">
                 Login
@@ -185,12 +188,15 @@ const App = () => {
           <Route
             path="/blogs/:id"
             element={
-              <Blog
-                blogs={blogs}
-                updateLikes={updateLikes}
-                deleteBlog={deleteBlog}
-                user={user}
-              />
+              <>
+                <Blog
+                  blogs={blogs}
+                  updateLikes={updateLikes}
+                  deleteBlog={deleteBlog}
+                  user={user}
+                />
+                <BlogComments />
+              </>
             }
           />
         </Routes>

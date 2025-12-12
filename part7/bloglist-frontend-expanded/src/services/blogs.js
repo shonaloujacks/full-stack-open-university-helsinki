@@ -48,6 +48,14 @@ const getById = async (id) => {
   return response.data
 }
 
+const addComment = async (id, commentText) => {
+  const response = await axios.post(`${baseUrl}/${id}/comments`, {
+    text: commentText,
+  })
+  console.log('New comment:', response.data)
+  return response.data
+}
+
 export default {
   getAll,
   create,
@@ -56,4 +64,5 @@ export default {
   deleteBlog,
   fetchUsers,
   getById,
+  addComment,
 }
