@@ -37,7 +37,9 @@ const BlogForm = ({ createBlog }) => {
 
   return (
     <div>
-      <Typography variant="h4">Create new</Typography>
+      <Typography variant="h4" sx={{ mt: 3 }}>
+        Create new
+      </Typography>
       <form onSubmit={addBlog}>
         <div>
           <TextField
@@ -72,7 +74,13 @@ const BlogForm = ({ createBlog }) => {
             onChange={handleBlogChange}
           />
         </div>
-        <Button data-testid="submit-button" type="submit">
+        <Button
+          data-testid="submit-button"
+          sx={{ mt: 1, mb: 1 }}
+          type="submit"
+          variant="outlined"
+          color="success"
+        >
           Create
         </Button>
       </form>
