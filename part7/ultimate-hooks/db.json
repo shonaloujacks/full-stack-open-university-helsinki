@@ -1,0 +1,60 @@
+{
+  "notes": [
+    {
+      "id": 1,
+      "content": "custom-hooks are awesome!"
+    },
+    {
+      "id": 2,
+      "content": "best feature ever <3"
+    },
+    {
+      "content": "keep the console open always",
+      "id": 3
+    },
+    {
+      "content": "debugging is an art",
+      "id": 4
+    },
+    {
+      "content": "debugging is an art",
+      "id": 5
+    },
+    {
+      "content": "hello",
+      "id": 6
+    }
+  ],
+  "persons": [
+    {
+      "id": 1,
+      "name": "mluukkai",
+      "number": "040-5483923"
+    },
+    {
+      "id": 2,
+      "name": "hellas",
+      "number": "012-123123"
+    },
+    {
+      "name": "Shonaj",
+      "number": "352-332546",
+      "id": 3
+    },
+    {
+      "name": "eleven",
+      "number": "124-3313553",
+      "id": 4
+    },
+    {
+      "name": "eminem",
+      "number": "434-243392264",
+      "id": 5
+    },
+    {
+      "name": "Emily",
+      "number": "243-246264",
+      "id": 6
+    }
+  ]
+}
