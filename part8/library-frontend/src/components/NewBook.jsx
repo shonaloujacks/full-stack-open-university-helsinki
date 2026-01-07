@@ -1,6 +1,16 @@
 import { useState } from "react";
-import { ALL_BOOKS, CREATE_BOOK } from "../queries.js";
+import { ALL_BOOKS, CREATE_BOOK, ALL_AUTHORS } from "../queries.js";
 import { useMutation, useQuery } from "@apollo/client/react";
+import {
+  Typography,
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Box,
+} from "@mui/material";
 
 const NewBook = ({ setError }) => {
   const [title, setTitle] = useState("");
@@ -12,7 +22,7 @@ const NewBook = ({ setError }) => {
   const { data } = useQuery(ALL_BOOKS);
 
   const [createBook] = useMutation(CREATE_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }],
+    refetchQueries: [{ query: ALL_BOOKS, ALL_AUTHORS }],
     onCompleted: (data) => {
       console.log("THIS IS NEW BOOK DATA", data.addBook);
     },
@@ -42,43 +52,53 @@ const NewBook = ({ setError }) => {
   };
 
   return (
-    <div>
-      <form onSubmit={submit}>
-        <div>
-          title
-          <input
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author
-          <input
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          published
-          <input
-            type="number"
-            value={published}
-            onChange={({ target }) => setPublished(Number(target.value))}
-          />
-        </div>
-        <div>
-          <input
-            value={genre}
-            onChange={({ target }) => setGenre(target.value)}
-          />
-          <button onClick={addGenre} type="button">
-            add genre
-          </button>
-        </div>
-        <div>genres: {genres.join(" ")}</div>
-        <button type="submit">create book</button>
-      </form>
-    </div>
+    <Box sx={{ maxWidth: 600 }}>
+      <Typography variant="h3" color="secondary" sx={{ pt: 4, pb: 2 }}>
+        add new book
+      </Typography>
+      <Box
+        component="form"
+        onSubmit={submit}
+        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+      >
+        <TextField
+          label="title"
+          type="text"
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
+        />
+        <TextField
+          label="author"
+          value={author}
+          onChange={({ target }) => setAuthor(target.value)}
+        />
+
+        <TextField
+          label="published"
+          type="number"
+          value={published}
+          onChange={({ target }) => setPublished(Number(target.value))}
+        />
+        <TextField
+          label="genre"
+          value={genre}
+          onChange={({ target }) => setGenre(target.value)}
+        />
+        <Button
+          onClick={addGenre}
+          type="button"
+          sx={{ justifyContent: "flex-start" }}
+        >
+          add genre
+        </Button>
+        <Typography variant="body1" color="primary">
+          genres: {genres.join(" ")}
+        </Typography>
+        <Button type="submit" variant="contained">
+          create book
+        </Button>
+      </Box>
+    </Box>
   );
 };
 

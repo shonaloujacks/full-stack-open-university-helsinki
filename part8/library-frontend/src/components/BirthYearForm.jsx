@@ -47,7 +47,7 @@ const BirthYearForm = () => {
   return (
     <Box sx={{ maxWidth: 400 }}>
       <Typography variant="h4" color="secondary" sx={{ pt: 4, pb: 2 }}>
-        Set birth year
+        set birth year
       </Typography>
 
       <Box
