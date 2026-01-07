@@ -1,6 +1,16 @@
 import { useMutation, useQuery } from "@apollo/client/react";
 import { useState } from "react";
 import { ALL_AUTHORS, EDIT_BIRTH_YEAR } from "../queries";
+import {
+  Typography,
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Box,
+} from "@mui/material";
 
 const BirthYearForm = () => {
   const [name, setName] = useState("");
@@ -15,64 +25,70 @@ const BirthYearForm = () => {
 
   const { data, loading } = useQuery(ALL_AUTHORS);
 
-  const authors = data?.allAuthors;
-
-  if (loading) {
-    return <div>Loading authors...</div>;
+  if (loading || !data) {
+    return <Typography>Loading authors...</Typography>;
   }
 
-  const authorsWithNoBirthYear = authors.filter(
+  const authorsWithNoBirthYear = data.allAuthors.filter(
     (author) => author.born === null,
   );
-
-  console.log("Authors with no birth year", authorsWithNoBirthYear);
 
   const submit = async (event) => {
     event.preventDefault();
 
-    await editBirthYear({ variables: { name, setBornTo: Number(birthYear) } });
+    await editBirthYear({
+      variables: { name, setBornTo: Number(birthYear) },
+    });
 
     setName("");
     setBirthYear("");
   };
 
   return (
-    <div>
-      <h2>Set birth year</h2>
+    <Box sx={{ maxWidth: 400 }}>
+      <Typography variant="h4" color="secondary" sx={{ pt: 4, pb: 2 }}>
+        Set birth year
+      </Typography>
 
-      <form onSubmit={submit}>
-        <div>
-          <label>
-            name{" "}
-            <select
-              name="name"
-              value={name}
-              onChange={(event) => {
-                console.log("THIS IS E TARGET VALUE", event.target.value);
-                setName(event.target.value);
-              }}
-            >
-              <option value="" disabled>
-                Select an author
-              </option>
-              {authorsWithNoBirthYear.map((author) => (
-                <option key={author.id} value={author.name}>
-                  {author.name}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-        <div>
-          born{""}
-          <input
-            value={birthYear}
-            onChange={({ target }) => setBirthYear(target.value)}
-          />
-        </div>
-        <button type="submit">update author</button>
-      </form>
-    </div>
+      <Box
+        component="form"
+        onSubmit={submit}
+        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+      >
+        <FormControl fullWidth>
+          <InputLabel id="author-label">Author</InputLabel>
+          <Select
+            labelId="author-label"
+            id="author"
+            name="name"
+            value={name}
+            label="Author"
+            onChange={(event) => setName(event.target.value)}
+          >
+            <MenuItem value="" disabled>
+              Select an author
+            </MenuItem>
+            {authorsWithNoBirthYear.map((author) => (
+              <MenuItem key={author.id} value={author.name}>
+                {author.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <TextField
+          label="Birth year"
+          type="number"
+          value={birthYear}
+          onChange={(event) => setBirthYear(event.target.value)}
+          fullWidth
+        />
+
+        <Button type="submit" variant="contained">
+          Update author
+        </Button>
+      </Box>
+    </Box>
   );
 };
 
