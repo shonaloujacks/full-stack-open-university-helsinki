@@ -12,7 +12,7 @@ import {
   Box,
 } from "@mui/material";
 
-const BirthYearForm = () => {
+const BirthYearForm = ({ setError, setSuccess }) => {
   const [name, setName] = useState("");
   const [birthYear, setBirthYear] = useState("");
 
@@ -20,6 +20,12 @@ const BirthYearForm = () => {
     refetchQueries: [{ query: ALL_AUTHORS }],
     onCompleted: (data) => {
       console.log("THIS IS NEW BIRTH YEAR DATA", data.editAuthor);
+      setSuccess(`Birth year set for ${data.editAuthor.name}`);
+    },
+    onError: (error) => {
+      setError(error.message);
+      setName("");
+      setBirthYear("");
     },
   });
 

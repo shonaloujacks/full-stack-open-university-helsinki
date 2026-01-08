@@ -8,18 +8,26 @@ import { Toolbar, AppBar, Button, Container } from "@mui/material";
 
 const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
-  const notify = (message) => {
+  const notifyError = (message) => {
     setErrorMessage(message);
     setTimeout(() => {
       setErrorMessage(null);
+    }, 10000);
+  };
+
+  const notifySuccess = (message) => {
+    setSuccessMessage(message);
+    setTimeout(() => {
+      setSuccessMessage(null);
     }, 10000);
   };
   return (
     <Router>
       <Container>
         <div>
-          <Notify errorMessage={errorMessage} />
+          <Notify errorMessage={errorMessage} successMessage={successMessage} />
           <AppBar position="static" sx={{ backgroundColor: "primary" }}>
             <Toolbar>
               <Button color="inherit" component={Link} to="/authors">
@@ -37,8 +45,18 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Books />} />
             <Route path="/books" element={<Books />} />
-            <Route path="/authors" element={<Authors />} />
-            <Route path="/addbook" element={<NewBook setError={notify} />} />
+            <Route
+              path="/authors"
+              element={
+                <Authors setError={notifyError} setSuccess={notifySuccess} />
+              }
+            />
+            <Route
+              path="/addbook"
+              element={
+                <NewBook setError={notifyError} setSuccess={notifySuccess} />
+              }
+            />
           </Routes>
         </div>
       </Container>

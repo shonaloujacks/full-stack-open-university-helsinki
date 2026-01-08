@@ -1,8 +1,37 @@
-const Notify = ({ errorMessage }) => {
-  if (!errorMessage) {
-    return null;
+import { Typography, Box } from "@mui/material";
+const Notify = ({ errorMessage, successMessage }) => {
+  if (errorMessage) {
+    return (
+      <Box
+        component="section"
+        sx={{
+          backgroundColor: "white",
+
+          mb: 2,
+        }}
+      >
+        <Typography style={{ color: "red" }} sx={{ pt: 4, pb: 2 }}>
+          {errorMessage}
+        </Typography>
+      </Box>
+    );
   }
-  return <div style={{ color: "red" }}>{errorMessage}</div>;
+  if (successMessage) {
+    return (
+      <Box
+        component="section"
+        sx={{
+          backgroundColor: "white",
+
+          mb: 2,
+        }}
+      >
+        <Typography style={{ color: "green" }} sx={{ pt: 4, pb: 2 }}>
+          {successMessage}
+        </Typography>
+      </Box>
+    );
+  }
 };
 
 export default Notify;

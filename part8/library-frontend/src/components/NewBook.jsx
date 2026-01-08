@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ALL_BOOKS, CREATE_BOOK, ALL_AUTHORS } from "../queries.js";
-import { useMutation, useQuery } from "@apollo/client/react";
+import { useMutation } from "@apollo/client/react";
 import {
   Typography,
   Button,
@@ -12,21 +12,27 @@ import {
   Box,
 } from "@mui/material";
 
-const NewBook = ({ setError }) => {
+const NewBook = ({ setError, setSuccess }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [published, setPublished] = useState("");
   const [genre, setGenre] = useState("");
   const [genres, setGenres] = useState([]);
 
-  const { data } = useQuery(ALL_BOOKS);
-
   const [createBook] = useMutation(CREATE_BOOK, {
     refetchQueries: [{ query: ALL_BOOKS, ALL_AUTHORS }],
     onCompleted: (data) => {
       console.log("THIS IS NEW BOOK DATA", data.addBook);
+      setSuccess(`${data?.addBook.title} added!`);
     },
-    onError: (error) => setError(error.message),
+    onError: (error) => {
+      setError(error.message);
+      setTitle("");
+      setPublished("");
+      setAuthor("");
+      setGenres([]);
+      setGenre("");
+    },
   });
 
   const submit = async (event) => {
@@ -41,9 +47,6 @@ const NewBook = ({ setError }) => {
     setAuthor("");
     setGenres([]);
     setGenre("");
-
-    const books = data?.allBooks;
-    console.log("THIS IS BOOK LIST AFTER NEW BOOK", books);
   };
 
   const addGenre = () => {
@@ -87,7 +90,8 @@ const NewBook = ({ setError }) => {
         <Button
           onClick={addGenre}
           type="button"
-          sx={{ justifyContent: "flex-start" }}
+          sx={{ alignSelf: "flex-start" }}
+          variant="outlined"
         >
           add genre
         </Button>

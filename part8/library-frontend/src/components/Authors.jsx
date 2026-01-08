@@ -12,7 +12,7 @@ import {
   Paper,
 } from "@mui/material";
 
-const Authors = () => {
+const Authors = ({ setError, setSuccess }) => {
   const { data, loading } = useQuery(ALL_AUTHORS);
 
   if (loading) {
@@ -64,7 +64,7 @@ const Authors = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <BirthYearForm />
+      <BirthYearForm setError={setError} setSuccess={setSuccess} />
     </div>
   );
 };
