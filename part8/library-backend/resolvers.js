@@ -1,7 +1,6 @@
 const { GraphQLError } = require('graphql')
 const Book = require('./models/books')
 const Author = require('./models/authors')
-const { v1: uuid } = require('uuid')
 
 const resolvers = {
   Query: {
@@ -12,7 +11,14 @@ const resolvers = {
 
       if (args.author) {
         const author = await Author.findOne({ name: args.author })
-        if (!author) return []
+        if (!author) {
+          throw new GraphQLError(`Author ${args.author} does not exist`, {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args.author,
+            },
+          })
+        }
 
         query.author = author._id
       }
@@ -27,22 +33,30 @@ const resolvers = {
     },
 
     allAuthors: async () => {
-      console.log('allAuthors resolver called')
       try {
         const authors = await Author.find({})
-        console.log('Authors found:', authors)
         return authors
       } catch (error) {
-        console.error('Error in allAuthors resolver:', error)
         throw error
       }
     },
   },
   Mutation: {
     addBook: async (root, args) => {
-      author = await Author.findOne({ name: args.author })
+      let author = await Author.findOne({ name: args.author })
 
       if (!author) {
+        if (args.author.length < 4) {
+          throw new GraphQLError(
+            `Author name ${args.author} must be at least 4 characters long`,
+            {
+              extensions: {
+                code: 'BAD_USER_INPUT',
+                invalidArgs: args.author,
+              },
+            }
+          )
+        }
         author = await Author.create({ name: args.author })
       }
 
@@ -55,6 +69,18 @@ const resolvers = {
             invalidArgs: args.title,
           },
         })
+      }
+
+      if (args.title.length < 5) {
+        throw new GraphQLError(
+          `Book title ${args.title} must be at least 5 characters long`,
+          {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args.title,
+            },
+          }
+        )
       }
 
       let book
@@ -84,7 +110,12 @@ const resolvers = {
       const author = await Author.findOne({ name: args.name })
 
       if (!author) {
-        return null
+        throw new GraphQLError(`Author ${args.name} does not exist`, {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name,
+          },
+        })
       }
 
       if (!author.born) {
