@@ -56,7 +56,7 @@ const Books = () => {
             {books.map((book) => (
               <TableRow key={book.id}>
                 <TableCell>{book.title}</TableCell>
-                <TableCell>{book.author}</TableCell>
+                <TableCell>{book.author.name}</TableCell>
                 <TableCell>{book.published}</TableCell>
               </TableRow>
             ))}
