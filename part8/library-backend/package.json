@@ -12,6 +12,7 @@
     "dev": "node --watch index.js"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "prettier": "3.7.4"
   },
   "dependencies": {
