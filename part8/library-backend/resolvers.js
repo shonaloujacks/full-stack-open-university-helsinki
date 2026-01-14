@@ -1,6 +1,7 @@
 const { GraphQLError } = require('graphql')
 const Book = require('./models/books')
 const Author = require('./models/authors')
+const User = require('./models/user')
 
 const resolvers = {
   Query: {
@@ -133,6 +134,35 @@ const resolvers = {
         }
       }
       return author
+    },
+
+    createUser: async (root, args) => {
+      const user = new User({
+        username: args.username,
+        favoriteGenre: args.favoriteGenre,
+      })
+
+      console.log('THIS IS ARGS.FAVORITEGENRE', args.favoriteGenre)
+
+      if (args.username.length < 3) {
+        throw new GraphQLError(`Username must be 3 or more characters `, {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.username,
+          },
+        })
+      }
+      try {
+        return await user.save()
+      } catch (error) {
+        throw new GraphQLError(`Saving new user failed: ${error.message}`, {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.username,
+            error,
+          },
+        })
+      }
     },
   },
 
