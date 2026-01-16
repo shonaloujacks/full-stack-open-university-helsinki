@@ -67,6 +67,7 @@ const Books = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
       <GenreFilter />
     </div>
   );

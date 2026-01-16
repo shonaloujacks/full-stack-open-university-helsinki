@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { useApolloClient } from "@apollo/client/react";
 import { useState } from "react";
+import Recommendations from "./components/Recommendations";
 import LoginForm from "./components/LoginForm";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
@@ -62,6 +63,11 @@ const App = () => {
                   add book
                 </Button>
               )}
+              {token && (
+                <Button color="inherit" component={Link} to="/recommendations">
+                  recommendations
+                </Button>
+              )}
               {token ? (
                 <Button
                   color="inherit"
@@ -102,6 +108,12 @@ const App = () => {
                 ) : (
                   <Navigate replace to="/books" />
                 )
+              }
+            />
+            <Route
+              path="/recommendations"
+              element={
+                token ? <Recommendations /> : <Navigate replace to="/books" />
               }
             />
             <Route
