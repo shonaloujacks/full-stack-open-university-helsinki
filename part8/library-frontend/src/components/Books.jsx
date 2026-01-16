@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client/react";
 import { ALL_BOOKS } from "../queries";
+import GenreFilter from "./GenreFilter";
 import {
   Typography,
   Table,
@@ -9,6 +10,9 @@ import {
   TableHead,
   TableRow,
   Paper,
+  AppBar,
+  Toolbar,
+  Button,
 } from "@mui/material";
 
 const Books = () => {
@@ -63,6 +67,7 @@ const Books = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <GenreFilter />
     </div>
   );
 };
