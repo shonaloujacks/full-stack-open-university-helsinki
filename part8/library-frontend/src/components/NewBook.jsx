@@ -56,7 +56,7 @@ const NewBook = ({ setError, setSuccess }) => {
 
   return (
     <Box sx={{ maxWidth: 600 }}>
-      <Typography variant="h3" color="secondary" sx={{ pt: 4, pb: 2 }}>
+      <Typography variant="h3" color="secondary" sx={{ pt: 3, pb: 3 }}>
         add new book
       </Typography>
       <Box

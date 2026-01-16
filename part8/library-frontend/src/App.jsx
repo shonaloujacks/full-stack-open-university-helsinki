@@ -97,7 +97,11 @@ const App = () => {
             <Route
               path="/addbook"
               element={
-                <NewBook setError={notifyError} setSuccess={notifySuccess} />
+                token ? (
+                  <NewBook setError={notifyError} setSuccess={notifySuccess} />
+                ) : (
+                  <Navigate replace to="/books" />
+                )
               }
             />
             <Route
