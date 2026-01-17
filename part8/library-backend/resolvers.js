@@ -25,7 +25,7 @@ const resolvers = {
         query.author = author._id
       }
 
-      if (args.genres && args.genres.length > 0) {
+      if (args.genres[0] !== '') {
         query.genres = {
           $all: args.genres,
         }
@@ -44,6 +44,9 @@ const resolvers = {
     },
     me: (root, args, context) => {
       console.log('THIS IS CONTEXT', context)
+      if (args.favoriteGenre) {
+        return context.currentUser.favoriteGenre
+      }
       return context.currentUser
     },
   },
