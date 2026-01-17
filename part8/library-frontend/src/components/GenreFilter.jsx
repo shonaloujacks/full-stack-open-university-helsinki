@@ -1,6 +1,7 @@
 import { AppBar, Toolbar, Button } from "@mui/material";
+import { ALL_BOOKS } from "../queries";
 
-const GenreFilter = () => {
+const GenreFilter = ({ setGenre }) => {
   return (
     <div>
       <AppBar
@@ -9,16 +10,29 @@ const GenreFilter = () => {
         sx={{ top: "auto", bottom: 0 }}
       >
         <Toolbar sx={{ gap: 1 }}>
-          <Button variant="contained">refactoring</Button>
-          <Button variant="contained">agile</Button>
-          <Button variant="contained">patterns</Button>
-          <Button variant="contained">design</Button>
-          <Button variant="contained">crime</Button>
-          <Button variant="contained">classic</Button>
-          <Button variant="contained">all genres</Button>
+          <Button variant="contained" onClick={() => setGenre("refactoring")}>
+            refactoring
+          </Button>
+          <Button variant="contained" onClick={() => setGenre("agile")}>
+            agile
+          </Button>
+          <Button variant="contained" onClick={() => setGenre("patterns")}>
+            patterns
+          </Button>
+          <Button variant="contained" onClick={() => setGenre("design")}>
+            design
+          </Button>
+          <Button variant="contained" onClick={() => setGenre("crime")}>
+            crime
+          </Button>
+          <Button variant="contained" onClick={() => setGenre("classic")}>
+            classic
+          </Button>
+          <Button variant="contained" onClick={() => setGenre("")}>
+            all genres
+          </Button>
         </Toolbar>
       </AppBar>
-      ;
     </div>
   );
 };

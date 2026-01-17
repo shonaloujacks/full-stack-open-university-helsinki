@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client/react";
+import { useState } from "react";
 import { ALL_BOOKS } from "../queries";
 import GenreFilter from "./GenreFilter";
 import {
@@ -10,13 +11,14 @@ import {
   TableHead,
   TableRow,
   Paper,
-  AppBar,
-  Toolbar,
-  Button,
 } from "@mui/material";
 
 const Books = () => {
-  const { data, loading } = useQuery(ALL_BOOKS);
+  const [genre, setGenre] = useState("");
+
+  const { data, loading } = useQuery(ALL_BOOKS, {
+    variables: { genres: [genre] },
+  });
 
   if (loading) {
     return (
@@ -27,6 +29,7 @@ const Books = () => {
   }
 
   const books = data?.allBooks;
+  console.log("THIS IS BOOKS", books);
 
   if (!books) {
     return null;
@@ -68,7 +71,7 @@ const Books = () => {
         </Table>
       </TableContainer>
 
-      <GenreFilter />
+      <GenreFilter genre={genre} setGenre={setGenre} />
     </div>
   );
 };
