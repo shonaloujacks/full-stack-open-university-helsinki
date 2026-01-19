@@ -1,5 +1,4 @@
 import { AppBar, Toolbar, Button } from "@mui/material";
-import { ALL_BOOKS } from "../queries";
 
 const GenreFilter = ({ setGenre }) => {
   return (
