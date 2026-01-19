@@ -26,7 +26,7 @@ const App = () => {
   const onLogout = () => {
     setToken(null);
     localStorage.clear();
-    client.resetStore();
+    client.clearStore();
   };
 
   const notifyError = (message) => {
