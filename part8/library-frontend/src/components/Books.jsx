@@ -13,11 +13,13 @@ import {
   Paper,
 } from "@mui/material";
 
-const Books = () => {
+const Books = ({ setError }) => {
   const [genre, setGenre] = useState("");
 
   const { data, loading } = useQuery(ALL_BOOKS, {
     variables: { genres: [genre] },
+    fetchPolicy: "cache-and-network",
+    onError: (error) => setError(error.message),
   });
 
   if (loading) {
@@ -41,7 +43,7 @@ const Books = () => {
         books
       </Typography>
 
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ mb: 10 }}>
         <Table>
           <TableHead>
             <TableRow>

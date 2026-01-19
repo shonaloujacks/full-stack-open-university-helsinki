@@ -93,7 +93,7 @@ const App = () => {
 
           <Routes>
             <Route path="/" element={<Books />} />
-            <Route path="/books" element={<Books />} />
+            <Route path="/books" element={<Books setError={notifyError} />} />
             <Route
               path="/authors"
               element={

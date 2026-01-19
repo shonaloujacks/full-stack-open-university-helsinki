@@ -53,7 +53,7 @@ const Recommendations = () => {
         books in your favourite genre <b>{genre}</b>
       </Typography>
 
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ mb: 10 }}>
         <Table>
           <TableHead>
             <TableRow>

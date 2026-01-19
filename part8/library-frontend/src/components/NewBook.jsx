@@ -20,7 +20,6 @@ const NewBook = ({ setError, setSuccess }) => {
   const [genres, setGenres] = useState([]);
 
   const [createBook] = useMutation(CREATE_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS, ALL_AUTHORS }],
     onCompleted: (data) => {
       console.log("THIS IS NEW BOOK DATA", data.addBook);
       setSuccess(`${data?.addBook.title} added!`);
@@ -33,14 +32,23 @@ const NewBook = ({ setError, setSuccess }) => {
       setGenres([]);
       setGenre("");
     },
+    update: (cache) => {
+      cache.evict({ fieldName: "allBooks" });
+      cache.evict({ fieldName: "allAuthors" });
+      cache.gc();
+    },
   });
 
   const submit = async (event) => {
     event.preventDefault();
 
-    await createBook({
-      variables: { title, author, published, genres },
-    });
+    try {
+      await createBook({
+        variables: { title, author, published, genres },
+      });
+    } catch (error) {
+      setError(error.message);
+    }
 
     setTitle("");
     setPublished("");
