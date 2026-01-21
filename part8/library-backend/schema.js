@@ -29,7 +29,7 @@ const typeDefs = /* GraphQL */ `
     authorCount: Int!
     allBooks(author: String, genres: [String]): [Book!]!
     allAuthors: [Author!]!
-    me(favoriteGenre: String): User
+    me: User
   }
 
   type Mutation {
@@ -43,6 +43,10 @@ const typeDefs = /* GraphQL */ `
     editAuthor(name: String!, setBornTo: Int): Author
     createUser(username: String!, favoriteGenre: String!): User
     login(username: String!, password: String!): Token
+  }
+
+  type Subscription {
+    bookAdded: Book!
   }
 `
 

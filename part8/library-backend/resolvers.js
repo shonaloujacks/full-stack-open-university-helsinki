@@ -1,8 +1,12 @@
 const { GraphQLError } = require('graphql')
+const { PubSub } = require('graphql-subscriptions')
+const jwt = require('jsonwebtoken')
+
 const Book = require('./models/books')
 const Author = require('./models/authors')
 const User = require('./models/user')
-const jwt = require('jsonwebtoken')
+
+const pubsub = new PubSub()
 
 const resolvers = {
   Query: {
@@ -43,10 +47,6 @@ const resolvers = {
       }
     },
     me: (root, args, context) => {
-      console.log('THIS IS CONTEXT', context)
-      if (args.favoriteGenre) {
-        return context.currentUser.favoriteGenre
-      }
       return context.currentUser
     },
   },
@@ -123,6 +123,8 @@ const resolvers = {
           },
         })
       }
+
+      pubsub.publish('BOOK_ADDED', { bookAdded: book })
 
       return book
     },
@@ -214,6 +216,12 @@ const resolvers = {
   Author: {
     bookCount: async (root, args) => {
       return Book.countDocuments({ author: root._id })
+    },
+  },
+
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterableIterator('BOOK_ADDED'),
     },
   },
 }
