@@ -11,6 +11,7 @@ import {
   InputLabel,
   Box,
 } from "@mui/material";
+import { addBookToCache } from "../utils/apolloCache";
 
 const NewBook = ({ setError, setSuccess }) => {
   const [title, setTitle] = useState("");
@@ -32,10 +33,10 @@ const NewBook = ({ setError, setSuccess }) => {
       setGenres([]);
       setGenre("");
     },
-    update: (cache) => {
-      cache.evict({ fieldName: "allBooks" });
-      cache.evict({ fieldName: "allAuthors" });
-      cache.gc();
+    update: (cache, response) => {
+      const newBook = response.data.addBook;
+      console.log("THIS IS RESPONSE in NewBook", response);
+      addBookToCache(cache, newBook);
     },
   });
 
