@@ -35,7 +35,7 @@ const Authors = ({ setError, setSuccess }) => {
         authors
       </Typography>
 
-      <TableContainer component={Paper} sx={{ mb: 10 }}>
+      <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>

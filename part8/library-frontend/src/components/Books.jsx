@@ -18,7 +18,6 @@ const Books = ({ setError }) => {
 
   const { data, loading } = useQuery(ALL_BOOKS, {
     variables: { genres: [genre] },
-    fetchPolicy: "cache-and-network",
     onError: (error) => setError(error.message),
   });
 

@@ -47,7 +47,7 @@ const Recommendations = () => {
   return (
     <div>
       <Typography variant="h3" color="secondary">
-        Recommendations
+        recommendations
       </Typography>
       <Typography variant="h5" color="secondary">
         books in your favourite genre <b>{genre}</b>
