@@ -1,18 +1,20 @@
 import { ALL_BOOKS } from "../queries";
 
 export const addBookToCache = (cache, bookToAdd) => {
-  cache.updateQuery({ query: ALL_BOOKS }, (data) => {
-    if (!data) return null;
+  const variableSet = [
+    { genres: [""] },
+    ...bookToAdd.genres.map((genre) => ({ genres: [genre] })),
+  ];
 
-    const { allBooks } = data;
-    const bookExists = allBooks.some((book) => book.id === bookToAdd.id);
+  variableSet.forEach((variables) => {
+    cache.updateQuery({ query: ALL_BOOKS, variables }, (data) => {
+      if (!data) return null;
 
-    if (bookExists) {
-      return { allBooks };
-    }
-
-    return {
-      allBooks: allBooks.concat(bookToAdd),
-    };
+      const { allBooks } = data;
+      if (allBooks.some((book) => book.id === bookToAdd.id)) {
+        return { allBooks };
+      }
+      return { allBooks: allBooks.concat(bookToAdd) };
+    });
   });
 };

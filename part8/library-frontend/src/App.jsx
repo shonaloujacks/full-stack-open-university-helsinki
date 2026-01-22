@@ -14,7 +14,7 @@ import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Notify from "./components/Notify";
 import { Toolbar, AppBar, Button, Container } from "@mui/material";
-import { BOOK_ADDED } from "./queries";
+import { BOOK_ADDED, ALL_BOOKS } from "./queries";
 import { addBookToCache } from "./utils/apolloCache";
 
 const App = () => {
@@ -26,7 +26,7 @@ const App = () => {
   const client = useApolloClient();
 
   useSubscription(BOOK_ADDED, {
-    onData: ({ data }) => {
+    onData: ({ data, client }) => {
       const newBook = data.data.bookAdded;
       console.log("This is data in subscription", data);
       addBookToCache(client.cache, newBook);
