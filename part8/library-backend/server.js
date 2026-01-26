@@ -1,3 +1,5 @@
+const DataLoader = require('dataloader')
+const { batchBookCounts, batchAuthorInfo } = require('./loaders')
 const { WebSocketServer } = require('ws')
 const { useServer } = require('graphql-ws/use/ws')
 const { ApolloServer } = require('@apollo/server')
@@ -63,7 +65,13 @@ const startServer = async (port) => {
       context: async ({ req }) => {
         const auth = req.headers.authorization
         const currentUser = await getUserFromAuthHeader(auth)
-        return { currentUser }
+        return {
+          currentUser,
+          loaders: {
+            bookCount: new DataLoader(batchBookCounts),
+            author: new DataLoader(batchAuthorInfo),
+          },
+        }
       },
     })
   )

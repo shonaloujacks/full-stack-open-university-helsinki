@@ -35,12 +35,13 @@ const resolvers = {
         }
       }
 
-      return Book.find(query).populate('author')
+      return Book.find(query)
     },
 
     allAuthors: async () => {
       try {
         const authors = await Author.find({})
+        console.log('allAuthors running')
         return authors
       } catch (error) {
         throw error
@@ -113,7 +114,6 @@ const resolvers = {
           genres: args.genres,
           author: author._id,
         })
-        await book.populate('author')
       } catch (error) {
         throw new GraphQLError(`Saving book failed: ${error.message}`, {
           extensions: {
@@ -214,8 +214,14 @@ const resolvers = {
   },
 
   Author: {
-    bookCount: async (root, args) => {
-      return Book.countDocuments({ author: root._id })
+    bookCount: async (root, args, context) => {
+      return context.loaders.bookCount.load(root._id)
+    },
+  },
+
+  Book: {
+    author: async (root, args, context) => {
+      return context.loaders.author.load(root.author)
     },
   },
 
