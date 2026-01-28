@@ -24,7 +24,9 @@ app.get('/bmi', (req, res) => {
 
     const bmi = calculateBmi(height, weight);
     res.json({ height, weight, bmi });
-  } catch {
-    res.status(400).json({ error: 'Provided values were not numbers!' });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    }
   }
 });
