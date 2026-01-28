@@ -38,7 +38,7 @@ const calculateExercises = (targetHours: number, dailyHours: number[]) : exercis
 
   const targetAveragePercentageDifference = ((averageHours - targetHours) / targetHours ) * 100
   
-  let rating: number; 
+  let rating!: number; 
   
   if (targetAveragePercentageDifference >= 0 ) {
     rating = 3
@@ -50,7 +50,7 @@ const calculateExercises = (targetHours: number, dailyHours: number[]) : exercis
     rating = 1
   }
 
-  let ratingDescription: string;
+  let ratingDescription!: string;
 
   if (rating === 3 ) {
     ratingDescription = 'you smashed your target!'
