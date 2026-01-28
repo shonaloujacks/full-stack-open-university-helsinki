@@ -24,7 +24,6 @@ const parseArguments = (args: string[]): BmiValues => {
 
 const calculateBmi = (height: number, weight: number, printText: string) : void => {
   const bmiResult = (weight / (height * height)) * 10000
-  console.log('THIS IS BMI result', bmiResult)
 
   if (bmiResult < 18.5 ) {
    console.log(printText, 'Underweight')
