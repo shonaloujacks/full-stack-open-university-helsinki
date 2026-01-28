@@ -25,7 +25,6 @@ export const calculateBmi = (height: number, weight: number): string => {
   if (bmiResult < 18.5) {
     return 'Underweight';
   }
-
   if (bmiResult >= 18.5 && bmiResult < 25) {
     return 'Healthy range';
   } else if (bmiResult >= 25 && bmiResult < 30) {
