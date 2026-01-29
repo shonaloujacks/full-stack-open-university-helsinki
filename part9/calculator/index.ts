@@ -1,15 +1,12 @@
 import express from 'express';
 import { calculateBmi } from './bmiCalculator';
+import { calculateExercises } from './exerciseCalculator';
+
 const app = express();
+app.use(express.json());
 
 app.get('/hello', (_req, res) => {
   res.send('Hello Full Stack!');
-});
-
-const PORT = 3003;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
 });
 
 app.get('/bmi', (req, res) => {
@@ -29,4 +26,31 @@ app.get('/bmi', (req, res) => {
       res.status(500).json({ error: error.message });
     }
   }
+});
+
+app.post('/exercises', (req, res) => {
+  const targetHours = Number(req.body.targetHours);
+  const dailyHours = req.body.dailyHours.map((day: any) => Number(day));
+
+  try {
+    if (!targetHours || !dailyHours) {
+      res.status(400).json({ error: 'parameters are missing' });
+    }
+
+    if (isNaN(targetHours) || dailyHours.some((day: any) => isNaN(day))) {
+      res.status(400).json({ error: 'malformatted parameters' });
+    }
+    const result = calculateExercises(targetHours, dailyHours);
+    res.send({ result });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+});
+
+const PORT = 3003;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
