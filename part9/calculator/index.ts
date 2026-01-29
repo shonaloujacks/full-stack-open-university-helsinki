@@ -29,16 +29,18 @@ app.get('/bmi', (req, res) => {
 });
 
 app.post('/exercises', (req, res) => {
-  const targetHours = Number(req.body.targetHours);
-  const dailyHours = req.body.dailyHours.map((day: any) => Number(day));
-
   try {
-    if (!targetHours || !dailyHours) {
+    if (!req.body.targetHours || !req.body.dailyHours) {
       res.status(400).json({ error: 'parameters are missing' });
+      return;
     }
+
+    const targetHours = Number(req.body.targetHours);
+    const dailyHours = req.body.dailyHours.map((day: any) => Number(day));
 
     if (isNaN(targetHours) || dailyHours.some((day: any) => isNaN(day))) {
       res.status(400).json({ error: 'malformatted parameters' });
+      return;
     }
     const result = calculateExercises(targetHours, dailyHours);
     res.send({ result });
