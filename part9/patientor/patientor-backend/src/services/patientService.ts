@@ -1,7 +1,7 @@
 import patientData from '../../data/patientEntries'
 
 const getPatients = () => {
-  return patientData
+  return patientData;
 };
 
 const addPatient = () => {
@@ -11,4 +11,4 @@ const addPatient = () => {
 export default {
   getPatients,
   addPatient
-}
+};
