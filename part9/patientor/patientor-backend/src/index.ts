@@ -8,7 +8,7 @@ app.use(cors({ origin: ['http://localhost:5174', 'http://127.0.0.1:5174']}))
 
 const PORT = 3000;
 
-app.get('/ping', (_req, res) => {
+app.get('/api/ping', (_req, res) => {
   console.log('someone pinged here');
   res.send('pong');
 });
