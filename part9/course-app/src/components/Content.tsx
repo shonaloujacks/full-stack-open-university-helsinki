@@ -1,6 +1,6 @@
-import type { CoursePart } from "../types"
+import type { ContentProps, CoursePart } from "../types"
 
-const Content = ({courseParts}: {courseParts: CoursePart[]}) => {
+const Content = ({courseParts}: ContentProps) => {
 
 return (
 <div>
