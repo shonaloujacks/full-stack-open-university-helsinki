@@ -1,6 +1,7 @@
 import Header from './components/Header'
 import Content from './components/Content'
 import Total from './components/Total'
+import './App.css'
 import type { CoursePart } from './types';
 
 const App = () => {
