@@ -14,7 +14,7 @@ const Part = ({courseParts}: PartProps) => {
       case "basic":
         return <div key={part.name}>
           {basics}
-          <p>{part.description}</p>
+          <p><i>{part.description}</i></p>
           </div>
       case "group":
         return <div key={part.name}>
@@ -24,8 +24,15 @@ const Part = ({courseParts}: PartProps) => {
       case "background":
         return <div key={part.name}>
           {basics}
-          <p>{part.description}</p>
+          <p><i>{part.description}</i></p>
           <p>{part.backgroundMaterial}</p>
+        </div>
+      case "special":
+        const requirementsAsString = part.requirements.join(', ')
+        return <div key={part.name}>
+          {basics}
+            <p><i>{part.description}</i></p>
+            <p>Required skills: {requirementsAsString}</p> 
           </div>
         default:
           return assertNever(part);

@@ -38,6 +38,13 @@ const courseParts: CoursePart[] = [
     description: "A hard part",
     kind: "basic",
   },
+  {
+    name: "Backend development",
+    exerciseCount: 21,
+    description: "Typing the backend",
+    requirements: ["nodejs", "jest"],
+    kind: "special",
+  }
 ];
 
   const totalExercises: number = courseParts.reduce((sum, part) => sum + part.exerciseCount, 0);
