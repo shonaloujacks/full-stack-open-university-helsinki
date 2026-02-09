@@ -35,7 +35,7 @@ const courseParts: CoursePart[] = [
   {
     name: "TypeScript in frontend",
     exerciseCount: 10,
-    description: "a hard part",
+    description: "A hard part",
     kind: "basic",
   },
 ];

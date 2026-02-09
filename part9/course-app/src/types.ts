@@ -6,6 +6,10 @@ export interface TotalProps {
   totalExercises: number;
 }
 
+export interface PartProps {
+  courseParts: CoursePart[]
+}
+
 export interface ContentProps {
   courseParts: CoursePart[];
 }
@@ -17,6 +21,10 @@ interface CoursePartBase {
   exerciseCount: number;
 }
 
+interface CoursePartDescription extends CoursePartBase {
+  description: string;
+}
+
 interface CoursePartBasic extends CoursePartDescription {
   kind: "basic"
 }
@@ -24,10 +32,6 @@ interface CoursePartBasic extends CoursePartDescription {
 interface CoursePartGroup extends CoursePartBase {
   groupProjectCount: number;
   kind: "group"
-}
-
-interface CoursePartDescription extends CoursePartBase {
-  description: string;
 }
 
 interface CoursePartBackground extends CoursePartDescription {
