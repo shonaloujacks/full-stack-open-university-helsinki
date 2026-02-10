@@ -7,6 +7,10 @@ export interface Diary {
 
 }
 
+export interface DiaryListProp {
+  diaries: Diary[];
+}
+
 type Weather = 'sunny' | 'rainy' | 'cloudy' | 'stormy' | 'windy';
 
 type Visibility = 'great' | 'good' | 'ok' | 'poor';
