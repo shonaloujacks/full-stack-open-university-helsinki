@@ -1,4 +1,4 @@
-export interface Diary {
+export interface DiaryEntry {
   id: string,
   date: string;
   weather: Weather;
@@ -8,11 +8,17 @@ export interface Diary {
 }
 
 export interface DiaryListProp {
-  diaries: Diary[];
+  diaries: DiaryEntry[];  
 }
 
-type Weather = 'sunny' | 'rainy' | 'cloudy' | 'stormy' | 'windy';
+export interface NewDiaryFormProp {
+    diaries: DiaryEntry[];
+    setDiaries: React.Dispatch<React.SetStateAction<DiaryEntry[]>>;
+  }
 
-type Visibility = 'great' | 'good' | 'ok' | 'poor';
 
-export type NewDiary = Omit<Diary, 'id'>
+export type Weather = 'sunny' | 'rainy' | 'cloudy' | 'stormy' | 'windy';
+
+export type Visibility = 'great' | 'good' | 'ok' | 'poor';
+
+export type NewDiaryEntry = Omit<DiaryEntry, 'id'>

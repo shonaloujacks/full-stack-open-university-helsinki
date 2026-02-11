@@ -1,25 +1,36 @@
 import { useState, useEffect } from 'react'
-import axios from "axios";
-import type { Diary } from './types'
+import type { DiaryEntry } from './types'
 import DiaryList from './components/DiaryList';
+import NewDiaryForm from './components/NewDiaryForm';
+import { getAllDiaries } from './DiaryService';
+
 
 
 const App = () => {
-  const [diaries, setDiaries] = useState<Diary[]>([])
-
-  const baseUrl = "http://localhost:3000/api/diaries"
+  const [diaries, setDiaries] = useState<DiaryEntry[]>([])
 
   useEffect(() => {
-    const getDiaries = async () => {
-      const response = await axios.get<Diary[]>(baseUrl)
-      setDiaries(response.data)
+    const retrieveDiaries = async () => {
+      const data = await getAllDiaries()
+      setDiaries(data)
     };
-    getDiaries();
+    retrieveDiaries();
   }, [])
+
+  // const errorNotification = () => {
+
+  // }
+
+  // const successNotification = () => {
+
+  // }
 
   return (
     
+  <div>
+    <NewDiaryForm diaries={diaries} setDiaries={setDiaries}/>  
     <DiaryList diaries={diaries}/>
+  </div>
 
   )
 }
