@@ -40,7 +40,9 @@ const NewDiaryForm = ({diaries, setDiaries}: NewDiaryFormProp, ) => {
           date:
         <label>
         <input
+          type="date"
           value={date}
+          max={new Date().toISOString().split('T')[0]}
           onChange={(event) => setDate(event.target.value)}/>
           </label>
           </div>
