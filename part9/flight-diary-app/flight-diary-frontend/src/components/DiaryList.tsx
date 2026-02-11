@@ -6,7 +6,7 @@ const DiaryList = ({diaries}: DiaryListProp) => {
   return (
   
   <Box>
-      <Typography color="primary" variant="h3" mb={2}>
+      <Typography color="primary" variant="h3" mb={2} mt={5}>
         diary entries
         </Typography>
 

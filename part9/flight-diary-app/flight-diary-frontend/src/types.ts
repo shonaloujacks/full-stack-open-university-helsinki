@@ -5,11 +5,11 @@ export interface DiaryEntry {
   visibility: Visibility;
   comment: string;
 
-}
+  }
 
 export interface DiaryListProp {
   diaries: DiaryEntry[];  
-}
+  }
 
 export interface NewDiaryFormProp {
     diaries: DiaryEntry[];
