@@ -1,3 +1,7 @@
+export interface NotificationProp {
+  errorNotification: string;
+}
+
 export interface DiaryEntry {
   id: string,
   date: string;
@@ -14,7 +18,8 @@ export interface DiaryListProp {
 export interface NewDiaryFormProp {
     diaries: DiaryEntry[];
     setDiaries: React.Dispatch<React.SetStateAction<DiaryEntry[]>>;
-  }
+    showError: (message: string ) => void;
+  };
 
 
 export type Weather = 'sunny' | 'rainy' | 'cloudy' | 'stormy' | 'windy';

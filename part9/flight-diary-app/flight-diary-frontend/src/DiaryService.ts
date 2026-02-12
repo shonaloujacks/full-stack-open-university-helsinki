@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { DiaryEntry, NewDiaryEntry } from './types'
 
-const baseUrl = "http://localhost:3000/api/diaries";
+const baseUrl = "http://localhost:3000/api/diaries"
 
 export const getAllDiaries = async () => {
   const response = await axios.get<DiaryEntry[]>(baseUrl)

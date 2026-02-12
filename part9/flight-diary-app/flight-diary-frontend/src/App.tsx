@@ -3,11 +3,13 @@ import type { DiaryEntry } from './types'
 import DiaryList from './components/DiaryList';
 import NewDiaryForm from './components/NewDiaryForm';
 import { getAllDiaries } from './DiaryService';
+import Notification from './components/Notification'
 
 
 
 const App = () => {
   const [diaries, setDiaries] = useState<DiaryEntry[]>([])
+  const [errorNotification, setErrorNotification] = useState("")
 
   useEffect(() => {
     const retrieveDiaries = async () => {
@@ -17,18 +19,18 @@ const App = () => {
     retrieveDiaries();
   }, [])
 
-  // const errorNotification = () => {
+  const showError = (message: string) => {
+    setErrorNotification(message)
+    setTimeout(() => { setErrorNotification("")
+    }, 5000)
+  };
 
-  // }
-
-  // const successNotification = () => {
-
-  // }
 
   return (
     
   <div>
-    <NewDiaryForm diaries={diaries} setDiaries={setDiaries}/>  
+    {errorNotification ? <Notification errorNotification={errorNotification} /> : null}
+    <NewDiaryForm diaries={diaries} setDiaries={setDiaries} showError={showError}/>  
     <DiaryList diaries={diaries}/>
   </div>
 

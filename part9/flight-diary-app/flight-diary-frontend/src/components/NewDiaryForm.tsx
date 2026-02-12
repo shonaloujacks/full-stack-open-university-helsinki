@@ -1,13 +1,14 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { addDiary } from "../DiaryService";
 import type { Weather, Visibility, NewDiaryFormProp } from "../types";
-import { Typography, Button } from "@mui/material";
+import { Typography, Box, Button, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from "@mui/material";
 
 const weatherOptions: Weather[] = ['sunny', 'rainy', 'cloudy', 'stormy', 'windy']
 
 const visibilityOptions: Visibility[] = ['great', 'good', 'ok', 'poor']
 
-const NewDiaryForm = ({diaries, setDiaries}: NewDiaryFormProp, ) => {
+const NewDiaryForm = ({diaries, setDiaries, showError}: NewDiaryFormProp, ) => {
   const [date, setDate] = useState('')
   const [weather, setWeather] = useState<Weather>('sunny')
   const [visibility, setVisibility] = useState<Visibility>('great')
@@ -15,6 +16,7 @@ const NewDiaryForm = ({diaries, setDiaries}: NewDiaryFormProp, ) => {
 
   const diaryCreation = async (event: React.SyntheticEvent) => {
     event.preventDefault();
+    try {
     const newDiary = await addDiary({
       date: date,
       weather: weather,
@@ -27,68 +29,61 @@ const NewDiaryForm = ({diaries, setDiaries}: NewDiaryFormProp, ) => {
     setVisibility('great')
     setComment('')
     console.log('this is diaries content', diaries)
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+       showError(error.response?.data ||error.message)
+     }
   }
+ }
 
   return (
-    <div>
+    <Box>
       <Typography color="primary" variant="h3" mb={2}>
         add new entry
         </Typography>
       
       <form onSubmit={diaryCreation}>
-        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-          date:
-        <label>
-        <input
+        <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+        <TextField
           type="date"
           value={date}
-          max={new Date().toISOString().split('T')[0]}
+          slotProps={{ htmlInput: {max: new Date().toISOString().split('T')[0] }}}
           onChange={(event) => setDate(event.target.value)}/>
-          </label>
-          </div>
+          </Box>
 
-       
-         <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-           weather: 
-          {weatherOptions.map((w) => (
-            <label key={w}>
-              <input 
-                type="radio"
-                name="weather"
-                checked={weather === w} 
-                onChange={() => setWeather(w)}
-              />
-              {w}
-            </label>
-            ))}
-          </div>
+        <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+         <FormControl sx={{ mb: 2 }}>
+            <FormLabel>weather</FormLabel>
+            <RadioGroup row value={weather} onChange={(e) => setWeather(e.target.value as Weather)}>
+              {weatherOptions.map((w) => (
+                <FormControlLabel key={w} value={w} control={<Radio />} label={w} />
+              ))}
+            </RadioGroup>
+          </FormControl>
+        </Box>
 
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-            visibility: 
+        <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+          <FormControl sx={{ mb: 2 }}>
+            <FormLabel>visibility: </FormLabel>
+            <RadioGroup row value={visibility} onChange={(e) => setVisibility(e.target.value as Visibility) }>
             {visibilityOptions.map((v) => (
-            <label key={v}>
-              <input
-                type="radio"
-                name="visibility"
-                checked={visibility === v}
-                onChange={() => setVisibility(v)}
-              />
-              {v}
-            </label>
+            <FormControlLabel key={v} value={v} control={<Radio />} label={v} />
           ))}
-          </div>
+          </RadioGroup>
+          </FormControl>
+        </Box>
 
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+      <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
         comment: 
         <input
           value={comment}
           onChange={(event) => setComment(event.target.value)}/>
-        </div>
+        </Box>
 
         <Button type="submit" variant="contained" color="secondary">submit</Button>
       </form>
 
-    </div>
+    </Box>
   )
 };
 
