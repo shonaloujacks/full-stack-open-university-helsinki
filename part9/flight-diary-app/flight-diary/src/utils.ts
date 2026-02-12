@@ -19,7 +19,7 @@ const isDate = (date: string): boolean => {
 
 const parseDate = (date: unknown): string => {
   if (!isString(date) || !isDate(date)) {
-      throw new Error('Incorrect date: ' + date);
+      throw new Error('Incorrect date ' + date);
   }
   return date;
 };
