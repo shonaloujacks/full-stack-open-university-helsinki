@@ -54,7 +54,7 @@ const NewDiaryForm = ({diaries, setDiaries, showNotification}: NewDiaryFormProp,
 
         <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
          <FormControl sx={{ mb: 2 }}>
-            <FormLabel>weather</FormLabel>
+            <FormLabel>weather:</FormLabel>
             <RadioGroup row value={weather} onChange={(e) => setWeather(e.target.value as Weather)}>
               {weatherOptions.map((w) => (
                 <FormControlLabel key={w} value={w} control={<Radio />} label={w} />
