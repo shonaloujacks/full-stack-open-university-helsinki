@@ -4,6 +4,9 @@ import DiaryList from './components/DiaryList';
 import NewDiaryForm from './components/NewDiaryForm';
 import { getAllDiaries } from './DiaryService';
 import Notification from './components/Notification'
+import { BrowserRouter as Router, Link, Routes, Route } from 'react-router-dom';   
+import {AppBar, Toolbar, Button} from "@mui/material";
+import FlightIcon from '@mui/icons-material/Flight';    
 
 
 
@@ -36,13 +39,27 @@ const App = () => {
 
 
   return (
-    
-  <div>
-    {errorNotification || successNotification ? <Notification errorNotification={errorNotification} successNotification={successNotification} /> : null}
-    <NewDiaryForm diaries={diaries} setDiaries={setDiaries} showNotification={showNotification}/>  
-    <DiaryList diaries={diaries}/>
-  </div>
+    <Router>
+      <div>
+      {errorNotification || successNotification ? <Notification errorNotification={errorNotification} successNotification={successNotification} /> : null}
+      <AppBar position="static" sx={{ backgroundColor: "primary", color: "white" }}>
+        <Toolbar>
+          <FlightIcon sx={{ mr: 2 }} />
+          <Button color="inherit" component={Link} to="/">
+          flight diaries
+          </Button>
+          <Button color="inherit" component={Link} to="/addnewdiary">
+          add new diary
+          </Button>
+        </Toolbar>
+      </AppBar>
 
+      <Routes>
+        <Route path="/" element={<DiaryList diaries={diaries}/>}/>
+        <Route path="/addnewdiary" element={<NewDiaryForm diaries={diaries} setDiaries={setDiaries} showNotification={showNotification}/>}/>
+      </Routes>
+     </div>
+    </Router>
   )
 }
 

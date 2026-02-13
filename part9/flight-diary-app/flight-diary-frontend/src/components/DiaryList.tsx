@@ -6,7 +6,7 @@ const DiaryList = ({diaries}: DiaryListProp) => {
   return (
   
   <Box>
-      <Typography color="primary" variant="h3" mb={2} mt={5}>
+      <Typography color="secondary" variant="h3" mb={2} mt={5}>
         diary entries
         </Typography>
 
@@ -15,7 +15,7 @@ const DiaryList = ({diaries}: DiaryListProp) => {
             <Typography 
               fontWeight={"bold"} 
               variant="h6" 
-              color="secondary">
+              color="primary">
               {diary.date}
             </Typography>
 

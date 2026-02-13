@@ -39,7 +39,7 @@ const NewDiaryForm = ({diaries, setDiaries, showNotification}: NewDiaryFormProp,
 
   return (
     <Box>
-      <Typography color="primary" variant="h3" mb={2}>
+      <Typography color="secondary" variant="h3" mb={2} mt={5}>
         add new entry
         </Typography>
       
@@ -81,7 +81,7 @@ const NewDiaryForm = ({diaries, setDiaries, showNotification}: NewDiaryFormProp,
           onChange={(event) => setComment(event.target.value)}/>
         </Box>
 
-        <Button type="submit" variant="contained" color="secondary">submit</Button>
+        <Button type="submit" variant="contained" color="secondary" sx={{color: 'white', ml: 15, mt: 3}}>submit</Button>
       </form>
 
     </Box>
