@@ -28,7 +28,7 @@ const NewDiaryForm = ({diaries, setDiaries, showNotification}: NewDiaryFormProp,
     setWeather('sunny')
     setVisibility('great')
     setComment('')
-    showNotification(`entry for ${newDiary.date} added`, 'success')
+    showNotification(`Entry for ${newDiary.date} added`, 'success')
   } catch (error) {
     if (axios.isAxiosError(error)) {
       showNotification(error.response?.data || error.message, 'error')
