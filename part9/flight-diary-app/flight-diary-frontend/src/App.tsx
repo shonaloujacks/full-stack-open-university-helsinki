@@ -6,7 +6,8 @@ import { getAllDiaries } from './DiaryService';
 import Notification from './components/Notification'
 import { BrowserRouter as Router, Link, Routes, Route } from 'react-router-dom';   
 import {AppBar, Toolbar, Button} from "@mui/material";
-import FlightIcon from '@mui/icons-material/Flight';    
+import Icon from '@mdi/react';
+import { mdiAirplane } from '@mdi/js';
 
 
 
@@ -44,7 +45,7 @@ const App = () => {
       {errorNotification || successNotification ? <Notification errorNotification={errorNotification} successNotification={successNotification} /> : null}
       <AppBar position="static" sx={{ backgroundColor: "primary", color: "white" }}>
         <Toolbar>
-          <FlightIcon sx={{ mr: 2 }} />
+          <Icon path={mdiAirplane} size={1} />
           <Button color="inherit" component={Link} to="/">
           flight diaries
           </Button>
