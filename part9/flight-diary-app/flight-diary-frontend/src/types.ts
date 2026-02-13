@@ -19,7 +19,7 @@ export interface DiaryListProp {
 export interface NewDiaryFormProp {
     diaries: DiaryEntry[];
     setDiaries: React.Dispatch<React.SetStateAction<DiaryEntry[]>>;
-    showNotification: (message: string ) => void;
+    showNotification: (message: string, type: 'error' | 'success') => void;
   };
 
 
