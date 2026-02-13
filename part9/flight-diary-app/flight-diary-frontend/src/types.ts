@@ -1,5 +1,6 @@
 export interface NotificationProp {
   errorNotification: string;
+  successNotification: string;
 }
 
 export interface DiaryEntry {
@@ -18,7 +19,7 @@ export interface DiaryListProp {
 export interface NewDiaryFormProp {
     diaries: DiaryEntry[];
     setDiaries: React.Dispatch<React.SetStateAction<DiaryEntry[]>>;
-    showError: (message: string ) => void;
+    showNotification: (message: string ) => void;
   };
 
 

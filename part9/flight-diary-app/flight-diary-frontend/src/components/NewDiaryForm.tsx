@@ -8,7 +8,7 @@ const weatherOptions: Weather[] = ['sunny', 'rainy', 'cloudy', 'stormy', 'windy'
 
 const visibilityOptions: Visibility[] = ['great', 'good', 'ok', 'poor']
 
-const NewDiaryForm = ({diaries, setDiaries, showError}: NewDiaryFormProp, ) => {
+const NewDiaryForm = ({diaries, setDiaries, showNotification}: NewDiaryFormProp, ) => {
   const [date, setDate] = useState('')
   const [weather, setWeather] = useState<Weather>('sunny')
   const [visibility, setVisibility] = useState<Visibility>('great')
@@ -28,10 +28,11 @@ const NewDiaryForm = ({diaries, setDiaries, showError}: NewDiaryFormProp, ) => {
     setWeather('sunny')
     setVisibility('great')
     setComment('')
-    console.log('this is diaries content', diaries)
+    showNotification(`entry for ${newDiary.date} added`, 'success')
   } catch (error) {
     if (axios.isAxiosError(error)) {
-       showError(error.response?.data ||error.message)
+      showNotification(error.response?.data || error.message, 'error')
+      console.log(error.response?.data)
      }
   }
  }

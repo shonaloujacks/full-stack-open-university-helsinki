@@ -10,6 +10,7 @@ import Notification from './components/Notification'
 const App = () => {
   const [diaries, setDiaries] = useState<DiaryEntry[]>([])
   const [errorNotification, setErrorNotification] = useState("")
+  const [successNotification, setSuccessNotification] = useState("")
 
   useEffect(() => {
     const retrieveDiaries = async () => {
@@ -19,18 +20,26 @@ const App = () => {
     retrieveDiaries();
   }, [])
 
-  const showError = (message: string) => {
+  const showNotification = (message: string, type: 'error' | 'success') => {
+    if (type === 'error') {
     setErrorNotification(message)
     setTimeout(() => { setErrorNotification("")
     }, 5000)
+  }
+    if (type === 'success') {
+      setSuccessNotification(message)
+    setTimeout(() => {setSuccessNotification("")
+    }, 5000)
+    }
+
   };
 
 
   return (
     
   <div>
-    {errorNotification ? <Notification errorNotification={errorNotification} /> : null}
-    <NewDiaryForm diaries={diaries} setDiaries={setDiaries} showError={showError}/>  
+    {errorNotification || successNotification ? <Notification errorNotification={errorNotification} successNotification={successNotification} /> : null}
+    <NewDiaryForm diaries={diaries} setDiaries={setDiaries} showNotification={showNotification}/>  
     <DiaryList diaries={diaries}/>
   </div>
 
