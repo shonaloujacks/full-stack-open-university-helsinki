@@ -11,6 +11,7 @@ export const NewPatientSchema = z.object({
   dateOfBirth: z.iso.date(),
   gender: z.enum(Gender), 
   occupation: z.string().min(1),
-  ssn: z.string().min(1)
+  ssn: z.string().min(1),
+  entries: z.array(z.object({}))
 });
 
