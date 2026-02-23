@@ -3,12 +3,16 @@ import { useParams } from "react-router";
 import patientService from "../../services/patients"
 import { useEffect, useState } from "react";
 import { Typography, Box } from "@mui/material";
-import type { Patient } from "../../types";
+import type { Patient, Diagnosis } from "../../types";
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 
-const PatientInfoPage = () => {
+interface DiagnosesProp {
+  diagnoses: Diagnosis[]
+}
+
+const PatientInfoPage = ({diagnoses}: DiagnosesProp) => {
   const [patientInfo, setPatientInfo] = useState<Patient>()
 
   const params = useParams()
@@ -42,7 +46,17 @@ const PatientInfoPage = () => {
     }
 
     const entries = patientInfo?.entries
-    console.log('this is entries', entries)
+
+    console.log('this is diagnoses', diagnoses)
+
+    const retrieveDiagnosisInfo = (code: string):string => {
+      const diagnosisEntry = diagnoses.find((diagnosis) => diagnosis.code === code);
+      if (diagnosisEntry === undefined) {
+        return "";
+      }
+      return diagnosisEntry.name
+    }
+    
 
   return (
 <Box>
@@ -55,7 +69,7 @@ const PatientInfoPage = () => {
     <Box key={entry.id}>
       <Typography>{entry.date}: <i>{entry.description}</i></Typography>
       <Typography sx={{mt: 3, ml: 3}}>{entry.diagnosisCodes?.map((code) => (
-        <li key={code}>{code}</li>
+        <li key={code}>{code}: {retrieveDiagnosisInfo(code)}</li>
       ))}</Typography>
 
   </Box>
