@@ -1,3 +1,4 @@
+
 import { useParams } from "react-router";
 import patientService from "../../services/patients"
 import { useEffect, useState } from "react";
@@ -18,11 +19,11 @@ const PatientInfoPage = () => {
     if (typeof id === "undefined") {
       return null
     }
-     const patient = await patientService.getPatient(id)
-     setPatientInfo(patient)
-      };
-      void fetchPatientInfo();
-    }, [id]);
+    const patient = await patientService.getPatient(id)
+    setPatientInfo(patient)
+    };
+    void fetchPatientInfo();
+  }, [id]);
 
     console.log('This is patientinfo', patientInfo)
 
@@ -40,17 +41,28 @@ const PatientInfoPage = () => {
       return <></>;
     }
 
+    const entries = patientInfo?.entries
+    console.log('this is entries', entries)
+
   return (
 <Box>
     <Typography variant="h5" sx={{ mt: 5, mb: 4, fontWeight: 'bold' }}>{patientInfo?.name} {genderIcon()}</Typography>
     <Typography>ssh: {patientInfo?.ssn}</Typography>
     <Typography>occupation: {patientInfo?.occupation}</Typography>
 
+    <Typography variant="h6" sx={{fontWeight: "bold", mt: 3, mb: 1 }}>entries</Typography>
+    {entries?.map((entry) => (
+    <Box key={entry.id}>
+      <Typography>{entry.date}: <i>{entry.description}</i></Typography>
+      <Typography sx={{mt: 3, ml: 3}}>{entry.diagnosisCodes?.map((code) => (
+        <li key={code}>{code}</li>
+      ))}</Typography>
+
+  </Box>
+  ))}
 </Box>
 
   
   )
-
-
 }
-export default PatientInfoPage
+export default PatientInfoPage;
