@@ -4,6 +4,7 @@ import patientService from "../../services/patients"
 import { useEffect, useState } from "react";
 import { Typography, Box } from "@mui/material";
 import type { Patient, Diagnosis } from "../../types";
+import EntryDetails from "./EntryDetails";
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import TransgenderIcon from '@mui/icons-material/Transgender';
@@ -45,38 +46,18 @@ const PatientInfoPage = ({diagnoses}: DiagnosesProp) => {
       return <></>;
     }
 
-    const entries = patientInfo?.entries
+    const entries = patientInfo?.entries 
 
     console.log('this is diagnoses', diagnoses)
-
-    const retrieveDiagnosisInfo = (code: string):string => {
-      const diagnosisEntry = diagnoses.find((diagnosis) => diagnosis.code === code);
-      if (diagnosisEntry === undefined) {
-        return "";
-      }
-      return diagnosisEntry.name
-    }
     
 
   return (
-<Box>
+    <Box>
     <Typography variant="h5" sx={{ mt: 5, mb: 4, fontWeight: 'bold' }}>{patientInfo?.name} {genderIcon()}</Typography>
     <Typography>ssh: {patientInfo?.ssn}</Typography>
     <Typography>occupation: {patientInfo?.occupation}</Typography>
-
-    <Typography variant="h6" sx={{fontWeight: "bold", mt: 3, mb: 1 }}>entries</Typography>
-    {entries?.map((entry) => (
-    <Box key={entry.id}>
-      <Typography>{entry.date}: <i>{entry.description}</i></Typography>
-      <Typography sx={{mt: 3, ml: 3}}>{entry.diagnosisCodes?.map((code) => (
-        <li key={code}>{code}: {retrieveDiagnosisInfo(code)}</li>
-      ))}</Typography>
-
-  </Box>
-  ))}
+    <EntryDetails entries={entries ?? []} diagnoses={diagnoses} />
 </Box>
-
-  
   )
 }
 export default PatientInfoPage;
