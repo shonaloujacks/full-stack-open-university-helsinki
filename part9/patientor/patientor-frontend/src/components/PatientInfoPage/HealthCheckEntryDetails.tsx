@@ -16,7 +16,7 @@ const HealthCheckEntryDetails = ({ entry, diagnoses}: Props) => {
     );
   };
 
-  const healthCheckIcon = () => {
+  const healthCheckIcon = (): JSX.Element => {
     switch(entry.healthCheckRating) {
       case HealthCheckRating.Healthy:
         return <FavoriteIcon sx={{color: "green"}}/>

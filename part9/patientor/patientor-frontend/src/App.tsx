@@ -10,10 +10,13 @@ import patientService from "./services/patients";
 import diagnosesService from "./services/diagnoses"
 import PatientListPage from "./components/PatientListPage";
 import PatientInfoPage from "./components/PatientInfoPage";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([])
+  const [successNotification, setSuccessNotification] = useState('')
+  const [errorNotification, setErrorNotification] = useState('')
 
   useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
@@ -32,11 +35,27 @@ const App = () => {
     };
     void fetchDiagnosesList();
   }, []);
+
+  const displayNotification = (message: string, type: 'error' | 'success') => {
+    if (type === 'error') { 
+      setErrorNotification(message)
+      setTimeout(() => {
+      setErrorNotification("")
+    }, 5000)
+  }
+    if (type === 'success') {
+      setSuccessNotification(message)
+      setTimeout(() => {
+      setSuccessNotification("")
+    }, 5000)
+    }
+  }
   
   return (
     <div className="App">
       <Router>
         <Container>
+          <Notification successNotification={successNotification} errorNotification={errorNotification}/>
           <Typography variant="h3" style={{ marginBottom: "0.5em" }}>
             Patientor
           </Typography>

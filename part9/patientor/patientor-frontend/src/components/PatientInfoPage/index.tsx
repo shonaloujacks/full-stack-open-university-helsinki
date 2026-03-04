@@ -8,6 +8,7 @@ import EntryDetails from "./EntryDetails";
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import TransgenderIcon from '@mui/icons-material/Transgender';
+import AddEntryForm from "./AddEntryForm"
 
 interface DiagnosesProp {
   diagnoses: Diagnosis[]
@@ -56,6 +57,7 @@ const PatientInfoPage = ({diagnoses}: DiagnosesProp) => {
     <Typography variant="h5" sx={{ mt: 5, mb: 4, fontWeight: 'bold' }}>{patientInfo?.name} {genderIcon()}</Typography>
     <Typography>ssh: {patientInfo?.ssn}</Typography>
     <Typography>occupation: {patientInfo?.occupation}</Typography>
+    <AddEntryForm diagnoses={diagnoses}/>
     <EntryDetails entries={entries ?? []} diagnoses={diagnoses} />
 </Box>
   )
