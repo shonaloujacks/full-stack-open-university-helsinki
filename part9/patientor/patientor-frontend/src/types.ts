@@ -58,7 +58,7 @@ export type Entry =
 
   };
 
-  interface SickLeave {
+ export interface SickLeave {
     startDate: string;
     endDate: string;
   }
