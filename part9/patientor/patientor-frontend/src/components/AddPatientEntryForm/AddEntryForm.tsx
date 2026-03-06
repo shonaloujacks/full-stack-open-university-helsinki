@@ -1,8 +1,11 @@
 import { Box, Button, RadioGroup, Radio, Typography, MenuItem, TextField, Select, FormControl, InputLabel, FormLabel, FormControlLabel } from '@mui/material' 
 import { useState } from 'react'
+import axios from 'axios';
 import { Diagnosis, Discharge, SickLeave, HealthCheckRating, Patient } from '../../types'
 import PatientService from '../../services/patients'
-import axios from 'axios';
+import AddHospitalEntryFields from './AddHospitalEntryFields'
+import AddOccupationalHealthcareEntryFields from './AddOccupationalHealthcareEntryFields'
+import AddHealthCheckEntryFields from './AddHealthCheckEntryFields';
 
 interface EntryFormProps {
   diagnoses: Diagnosis[];
@@ -41,17 +44,21 @@ const AddEntryForm = ({ diagnoses, id, displayNotification, patientInfo, setPati
 
   console.log('THIS IS PATIENT INFO', patientInfo)
 
+
   const addNewEntry = async (event: React.FormEvent<HTMLFormElement>) => {
-     event.preventDefault();       
+     event.preventDefault();
+     const baseEntry = {
+      date, 
+      description, 
+      specialist, 
+      diagnosisCodes,
+  }       
     try {
-      if (type === "HealthCheck") {
+      if (type === 'HealthCheck') {
         const newEntry = { 
-          date: date,
-          description: description,
-          specialist: specialist,
-          diagnosisCodes: diagnosisCodes,
-          type: type,
-          healthCheckRating: healthCheckRating
+         ...baseEntry,
+         type,
+         healthCheckRating
         }
         const createdEntry = await PatientService.createEntry(id, newEntry);
         displayNotification(`${type} entry added`, 'success')
@@ -62,10 +69,7 @@ const AddEntryForm = ({ diagnoses, id, displayNotification, patientInfo, setPati
       }
         if (type === "Hospital") {
         const newEntry = { 
-          date: date,
-          description: description,
-          specialist: specialist,
-          diagnosisCodes: diagnosisCodes,
+          ...baseEntry,
           type: type,
           discharge: discharge
         }
@@ -78,10 +82,7 @@ const AddEntryForm = ({ diagnoses, id, displayNotification, patientInfo, setPati
       }
         if (type === "OccupationalHealthcare") {
         const newEntry = { 
-          date: date,
-          description: description,
-          specialist: specialist,
-          diagnosisCodes: diagnosisCodes,
+          ...baseEntry,
           type: type,
           employerName: employerName,
           sickLeave: sickLeave
@@ -188,84 +189,12 @@ const AddEntryForm = ({ diagnoses, id, displayNotification, patientInfo, setPati
         </RadioGroup>
       </FormControl>
       
-      {type === "Hospital" && 
-      <Box>
-        <Typography color={'rgba(0, 0, 0, 0.6)'} sx={{fontWeight:'bold'}}>Discharge:</Typography>
-        <TextField
-          variant="standard"
-          fullWidth
-          sx={{ display: 'block', mb: 2, '& input': { color: 'text.secondary' }}}
-          required
-          type="date"
-          value={discharge.date}
-          onChange={event => setDischarge({...discharge, date: event.target.value})}>
-        </TextField>
-        <TextField
-          variant="standard"
-          fullWidth
-          sx={{ display: 'block', mb: 2,}}
-          required
-          label='Criteria'
-          value={discharge.criteria}
-          onChange={event => setDischarge({...discharge, criteria: event.target.value})}
-          >
-        </TextField>
-      </Box>
-        }
+      {type === "Hospital" && <AddHospitalEntryFields discharge={discharge} setDischarge={setDischarge} />}
 
-        {type === "OccupationalHealthcare" && 
-        <Box>
-          <Typography color={'rgba(0, 0, 0, 0.6)'} sx={{fontWeight:'bold', mb: 1}}>Sick leave:</Typography>
-          <TextField
-            variant="standard"
-            fullWidth
-            sx={{ display: 'block', mb: 2, '& input': { color: 'text.secondary' }}}
-            type='date'
-            label="Start date"
-            value={sickLeave.startDate}
-            InputLabelProps={{ shrink: true }}
-            onChange={event => setSickLeave({...sickLeave, startDate: event.target.value})}
-            >
-          </TextField>
-          <TextField
-            variant="standard"
-            fullWidth
-            sx={{ display: 'block, mb: 2', '& input': { color: 'text.secondary' }}}
-            type='date'
-            label="End date"
-            value={sickLeave.endDate}
-            InputLabelProps={{ shrink: true}}
-            onChange={event => setSickLeave({...sickLeave, endDate: event.target.value})}>      
-          </TextField>
-          <TextField
-            variant="standard"
-            fullWidth
-            sx={{ display: 'block', mb: 2 }}
-            required
-            label="Employer name"
-            value={employerName}
-            onChange={event => setEmployerName(event.target.value)}>
-          </TextField>
-        </Box>
-        }
-        {type === 'HealthCheck' && 
-        <Box>
-          <FormControl fullWidth variant="standard" sx={{ '& .MuiSelect-select': { color: 'rgba(0, 0, 0, 0.6)' }}}>
-            <InputLabel>Health check rating</InputLabel>
-            <Select
-              labelId="health-check-rating-label"
-              id="health-check-rating"
-              value={healthCheckRating}
-              onChange={event => setHealthCheckRating(event.target.value as HealthCheckRating)}
-            >
-              <MenuItem value={0}>Healthy</MenuItem>
-              <MenuItem value={1}>Low risk</MenuItem>
-              <MenuItem value={2}>High risk</MenuItem>
-              <MenuItem value={3}>Critical risk</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-        }
+      {type === "OccupationalHealthcare" && <AddOccupationalHealthcareEntryFields sickLeave={sickLeave} setSickLeave={setSickLeave} employerName={employerName} setEmployerName={setEmployerName}/> }
+      
+      {type === 'HealthCheck' && <AddHealthCheckEntryFields healthCheckRating={healthCheckRating} setHealthCheckRating={setHealthCheckRating}/>}
+
       <Button type="submit" variant="contained" sx={{ mt: 2}}>Submit</Button>
       </form>
     </Box> 

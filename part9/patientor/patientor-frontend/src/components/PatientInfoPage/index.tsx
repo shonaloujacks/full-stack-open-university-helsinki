@@ -8,7 +8,7 @@ import EntryDetails from "./EntryDetails";
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import TransgenderIcon from '@mui/icons-material/Transgender';
-import AddEntryForm from "./AddEntryForm"
+import AddEntryForm from "../AddPatientEntryForm/AddEntryForm"
 
 interface DiagnosesProp {
   diagnoses: Diagnosis[];
