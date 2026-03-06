@@ -1,7 +1,7 @@
 import { Box, Button, RadioGroup, Radio, Typography, MenuItem, TextField, Select, FormControl, InputLabel, FormLabel, FormControlLabel } from '@mui/material' 
 import { useState } from 'react'
 import axios from 'axios';
-import { Diagnosis, Discharge, SickLeave, HealthCheckRating, Patient } from '../../types'
+import { Diagnosis, Discharge, SickLeave, HealthCheckRating, Patient, Entry } from '../../types'
 import PatientService from '../../services/patients'
 import AddHospitalEntryFields from './AddHospitalEntryFields'
 import AddOccupationalHealthcareEntryFields from './AddOccupationalHealthcareEntryFields'
@@ -42,8 +42,13 @@ const AddEntryForm = ({ diagnoses, id, displayNotification, patientInfo, setPati
     setHealthCheckRating(0)
   }
 
-  console.log('THIS IS PATIENT INFO', patientInfo)
-
+  const handleCreatedEntry = (createdEntry: Entry) => {
+    displayNotification(`${type} entry added`, 'success')
+    if (patientInfo) {
+      setPatientInfo({...patientInfo, entries: patientInfo.entries.concat(createdEntry)})
+    }
+    clearStates();
+  }
 
   const addNewEntry = async (event: React.FormEvent<HTMLFormElement>) => {
      event.preventDefault();
@@ -52,7 +57,7 @@ const AddEntryForm = ({ diagnoses, id, displayNotification, patientInfo, setPati
       description, 
       specialist, 
       diagnosisCodes,
-  }       
+     }       
     try {
       if (type === 'HealthCheck') {
         const newEntry = { 
@@ -61,12 +66,8 @@ const AddEntryForm = ({ diagnoses, id, displayNotification, patientInfo, setPati
          healthCheckRating
         }
         const createdEntry = await PatientService.createEntry(id, newEntry);
-        displayNotification(`${type} entry added`, 'success')
-        if (patientInfo) {
-        setPatientInfo({...patientInfo, entries: patientInfo.entries.concat(createdEntry)})
-        }
-        clearStates();
-      }
+        handleCreatedEntry(createdEntry)
+      };
         if (type === "Hospital") {
         const newEntry = { 
           ...baseEntry,
@@ -74,11 +75,7 @@ const AddEntryForm = ({ diagnoses, id, displayNotification, patientInfo, setPati
           discharge: discharge
         }
         const createdEntry = await PatientService.createEntry(id, newEntry);
-        displayNotification(`${type} entry added`, 'success')
-        if (patientInfo) {
-        setPatientInfo({...patientInfo, entries: patientInfo.entries.concat(createdEntry)})
-        }
-        clearStates();
+        handleCreatedEntry(createdEntry)
       }
         if (type === "OccupationalHealthcare") {
         const newEntry = { 
@@ -88,12 +85,7 @@ const AddEntryForm = ({ diagnoses, id, displayNotification, patientInfo, setPati
           sickLeave: sickLeave
         }
         const createdEntry = await PatientService.createEntry(id, newEntry);
-        
-        displayNotification(`${type} entry added`, 'success')
-        if (patientInfo) {
-        setPatientInfo({...patientInfo, entries: patientInfo.entries.concat(createdEntry)})
-        }
-        clearStates();
+        handleCreatedEntry(createdEntry)
       }
     }
     catch (error: unknown){
@@ -198,7 +190,7 @@ const AddEntryForm = ({ diagnoses, id, displayNotification, patientInfo, setPati
       <Button type="submit" variant="contained" sx={{ mt: 2}}>Submit</Button>
       </form>
     </Box> 
-  )
-}
+  );
+};
 
-export default AddEntryForm
+export default AddEntryForm;

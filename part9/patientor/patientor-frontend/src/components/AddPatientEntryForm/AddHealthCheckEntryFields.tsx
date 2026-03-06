@@ -1,4 +1,4 @@
-import { Box, FormControl, Select, InputLabel, Button, MenuItem } from '@mui/material' 
+import { Box, FormControl, Select, InputLabel, MenuItem } from '@mui/material' 
 import type { HealthCheckRating } from '../../types'
 
 interface Props {
