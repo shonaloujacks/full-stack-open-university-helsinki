@@ -11,10 +11,11 @@ import TransgenderIcon from '@mui/icons-material/Transgender';
 import AddEntryForm from "./AddEntryForm"
 
 interface DiagnosesProp {
-  diagnoses: Diagnosis[]
+  diagnoses: Diagnosis[];
+  displayNotification:  (message: string, type: 'error' | 'success') => void;
 }
 
-const PatientInfoPage = ({diagnoses}: DiagnosesProp) => {
+const PatientInfoPage = ({diagnoses, displayNotification}: DiagnosesProp) => {
   const [patientInfo, setPatientInfo] = useState<Patient>()
 
   const params = useParams()
@@ -57,7 +58,7 @@ const PatientInfoPage = ({diagnoses}: DiagnosesProp) => {
     <Typography variant="h5" sx={{ mt: 5, mb: 4, fontWeight: 'bold' }}>{patientInfo?.name} {genderIcon()}</Typography>
     <Typography>ssh: {patientInfo?.ssn}</Typography>
     <Typography>occupation: {patientInfo?.occupation}</Typography>
-    <AddEntryForm diagnoses={diagnoses}/>
+    {id && <AddEntryForm diagnoses={diagnoses} id={id} displayNotification={displayNotification} patientInfo={patientInfo} setPatientInfo={setPatientInfo} /> }
     <EntryDetails entries={entries ?? []} diagnoses={diagnoses} />
 </Box>
   )

@@ -1,17 +1,23 @@
-import { Box, RadioGroup, Radio, Typography, MenuItem, TextField, Select, FormControl, InputLabel, FormLabel, FormControlLabel } from '@mui/material' 
+import { Box, Button, RadioGroup, Radio, Typography, MenuItem, TextField, Select, FormControl, InputLabel, FormLabel, FormControlLabel } from '@mui/material' 
 import { useState } from 'react'
-import { Diagnosis, Discharge, SickLeave, HealthCheckRating } from '../../types'
+import { Diagnosis, Discharge, SickLeave, HealthCheckRating, Patient } from '../../types'
+import PatientService from '../../services/patients'
+import axios from 'axios';
 
 interface EntryFormProps {
-  diagnoses: Diagnosis[]
+  diagnoses: Diagnosis[];
+  id: string;
+  displayNotification: (message: string, type: 'error' | 'success') => void;
+  patientInfo: Patient | undefined;
+  setPatientInfo:  React.Dispatch<React.SetStateAction<Patient | undefined>>;
 }
 
-const AddEntryForm = ({ diagnoses }: EntryFormProps) => {
+const AddEntryForm = ({ diagnoses, id, displayNotification, patientInfo, setPatientInfo }: EntryFormProps) => {
   const [date, setDate] = useState('')
   const [description, setDescription] = useState('')
   const [specialist, setSpecialist] = useState('')
   const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([])
-  const [type, setType] = useState('')
+  const [type, setType] = useState<'HealthCheck' | 'Hospital' | 'OccupationalHealthcare' | ''>('')
   const [discharge, setDischarge] = useState<Discharge>({date: '', criteria: ''})
   const [employerName, setEmployerName] = useState('')
   const [sickLeave, setSickLeave] = useState<SickLeave>({startDate: '', endDate: ''})
@@ -21,10 +27,92 @@ const AddEntryForm = ({ diagnoses }: EntryFormProps) => {
     diagnosis.code
   ))
 
-  console.log('THIS IS HEALTHCHECKRATING', healthCheckRating)
+  const clearStates = () => {
+    setDate('')
+    setDescription('')
+    setSpecialist('')
+    setDiagnosisCodes([])
+    setType('')
+    setDischarge({date: '', criteria: ''})
+    setEmployerName('')
+    setSickLeave({startDate: '', endDate: ''})
+    setHealthCheckRating(0)
+  }
+
+  console.log('THIS IS PATIENT INFO', patientInfo)
+
+  const addNewEntry = async (event: React.FormEvent<HTMLFormElement>) => {
+     event.preventDefault();       
+    try {
+      if (type === "HealthCheck") {
+        const newEntry = { 
+          date: date,
+          description: description,
+          specialist: specialist,
+          diagnosisCodes: diagnosisCodes,
+          type: type,
+          healthCheckRating: healthCheckRating
+        }
+        const createdEntry = await PatientService.createEntry(id, newEntry);
+        displayNotification(`${type} entry added`, 'success')
+        if (patientInfo) {
+        setPatientInfo({...patientInfo, entries: patientInfo.entries.concat(createdEntry)})
+        }
+        clearStates();
+      }
+        if (type === "Hospital") {
+        const newEntry = { 
+          date: date,
+          description: description,
+          specialist: specialist,
+          diagnosisCodes: diagnosisCodes,
+          type: type,
+          discharge: discharge
+        }
+        const createdEntry = await PatientService.createEntry(id, newEntry);
+        displayNotification(`${type} entry added`, 'success')
+        if (patientInfo) {
+        setPatientInfo({...patientInfo, entries: patientInfo.entries.concat(createdEntry)})
+        }
+        clearStates();
+      }
+        if (type === "OccupationalHealthcare") {
+        const newEntry = { 
+          date: date,
+          description: description,
+          specialist: specialist,
+          diagnosisCodes: diagnosisCodes,
+          type: type,
+          employerName: employerName,
+          sickLeave: sickLeave
+        }
+        const createdEntry = await PatientService.createEntry(id, newEntry);
+        
+        displayNotification(`${type} entry added`, 'success')
+        if (patientInfo) {
+        setPatientInfo({...patientInfo, entries: patientInfo.entries.concat(createdEntry)})
+        }
+        clearStates();
+      }
+    }
+    catch (error: unknown){
+      if (axios.isAxiosError(error)) {
+        if (error?.response?.data && typeof error?.response?.data === 'string') {
+          const message = error.response.data.replace('Something weent wrong. Error: ', '');
+          displayNotification(message, 'error')
+        } else {
+          displayNotification('Unrecognised axios error', 'error')
+        } 
+        } else {
+          displayNotification(`Unknown error ${error}`, 'error')
+      }
+      } 
+    }
 
   return (
+    
     <Box sx={{ p: 2, mt: 1, border: '1px dashed', borderColor: 'grey.500', borderRadius: 4}}>
+      <form onSubmit={addNewEntry}>
       <Typography variant="h6" sx={{ fontWeight:"bold", mb: 2}}>Add new entry</Typography>
       <TextField
         variant="standard"
@@ -80,7 +168,7 @@ const AddEntryForm = ({ diagnoses }: EntryFormProps) => {
           row
           name="type-buttons-group"
           sx={{ color: 'rgba(0, 0, 0, 0.6)'}}
-          onChange={event => setType(event.target.value)}
+          onChange={event => setType(event.target.value as 'HealthCheck' | 'Hospital' | 'OccupationalHealthcare')}
           >
           <FormControlLabel 
             value="HealthCheck" 
@@ -178,8 +266,9 @@ const AddEntryForm = ({ diagnoses }: EntryFormProps) => {
           </FormControl>
         </Box>
         }
-    
-    </Box>
+      <Button type="submit" variant="contained" sx={{ mt: 2}}>Submit</Button>
+      </form>
+    </Box> 
   )
 }
 

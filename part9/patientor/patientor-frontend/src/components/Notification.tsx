@@ -9,11 +9,11 @@ interface NotificationProps {
 const Notification = ({successNotification, errorNotification}: NotificationProps) => {
 
   return (
-  <p>
+  <div>
     {successNotification ? <Alert severity='success'>{successNotification}</Alert> : ''}
     
     {errorNotification ? <Alert severity='error'>{errorNotification}</Alert> : ''}
-  </p>
+  </div>
   )
 }
 

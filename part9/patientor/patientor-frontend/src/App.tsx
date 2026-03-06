@@ -49,6 +49,7 @@ const App = () => {
       setSuccessNotification("")
     }, 5000)
     }
+    console.log('This is success notification', successNotification)
   }
   
   return (
@@ -65,7 +66,7 @@ const App = () => {
           <Divider hidden />
           <Routes>
             <Route path="/" element={<PatientListPage patients={patients} setPatients={setPatients} />} />
-            <Route path="/:id" element={<PatientInfoPage diagnoses={diagnoses}/>}/>
+            <Route path="/:id" element={<PatientInfoPage diagnoses={diagnoses} displayNotification={displayNotification}/>}/>
           </Routes>
         </Container>
       </Router>
