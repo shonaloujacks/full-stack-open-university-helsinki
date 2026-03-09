@@ -83,7 +83,7 @@ const parseString = (value: unknown): string => {
 };
 
 const parseHealthCheckRating = (value: unknown): HealthCheckRating => {
-  if (!value || typeof value !== 'number' || !Object.values(HealthCheckRating).includes(value as number)) {
+  if (value === undefined || value === null || typeof value !== 'number' || !Object.values(HealthCheckRating).includes(value as number)) {
     throw new Error('healthCheckRating is missing or not a number');
   }
   return value;
@@ -116,7 +116,7 @@ const newEntryParser = (entry: EntryWithoutId) => {
       }
     case "OccupationalHealthcare":
       return {
-         description: parseString(entry.description),
+        description: parseString(entry.description),
         date: parseString(entry.date),
         specialist: parseString(entry.specialist),
         diagnosisCodes: parseDiagnosisCodes(entry),
