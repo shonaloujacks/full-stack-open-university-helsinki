@@ -68,7 +68,7 @@ export type Entry =
   criteria: string;
 }
 
-export type PatientFormValues = Omit<Patient, "id" | "entries">;
+export type PatientFormValues = Omit<Patient, "id">;
 
 type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
 

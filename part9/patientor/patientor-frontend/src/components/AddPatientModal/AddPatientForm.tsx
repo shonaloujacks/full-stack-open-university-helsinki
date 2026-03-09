@@ -38,12 +38,18 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
 
   const addPatient = (event: SyntheticEvent) => {
     event.preventDefault();
-    onSubmit({
+
+    const newPatient = {
       name,
       occupation,
       ssn,
       dateOfBirth,
-      gender
+      gender,
+    }
+    
+    onSubmit({
+      ...newPatient,
+      entries: []
     });
   };
 

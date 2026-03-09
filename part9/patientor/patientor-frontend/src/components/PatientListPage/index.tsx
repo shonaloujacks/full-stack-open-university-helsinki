@@ -31,6 +31,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
     try {
       const patient = await patientService.create(values);
       setPatients(patients.concat(patient));
+      console.log('THIS IS NEW PATIENT', patient)
       setModalOpen(false);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -77,15 +78,15 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
           ))}
         </TableBody>
       </Table>
+      <Button variant="contained" onClick={() => openModal()}>
+        Add New Patient
+      </Button>
       <AddPatientModal
         modalOpen={modalOpen}
         onSubmit={submitNewPatient}
         error={error}
         onClose={closeModal}
       />
-      <Button variant="contained" onClick={() => openModal()}>
-        Add New Patient
-      </Button>
     </div>
   );
 };
