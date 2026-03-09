@@ -78,7 +78,8 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
           ))}
         </TableBody>
       </Table>
-      <Button variant="contained" onClick={() => openModal()}>
+      <Button variant="contained" onClick={(event) => { (event.currentTarget as HTMLElement).blur(); 
+        openModal();}}>
         Add New Patient
       </Button>
       <AddPatientModal
